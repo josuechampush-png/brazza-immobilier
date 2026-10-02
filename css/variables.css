@@ -1,0 +1,36 @@
+/* ==================================================
+   variables.css — VARIABLES CSS GLOBALES
+   Définit toutes les couleurs, ombres et constantes
+   réutilisables dans tout le site
+   ================================================== */
+
+:root {
+  /* ===== COULEURS PRINCIPALES ===== */
+  --couleur-primaire: #1e3a5f;       /* Bleu foncé principal (header, titres) */
+  --couleur-secondaire: #2c5282;     /* Bleu secondaire (dégradés) */
+  --couleur-accent: #3182ce;         /* Bleu clair (liens, focus) */
+  
+  /* ===== COULEURS FONCTIONNELLES ===== */
+  --couleur-succes: #38a169;         /* Vert (prix, WhatsApp, validation) */
+  --couleur-info: #4299e1;           /* Bleu info */
+  --couleur-warning: #ed8936;        /* Orange warning */
+  --couleur-danger: #e53e3e;         /* Rouge (erreurs, obligatoire) */
+  
+  /* ===== COULEURS DE TEXTE ===== */
+  --couleur-texte: #2d3748;          /* Gris foncé (texte principal) */
+  --couleur-texte-clair: #718096;    /* Gris clair (texte secondaire) */
+  
+  /* ===== COULEURS DE FOND ===== */
+  --couleur-fond: #f7fafc;           /* Fond gris très clair (body) */
+  --couleur-carte: #ffffff;          /* Blanc (cartes, sections) */
+  
+  /* ===== OMBRES ===== */
+  --ombre-legere: 0 1px 3px rgba(0,0,0,0.12);      /* Ombre subtile */
+  --ombre-moyenne: 0 4px 6px rgba(0,0,0,0.1);      /* Ombre moyenne */
+  --ombre-forte: 0 10px 15px rgba(0,0,0,0.1);      /* Ombre forte (hover) */
+  
+  /* ===== CONSTANTES GLOBALES ===== */
+  --rayon-bord: 8px;                               /* Arrondi standard */
+  --transition: all 0.3s ease;                     /* Animation fluide */
+}
+

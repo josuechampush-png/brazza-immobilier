@@ -1,0 +1,453 @@
+/* ==================================================
+   admin.css — TABLEAU DE BORD ADMINISTRATEUR
+   Thème Orange (comme avant)
+   ================================================== */
+
+.admin-page {
+  background: var(--couleur-fond);
+  min-height: 100vh;
+  /* ✅ CORRIGÉ : Padding top augmenté de 20px (145 -> 165) pour faire descendre les boîtes */
+  padding: 165px 16px 80px; 
+}
+
+/* ===== BADGE ADMIN ===== */
+.admin-badge {
+  /* ✅ CORRIGÉ : Position Fixed maintenue pour rester au-dessus du scroll */
+  position: fixed;
+  /* ✅ CORRIGÉ : Top augmenté à 105px pour sortir clairement du header */
+  top: 105px; 
+  right: 2px;
+
+	margin-top: 15px;
+	margin-right: 7px;
+	
+  background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(246, 173, 85, 0.3);
+  z-index: 99;
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.admin-badge-icone { font-size: 14px; }
+.admin-badge-texte { letter-spacing: 0.5px; }
+
+/* ===== STATISTIQUES ===== */
+.admin-stats {
+  /* ✅ MAINTENU : Grille responsive identique à l'original */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--couleur-carte);
+  padding: 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--ombre-legere);
+  border: 1px solid #e2e8f0;
+}
+
+.stat-icone {
+  font-size: 28px;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-info { display: flex; flex-direction: column; }
+
+.stat-nombre {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--couleur-primaire);
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--couleur-texte-clair);
+}
+
+/* ===== SECTION GESTION ===== */
+.admin-section {
+  background: var(--couleur-carte);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--ombre-legere);
+  border: 1px solid #e2e8f0;
+  
+  /* ✅ MODIFIÉ : Marge haute réduite à 20px */
+  margin-top: 20px;
+}
+
+/* ✅ NOUVEAU : Règle spécifique pour ajouter une marge basse sur la section Mode Maintenance 
+   (C'est la 3ème section .admin-section dans le DOM) */
+.admin-section:nth-of-type(3) {
+  margin-bottom: 20px;
+}
+
+.admin-section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #edf2f7;
+}
+
+.admin-section-titre {
+  font-size: 18px;
+  color: var(--couleur-primaire);
+  font-weight: 700;
+  margin: 0;
+}
+
+.admin-input {
+  padding: 10px 12px;
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: #ed8936;
+  box-shadow: 0 0 0 3px rgba(237, 137, 54, 0.15);
+}
+
+/* ===== LISTE DES ANNONCES ===== */
+.admin-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-ligne {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--couleur-fond);
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  transition: var(--transition);
+}
+
+.admin-ligne:hover {
+  border-color: #ed8936;
+  transform: translateX(2px);
+}
+
+.admin-miniature {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.admin-info { flex: 1; min-width: 0; }
+
+.admin-titre {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--couleur-primaire);
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-detail {
+  font-size: 12px;
+  color: var(--couleur-texte-clair);
+  margin: 2px 0;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-admin {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.btn-voir {
+  background: #ebf8ff;
+  color: #3182ce;
+}
+
+.btn-voir:hover {
+  background: #3182ce;
+  color: white;
+}
+
+.btn-supprimer {
+  background: #feebc8;
+  color: #c05621;
+}
+
+.btn-supprimer:hover {
+  background: #dd6b20;
+  color: white;
+}
+
+/* ===== MODE SOMBRE ===== */
+body.theme-sombre .stat-card,
+body.theme-sombre .admin-section,
+body.theme-sombre .admin-ligne {
+  background: var(--couleur-carte);
+  border-color: #4a5568;
+}
+
+body.theme-sombre .admin-section-header {
+  border-bottom-color: #4a5568;
+}
+
+body.theme-sombre .admin-input {
+  background: #2d3748;
+  border-color: #4a5568;
+  color: var(--couleur-texte);
+}
+
+/* ==================================================
+   ✅ AJOUTS POUR LES NOUVELLES FONCTIONNALITÉS
+   (Ajoutés à la fin pour ne rien casser)
+   ================================================== */
+
+/* Animation sur les cartes stats */
+.stat-card.clickable {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.stat-card.clickable:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(237, 137, 54, 0.3);
+}
+
+/* Conteneur du graphique (hauteur augmentée pour voir "Non précisé") */
+.chart-container {
+  position: relative;
+  height: 450px;
+  width: 100%;
+  max-width: 500px;
+  margin: 10px auto 0;
+}
+
+/* Avatar utilisateur */
+.admin-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Boutons admin étendus */
+.btn-bloquer { background: #feebc8; color: #c05621; }
+.btn-bloquer:hover { background: #dd6b20; color: white; }
+.btn-debloquer { background: #c6f6d5; color: #22543d; }
+.btn-debloquer:hover { background: #38a169; color: white; }
+.btn-suspendre { background: #fefcbf; color: #744210; }
+.btn-suspendre:hover { background: #d69e2e; color: white; }
+
+/* Badges de statut */
+.badge-statut {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-right: 6px;
+}
+.badge-actif { background: #c6f6d5; color: #22543d; }
+.badge-bloque { background: #fed7d7; color: #742a2a; }
+.badge-suspendu { background: #fefcbf; color: #744210; }
+
+/* Mode sombre pour les nouveaux éléments */
+body.theme-sombre .admin-avatar {
+  background: linear-gradient(135deg, #ed8936 0%, #c05621 100%);
+}
+
+/* Onglets de navigation (flex-wrap évite le défilement horizontal moche sur petit écran) */
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0;
+  flex-wrap: wrap;
+}
+
+.admin-tab {
+  padding: 12px 20px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--couleur-texte-clair);
+  transition: all 0.2s;
+  margin-bottom: -2px;
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.admin-tab:hover {
+  color: var(--couleur-primaire);
+  background: rgba(237, 137, 54, 0.05);
+}
+
+.admin-tab.active {
+  color: var(--couleur-primaire);
+  border-bottom-color: #ed8936;
+}
+
+body.theme-sombre .admin-tabs {
+  border-bottom-color: #4a5568;
+}
+
+body.theme-sombre .admin-tab:hover {
+  background: rgba(237, 137, 54, 0.1);
+}
+
+/* Modale de signalement */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+.modal-contenu {
+  background: var(--couleur-carte, white);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #e53e3e;
+}
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #718096;
+}
+.modal-body {
+  padding: 20px;
+}
+.btn-signaler {
+  background: #fed7d7;
+  color: #c53030;
+  width: auto;
+  padding: 8px 16px;
+  font-size: 14px;
+  height: 36px; /* Pour s'aligner avec les autres boutons */
+}
+.btn-signaler:hover {
+  background: #fc8181;
+  color: white;
+}
+body.theme-sombre .modal-contenu {
+  background: #2d3748;
+  color: white;
+}
+body.theme-sombre .modal-header {
+  border-bottom-color: #4a5568;
+}
+
+
+
+
+/* ==================================================
+   ✅ BOUTONS D'EXPORT CSV (AJOUT)
+   ================================================== */
+.btn-export {
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-export:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(56, 161, 105, 0.3);
+}
+
+.btn-export:active {
+  transform: translateY(0);
+}
+
+body.theme-sombre .btn-export {
+  background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+}
+

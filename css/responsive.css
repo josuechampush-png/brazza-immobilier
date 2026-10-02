@@ -1,0 +1,16 @@
+/* ==================================================
+   responsive.css — MEDIA QUERIES
+   Contient toutes les adaptations pour mobile
+   et les différentes tailles d'écran
+   ================================================== */
+
+/* ===== ÉCRANS TRÈS PETITS (moins de 380px) ===== */
+@media (max-width: 380px) {
+  
+  /* Grille : passe à 1 seule colonne */
+  #liste {
+    grid-template-columns: 1fr !important;
+  }
+  
+}
+

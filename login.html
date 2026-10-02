@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion — Braza-Immobilier</title>
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  
+  <style>
+    /* Styles pour la modale Mot de passe oublié */
+    .modal-overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;
+    }
+    .modal-box {
+      background: white; padding: 2rem; border-radius: 12px; max-width: 400px; width: 90%;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative;
+    }
+    body.theme-sombre .modal-box {
+      background: #2d3748; color: #f7fafc;
+    }
+    .close-modal {
+      position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #718096;
+    }
+    .link-secondary {
+      color: var(--couleur-primaire, #3182ce); text-decoration: underline; cursor: pointer; font-size: 14px; margin-top: 10px; display: block; text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header-pro" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+    <div class="header-contenu">
+      <div class="header-logo">
+        <h1 class="site-nom" style="color: white;">Braza<span class="separateur">–</span>Immobilier</h1>
+        <p class="site-slogan" style="color: rgba(255,255,255,0.8);">Trouvez votre logement idéal à Brazzaville</p>
+      </div>
+      <div class="header-actions">
+        <button id="btn-theme" class="btn-theme" title="Changer de thème">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo">🔐</div>
+        <h2 class="auth-titre">Bon retour parmi nous</h2>
+        <p class="auth-description">Connectez-vous avec votre Email ou Téléphone</p>
+      </div>
+
+      <form id="form-login" class="auth-form">
+        
+        <!-- Champ fusionné Email/Téléphone -->
+        <div class="form-groupe">
+          <label for="identifiant" class="form-label">
+            <span class="label-icone">🆔</span>
+            <span>Email ou Numéro de téléphone</span>
+          </label>
+          <input type="text" id="identifiant" class="form-input" placeholder="votre@email.com ou +242..." required>
+        </div>
+
+        <!-- Mot de passe -->
+        <div class="form-groupe">
+          <label for="mdp-login" class="form-label">
+            <span class="label-icone">🔒</span>
+            <span>Mot de passe</span>
+          </label>
+          <input type="password" id="mdp-login" class="form-input" placeholder="Votre mot de passe" required autocomplete="current-password">
+        </div>
+
+        <!-- Lien Mot de passe oublié -->
+        <span id="btn-forgot-password" class="link-secondary">Mot de passe oublié ?</span>
+
+        <button type="submit" id="btn-login" class="btn-auth">
+          <span class="btn-icone">🔓</span>
+          <span>Se connecter</span>
+        </button>
+
+        <p id="message-auth" class="auth-message"></p>
+      </form>
+
+      <div class="auth-separateur">ou</div>
+      <div class="auth-footer">
+        <p>Nouveau sur Braza-Immobilier ? <a href="register.html">Créer un compte gratuitement</a></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modale Mot de passe oublié -->
+  <div id="modal-forgot-password" class="modal-overlay">
+    <div class="modal-box">
+      <span class="close-modal">&times;</span>
+      <h3>Récupérer mon accès</h3>
+      <p style="font-size:14px; color:#718096; margin-bottom:15px;">Entrez votre email ou votre numéro de téléphone. Nous vous enverrons un lien de réinitialisation par email.</p>
+      
+      <form id="form-forgot">
+        <div class="form-groupe">
+          <input type="text" id="forgot-contact" class="form-input" placeholder="Email ou Téléphone" required>
+        </div>
+        <button type="submit" class="btn-auth" style="width:100%;">Envoyer le lien</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/footer.js"></script>
+</body>
+</html>

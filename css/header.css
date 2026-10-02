@@ -1,0 +1,260 @@
+/* ==================================================
+   header.css — HEADER PROFESSIONNEL + NAVIGATION
+   Contient le header fixe, le logo, le bouton publier,
+   et la barre de navigation avec bordures arrondies
+   ================================================== */
+
+/* ===== HEADER PRINCIPAL ===== */
+.header-pro {
+  background: linear-gradient(135deg, var(--couleur-primaire) 0%, var(--couleur-secondaire) 100%);
+  color: white;                        /* Texte blanc */
+  position: fixed;                     /* Position fixe */
+  top: 0;                              /* Collé en haut */
+  left: 50%;                           /* Centré horizontalement */
+  transform: translateX(-50%);         /* Correction centrage */
+  width: 100%;                         /* Pleine largeur */
+  max-width: 600px;                    /* Max 600px */
+  z-index: 100;                        /* Au-dessus des autres */
+  box-shadow: var(--ombre-forte);      /* Ombre forte */
+}
+
+/* ===== CONTENEUR DU HEADER ===== */
+.header-contenu {
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  justify-content: space-between;      /* Espace entre logo et actions */
+  padding: 7px 10px;                   /* Espace intérieur */
+  gap: 8px;                            /* Espace entre éléments */
+}
+
+/* ===== LOGO ET NOM DU SITE ===== */
+.header-logo {
+  flex: 1;                             /* Prend l'espace disponible */
+}
+
+/* Nom du site */
+.site-nom {
+  font-size: 12px;                     /* Taille */
+  font-weight: 700;                    /* Très gras */
+  letter-spacing: -0.3px;              /* Espacement lettres */
+  margin-bottom: 0;                    /* Pas d'espace en bas */
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  gap: 0;                              /* Pas d'espace entre les mots */
+}
+
+/* Séparateur : TIRET D'UNION */
+.separateur {
+  color: var(--couleur-accent);        /* Bleu clair */
+  margin: 0 3px;                       /* Espace autour du tiret */
+  font-weight: 300;                    /* Léger */
+  font-size: 14px;                     /* Taille du tiret */
+}
+
+/* Slogan du site */
+.site-slogan {
+  font-size: 8px;                      /* Petite taille */
+  color: rgba(255, 255, 255, 0.8);     /* Blanc transparent */
+  font-weight: 400;                    /* Normal */
+  letter-spacing: 0.2px;               /* Espacement lettres */
+}
+
+/* ===== ACTIONS DU HEADER ===== */
+.header-actions {
+  display: flex;                       /* Mode flexbox */
+  gap: 5px;                            /* Espace entre boutons */
+  align-items: center;                 /* Centré verticalement */
+}
+
+/* Bouton thème (lune/soleil) */
+.btn-theme {
+  background: rgba(255, 255, 255, 0.15); /* Fond blanc transparent */
+  color: white;                        /* Texte blanc */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Bordure blanche */
+  width: 24px;                         /* Largeur fixe */
+  height: 24px;                        /* Hauteur fixe */
+  border-radius: 50%;                  /* Rond */
+  font-size: 12px;                     /* Taille emoji */
+  cursor: pointer;                     /* Curseur main */
+  transition: var(--transition);       /* Animation */
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  justify-content: center;             /* Centré horizontalement */
+}
+
+.btn-theme:hover {
+  background: rgba(255, 255, 255, 0.25); /* Plus opaque au survol */
+  transform: scale(1.05);              /* Agrandit légèrement */
+}
+
+/* Bouton publier / retour */
+.btn-publier-pro {
+  background: white !important;        /* Fond blanc FORCÉ */
+  color: var(--couleur-primaire) !important; /* Texte bleu foncé FORCÉ */
+  padding: 5px 10px !important;        /* Espace intérieur */
+  border-radius: 16px !important;      /* Bords arrondis */
+  text-decoration: none !important;    /* Pas de soulignement FORCÉ */
+  font-size: 10px !important;          /* Taille */
+  font-weight: 700 !important;         /* Très gras FORCÉ */
+  transition: var(--transition);       /* Animation */
+  display: flex !important;            /* Mode flexbox FORCÉ */
+  align-items: center !important;      /* Centré verticalement */
+  gap: 3px !important;                 /* Espace entre icône et texte */
+  box-shadow: var(--ombre-moyenne) !important; /* Ombre */
+  border: none !important;             /* Pas de bordure */
+  cursor: pointer;                     /* Curseur main */
+  white-space: nowrap;                 /* Texte sur une ligne */
+}
+
+.btn-publier-pro:hover {
+  transform: translateY(-2px) !important; /* Monte au survol */
+  box-shadow: var(--ombre-forte) !important; /* Ombre forte */
+  background: #f7fafc !important;      /* Fond gris très clair */
+}
+
+.btn-publier-pro:active {
+  transform: translateY(0) !important; /* Redescend au clic */
+}
+
+/* Icône du bouton */
+.btn-icone {
+  font-size: 11px;                     /* Taille icône */
+  font-weight: 700;                    /* Très gras */
+}
+
+/* Texte du bouton */
+.btn-texte {
+  font-size: 10px;                     /* Taille texte */
+  font-weight: 700;                    /* Très gras */
+}
+
+/* ===== BARRE DE NAVIGATION ===== */
+.header-nav {
+  background: rgba(0, 0, 0, 0.15);     /* Fond noir transparent */
+  margin: 0 8px 6px 8px;               /* Marge autour */
+  border-radius: 12px;                 /* Bords arrondis */
+  padding: 3px;                        /* Petit padding interne */
+  overflow: hidden;                    /* Cache les débordements */
+}
+
+/* Menu de navigation */
+.nav-menu {
+  display: flex;                       /* Mode flexbox */
+  list-style: none;                    /* Pas de puces */
+  justify-content: space-around;       /* Espace égal entre items */
+  padding: 0;                          /* Pas de padding */
+  margin: 0;                           /* Pas de marge */
+  background: rgba(255, 255, 255, 0.08); /* Fond blanc léger */
+  border-radius: 9px;                  /* Bords arrondis internes */
+  overflow: hidden;                    /* Cache les débordements */
+}
+
+/* Item de navigation */
+.nav-item {
+  flex: 1;                             /* Même largeur */
+}
+
+/* Lien de navigation */
+.nav-link {
+  display: flex;                       /* Mode flexbox */
+  flex-direction: column;              /* Icône au-dessus du texte */
+  align-items: center;                 /* Centré horizontalement */
+  padding: 4px 4px;                    /* Espace intérieur */
+  color: rgba(255, 255, 255, 0.85);    /* Blanc transparent */
+  text-decoration: none;               /* Pas de soulignement */
+  font-size: 8px;                      /* Taille */
+  transition: var(--transition);       /* Animation */
+  border-radius: 6px;                  /* Bords arrondis */
+  margin: 1px;                         /* Petit espace */
+}
+
+.nav-link:hover {
+  color: white;                        /* Blanc pur au survol */
+  background: rgba(255, 255, 255, 0.1); /* Fond blanc transparent */
+}
+
+/* Lien actif */
+.nav-link.actif {
+  color: white;                        /* Blanc pur */
+  font-weight: 600;                    /* Gras */
+  background: rgba(255, 255, 255, 0.2); /* Fond plus visible */
+}
+
+/* Icône de navigation */
+.nav-icone {
+  font-size: 11px;                     /* Taille icône */
+  margin-bottom: 0;                    /* Pas d'espace en bas */
+}
+
+/* Texte de navigation */
+.nav-texte {
+  font-size: 7px;                      /* Très petite taille */
+  letter-spacing: 0.2px;               /* Espacement lettres */
+}
+
+
+
+
+/* ==================================================
+   AJOUT : UTILISATEUR CONNECTÉ DANS LE HEADER
+   Ne touche PAS au style existant ci-dessus
+   ================================================== */
+
+.user-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.user-nom {
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  white-space: nowrap;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-deconnexion {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.btn-deconnexion:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+.btn-connexion-header {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 12px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.btn-connexion-header:hover {
+  background: rgba(255, 255, 255, 0.25);
+}

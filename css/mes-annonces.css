@@ -1,0 +1,264 @@
+/* ==================================================
+   mes-annonces.css — PAGE MES ANNONCES / FAVORIS / HISTORIQUE
+   Styles pour les cartes compactes avec actions
+   ================================================== */
+
+.mes-annonces-page {
+  background: var(--couleur-fond);
+  min-height: 100vh;
+  padding: 80px 16px 100px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.page-titre {
+  font-size: 22px;
+  color: var(--couleur-primaire);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.page-description {
+  font-size: 13px;
+  color: var(--couleur-texte-clair);
+}
+
+.message-info {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--couleur-texte-clair);
+  font-size: 15px;
+  background: var(--couleur-carte);
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.btn-connexion,
+.btn-publier-premiere {
+  display: block;
+  text-align: center;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--couleur-primaire) 0%, var(--couleur-secondaire) 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: 700;
+  margin: 10px auto;
+  max-width: 300px;
+}
+
+/* Liste en grille */
+.liste-annonces {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* Carte d'annonce (structure horizontale image + texte) */
+.annonce-ma {
+  background: var(--couleur-carte);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--ombre-moyenne);
+  display: flex;
+  animation: slideUp 0.4s ease-out backwards;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.annonce-ma:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ombre-forte);
+}
+
+.annonce-ma:nth-child(1) { animation-delay: 0.05s; }
+.annonce-ma:nth-child(2) { animation-delay: 0.1s; }
+.annonce-ma:nth-child(3) { animation-delay: 0.15s; }
+.annonce-ma:nth-child(4) { animation-delay: 0.2s; }
+
+/* Zone Image à gauche */
+.annonce-ma-image {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.annonce-ma-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Lien wrapper pour l'image */
+.annonce-ma-image-link {
+  text-decoration: none;
+  display: block;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* Contenu à droite */
+.annonce-ma-contenu {
+  flex: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+/* Titre cliquable */
+.titre-lien {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  display: block;
+}
+
+.titre-lien:hover .annonce-ma-titre {
+  color: var(--couleur-accent);
+}
+
+.annonce-ma-titre {
+  font-size: 14px;
+  color: var(--couleur-primaire);
+  font-weight: 700;
+  margin-bottom: 4px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s ease;
+}
+
+.annonce-ma-prix {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--couleur-succes);
+  margin-bottom: 4px;
+}
+
+.annonce-ma-quartier {
+  font-size: 12px;
+  color: var(--couleur-texte-clair);
+  margin-bottom: 8px;
+}
+
+/* Actions en bas de la carte */
+.annonce-ma-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: auto;
+}
+
+/* Bouton Voir Détails */
+.btn-voir {
+  flex: 1;
+  padding: 6px 8px;
+  background: var(--couleur-accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.btn-voir:hover {
+  background: #2b6cb0;
+  transform: translateY(-1px);
+}
+
+/* Bouton Modifier */
+.btn-modifier {
+  flex: 1;
+  padding: 6px 8px;
+  background: var(--couleur-warning);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.btn-modifier:hover {
+  background: #dd6b20;
+  transform: translateY(-1px);
+}
+
+/* Bouton Supprimer / Retirer */
+.btn-supprimer,
+.btn-retirer {
+  flex: 0 0 36px;
+  padding: 6px;
+  background: #fed7d7;
+  color: #c53030;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-supprimer:hover,
+.btn-retirer:hover {
+  background: #e53e3e;
+  color: white;
+}
+
+/* Bouton Effacer Historique */
+.btn-effacer-historique {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+}
+
+.btn-effacer-historique:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(229, 62, 62, 0.4);
+}
+
+/* Mode sombre */
+body.theme-sombre .annonce-ma {
+  background: var(--couleur-carte);
+}
+
+body.theme-sombre .btn-voir {
+  background: #60a5fa;
+}
+
+body.theme-sombre .btn-voir:hover {
+  background: #3b82f6;
+}

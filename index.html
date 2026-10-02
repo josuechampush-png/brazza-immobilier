@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brazza-Immobilier — Location immobilière à Brazzaville</title>
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/bottom-nav.css">
+  
+  <style>
+    #liste {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 10px !important;
+      padding: 10px !important;
+    }
+    .annonce {
+      margin: 0 !important;
+      width: 100% !important;
+    }
+    
+    /* ✅ STYLES POUR LE BOUTON FAVORI */
+    .btn-favori {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 16px;
+    }
+    
+    .btn-favori:hover {
+      transform: scale(1.1);
+    }
+    
+    .btn-favori.favori-actif {
+      background: #fed7d7;
+      border-color: #e53e3e;
+      color: #e53e3e;
+    }
+
+    /* ✅ NOUVEAU : STYLES POUR LA PAGINATION */
+    .pagination-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin: 20px 0 60px 0;
+      flex-wrap: wrap;
+    }
+    .pagination-btn {
+      padding: 8px 14px;
+      border: 1px solid #e2e8f0;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+      transition: all 0.2s;
+    }
+    .pagination-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+    .pagination-btn.active {
+      background: #3182ce;
+      color: white;
+      border-color: #3182ce;
+    }
+    .pagination-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      background: #f8fafc;
+    }
+
+    /* ✅ NOUVEAU : STYLES POUR LES TÉMOIGNAGES */
+    .section-temoignages {
+      padding: 40px 16px;
+      background: var(--couleur-fond);
+      text-align: center;
+    }
+    .titre-temoignages {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--couleur-primaire);
+      margin-bottom: 20px;
+    }
+    .grille-temoignages {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .carte-temoin {
+      background: var(--couleur-carte);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      text-align: left;
+      border: 1px solid #e2e8f0;
+      transition: transform 0.2s;
+    }
+    .carte-temoin:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .stars-temoin {
+      color: #ed8936;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .message-temoin {
+      font-style: italic;
+      color: var(--couleur-texte);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+    .auteur-temoin {
+      font-weight: 600;
+      color: var(--couleur-primaire);
+      font-size: 13px;
+    }
+    .ville-temoin {
+      color: var(--couleur-texte-clair);
+      font-size: 12px;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header-pro">
+    <div class="header-contenu">
+      <div class="header-logo">
+        <h1 class="site-nom">
+          Braza<span class="separateur">–</span>Immobilier
+        </h1>
+        <p class="site-slogan">Trouvez votre logement idéal à Brazzaville</p>
+      </div>
+      <div class="header-actions">
+        <button id="btn-theme" class="btn-theme" title="Changer de thème">🌙</button>
+        <a href="publier.html" class="btn-publier-pro">
+          <span class="btn-icone">+</span>
+          <span class="btn-texte">Publier</span>
+        </a>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <a href="index.html" class="nav-link actif">
+            <span class="nav-icone">🏠</span>
+            <span class="nav-texte">Accueil</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#recherche" class="nav-link">
+            <span class="nav-icone">🔍</span>
+            <span class="nav-texte">Rechercher</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="publier.html" class="nav-link">
+            <span class="nav-icone">📝</span>
+            <span class="nav-texte">Publier</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero-section">
+    <div class="hero-contenu">
+      <h2 class="hero-titre">La plateforme N°1 de l'immobilier à Brazzaville</h2>
+      <p class="hero-description">
+        Découvrez des centaines d'annonces immobilières vérifiées. 
+        Que vous cherchiez une maison, un appartement ou une chambre, 
+        trouvez le logement parfait en quelques clics.
+      </p>
+    </div>
+  </section>
+
+  <section class="recherche" id="recherche">
+    <h3 class="recherche-titre">
+      <span class="recherche-icone">🔍</span>
+      Recherche avancée
+    </h3>
+    <input type="text" id="filtreTexte" placeholder="Rechercher par mot-clé (ex: balcon, garage...)">
+    
+    <select id="filtreArrondissement">
+      <option value="">🏛️ Tous les arrondissements</option>
+      <option value="1er - Makélékélé">1er - Makélékélé</option>
+      <option value="2e - Bacongo">2e - Bacongo</option>
+      <option value="3e - Poto-Poto">3e - Poto-Poto</option>
+      <option value="4e - Moungali">4e - Moungali</option>
+      <option value="5e - Ouenzé">5e - Ouenzé</option>
+      <option value="6e - Talangaï">6e - Talangaï</option>
+      <option value="7e - Mfilou">7e - Mfilou</option>
+      <option value="8e - Madibou">8e - Madibou</option>
+      <option value="9e - Djiri">9e - Djiri</option>
+      <option value="10e - Kintélé">10e - Kintélé</option>
+    </select>
+    
+    <select id="filtreQuartier" disabled>
+      <option value="">🏘️ Choisissez d'abord un arrondissement</option>
+    </select>
+    
+    <select id="filtreType">
+      <option value="">🏠 Tous les types</option>
+      <option value="maison">Maison</option>
+      <option value="appartement">Appartement</option>
+      <option value="chambre">Chambre</option>
+    </select>
+    <select id="filtrePieces">
+      <option value="">🚪 Toutes les pièces</option>
+      <option value="1">1 pièce</option>
+      <option value="2">2 pièces</option>
+      <option value="3">3 pièces</option>
+      <option value="4">4 pièces</option>
+      <option value="5">5+ pièces</option>
+    </select>
+    <div class="ligne-prix">
+      <input type="number" id="filtrePrixMin" placeholder="Prix min (FCFA)">
+      <input type="number" id="filtrePrixMax" placeholder="Prix max (FCFA)">
+    </div>
+    <div class="ligne-actions">
+      <select id="triPrix">
+        <option value="">🔀 Trier par prix</option>
+        <option value="croissant">Prix croissant ↑</option>
+        <option value="decroissant">Prix décroissant ↓</option>
+      </select>
+      <button id="btn-favoris" class="btn-action">❤️ Favoris</button>
+      <button id="btn-historique" class="btn-action">🕐 Historique</button>
+    </div>
+  </section>
+
+  <main id="skeleton" class="skeleton-container">
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+  </main>
+
+  <main id="liste" style="display:none;"></main>
+
+  <p id="aucun-resultat" style="display:none;">
+    Aucune annonce trouvée 😕
+  </p>
+
+  <!-- ✅ NOUVEAU : Conteneur pour la pagination -->
+  <div id="pagination" class="pagination-container"></div>
+
+  <!-- ✅ NOUVELLE SECTION : TÉMOIGNAGES CLIENTS -->
+  <section class="section-temoignages" id="section-temoignages-public" style="display:none;">
+    <h3 class="titre-temoignages">⭐ Ce que disent nos clients</h3>
+    <div id="grille-temoignages" class="grille-temoignages">
+      <!-- Les témoignages seront injectés ici par JS -->
+    </div>
+  </section>
+
+  <button id="btn-retour-haut" class="btn-retour-haut" title="Retour en haut">↑</button>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">🏠</span>
+      <span class="bottom-nav-texte">Accueil</span>
+    </a>
+    <a href="carte.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">🗺️</span>
+      <span class="bottom-nav-texte">Carte</span>
+    </a>
+    <a href="mes-annonces.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">📋</span>
+      <span class="bottom-nav-texte">Mes annonces</span>
+    </a>
+    <a href="favoris.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">❤️</span>
+      <span class="bottom-nav-texte">Favoris</span>
+    </a>
+    <a href="plus.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">⚙️</span>
+      <span class="bottom-nav-texte">Plus</span>
+    </a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    // ✅ DONNÉES LOCALES PAR DÉFAUT (SECOURS SI SUPABASE ÉCHEC)
+    let ARRONDISSEMENTS_DATA = {
+      "1er - Makélékélé": ["Centre Sportif", "Diata", "Kingouari", "Kinsoundi", "Mamba", "Mayoma", "Météo", "Moukoudzi Ngouaka", "Ngangouoni", "Ngoma", "Niania Sita dia tsiolo"],
+      "2e - Bacongo": ["Cinq Chemins", "Dahomey (Vieux Bacongo)", "La Glacière", "Mbama", "Mpissa", "Nimbi", "Nkéoua", "Saint-Pierre Claver", "Tahiti"],
+      "3e - Poto-Poto": ["Camp CFCO", "Vieux Poto-Poto"],
+      "4e - Moungali": ["Anciens Combattants", "Batignolles", "CEG Matsoua", "CEG de la Paix", "Dix Maisons", "La Poudrière", "Marché 10 Francs", "Moukondo", "O.C.H.", "Plateau des 15 ans"],
+      "5e - Ouenzé": ["La Tsiémé", "Mpila", "Sukisa"],
+      "6e - Talangaï": ["Champ de Tir", "Fleuve Congo", "Intendance", "Joseph Ngobali", "Liberté", "Manianga", "Maman Mboualé", "Mikalou", "Mpila", "Ngamakosso", "Petit-Chose", "Simba Pelle", "Texaco Tsiémé", "Volonté Populaire"],
+      "7e - Mfilou": ["Congo Chine", "Domaine", "Indzouli", "Kiélé Tenard", "Loukanga", "Mambo", "Mayanga", "Mazala", "Ngamaba", "Ngambio", "Nzoko-Mbimi", "Sadelmi"],
+      "8e - Madibou": ["Kibina", "Kintsana", "Kombé", "Madibou", "Mantebé", "Massissia", "M'bouono", "Ntsangamani", "Sangolo"],
+      "9e - Djiri": ["Académie Bilolo", "Don Bosco", "Émeraude", "Impoh Manianga", "Itatolo", "Jacques Opangault", "Makabandilou", "Massengo", "Matari", "Mikalou Madzouna", "Nkombo"],
+      "10e - Kintélé": ["Kintélé"]
+    };
+
+    const SUPABASE_URL = 'https://buymgwahouwcwwgdiogn.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDYyODQxOSwiZXhwIjoyMTA2MjA0NDE5fQ.4m7vMaiQvDEV5NtptuGlGcdh4gcxNMxHdD-8sPo6M4k';
+
+    let toutesLesAnnonces = [];
+    
+    // ✅ VARIABLES POUR LA PAGINATION
+    let resultatsFiltres = [];
+    let pageActuelle = 1;
+    const elementsParPage = 12;
+
+    window.addEventListener("load", async function() {
+      
+      // 1. CHARGER LES QUARTIERS DEPUIS SUPABASE EN PRIORITÉ
+      try {
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const { data: quartiersDb, error } = await supabaseClient
+          .from('quartiers')
+          .select('*')
+          .order('arrondissement', { ascending: true })
+          .order('ordre', { ascending: true });
+
+        if (!error && quartiersDb && quartiersDb.length > 0) {
+          // Reconstruire l'objet ARRONDISSEMENTS_DATA depuis la base de données
+          const newData = {};
+          quartiersDb.forEach(q => {
+            if (!newData[q.arrondissement]) {
+              newData[q.arrondissement] = [];
+            }
+            newData[q.arrondissement].push(q.quartier);
+          });
+          // Remplacer les données locales par celles de la DB
+          ARRONDISSEMENTS_DATA = newData;
+          console.log("✅ Quartiers chargés depuis Supabase");
+        } else {
+          console.warn("⚠️ Utilisation des quartiers locaux (secours)");
+        }
+      } catch (err) {
+        console.error("❌ Erreur chargement quartiers:", err);
+      }
+
+      // 2. INITIALISATION DE L'INTERFACE AVEC LES QUARTIERS DISPONIBLES
+      const selectArr = document.getElementById("filtreArrondissement");
+      const selectQuar = document.getElementById("filtreQuartier");
+      
+      if (selectArr && selectQuar) {
+        selectArr.addEventListener("change", function() {
+          const arr = this.value;
+          selectQuar.innerHTML = '<option value="">🏘️ Sélectionnez un quartier</option>';
+          
+          if (arr && ARRONDISSEMENTS_DATA[arr]) {
+            selectQuar.disabled = false;
+            ARRONDISSEMENTS_DATA[arr].forEach(function(q) {
+              const opt = document.createElement("option");
+              opt.value = q;
+              opt.textContent = q;
+              selectQuar.appendChild(opt);
+            });
+          } else {
+            selectQuar.disabled = true;
+          }
+          
+          appliquerFiltres();
+        });
+      }
+      
+      await chargerAnnonces();
+      initialiserFiltres();
+      initialiserBoutonRetour();
+      initialiserBoutonsNavigation();
+      
+      // ✅ NOUVEAU : Charger les témoignages publics
+      chargerTemoignagesPublics();
+    });
+
+    async function chargerAnnonces() {
+      const skeleton = document.getElementById("skeleton");
+      const liste = document.getElementById("liste");
+      const aucunResultat = document.getElementById("aucun-resultat");
+      
+      try {
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        const { data, error } = await supabase
+          .from('annonces')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (skeleton) skeleton.style.display = "none";
+        
+        if (error) {
+          if (liste) {
+            liste.innerHTML = "<p style='color:red;padding:20px;grid-column:1/-1;'>❌ Erreur : " + error.message + "</p>";
+            liste.style.display = "grid";
+          }
+          return;
+        }
+        
+        if (!data || data.length === 0) {
+          if (aucunResultat) aucunResultat.style.display = "block";
+          return;
+        }
+        
+        toutesLesAnnonces = data;
+        appliquerFiltres(); 
+        
+      } catch (err) {
+        if (skeleton) skeleton.style.display = "none";
+        if (liste) {
+          liste.innerHTML = "<p style='color:red;padding:20px;grid-column:1/-1;'>❌ Erreur : " + err.message + "</p>";
+          liste.style.display = "grid";
+        }
+      }
+    }
+
+    function initialiserFiltres() {
+      const filtres = ["filtreTexte", "filtreArrondissement", "filtreQuartier", "filtreType", "filtrePieces", "filtrePrixMin", "filtrePrixMax", "triPrix"];
+      
+      filtres.forEach(function(id) {
+        const element = document.getElementById(id);
+        if (element) {
+          element.addEventListener("input", appliquerFiltres);
+          element.addEventListener("change", appliquerFiltres);
+        }
+      });
+    }
+
+    function normaliserArrondissement(texte) {
+      if (!texte) return "";
+      return texte.toLowerCase()
+        .replace(/[0-9]+er|ème|e/g, "")
+        .replace(/[-–\s]/g, "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+    }
+
+    function appliquerFiltres() {
+      const texte = document.getElementById("filtreTexte").value.toLowerCase().trim();
+      const arrondissement = document.getElementById("filtreArrondissement").value;
+      const quartier = document.getElementById("filtreQuartier").value;
+      const type = document.getElementById("filtreType").value;
+      const pieces = document.getElementById("filtrePieces").value;
+      const prixMin = document.getElementById("filtrePrixMin").value;
+      const prixMax = document.getElementById("filtrePrixMax").value;
+      const tri = document.getElementById("triPrix").value;
+      
+      const arrNormalise = normaliserArrondissement(arrondissement);
+      
+      let resultats = toutesLesAnnonces.filter(function(a) {
+        if (texte) {
+          const recherche = (String(a.titre || "") + " " + String(a.description || "") + " " + String(a.quartier || "") + " " + String(a.adresse || "")).toLowerCase();
+          if (!recherche.includes(texte)) return false;
+        }
+        
+        if (arrNormalise) {
+          const arrAnnonce = normaliserArrondissement(a.arrondissement);
+          if (arrAnnonce !== arrNormalise) return false;
+        }
+        
+        if (quartier && a.quartier !== quartier) return false;
+        if (type && a.type !== type) return false;
+        
+        if (pieces) {
+          const nbPieces = Number(a.pieces);
+          if (pieces === "5") {
+            if (!a.pieces || nbPieces < 5) return false;
+          } else {
+            if (nbPieces !== Number(pieces)) return false;
+          }
+        }
+        
+        const prixAnnonce = Number(a.prix);
+        if (prixMin && prixAnnonce < Number(prixMin)) return false;
+        if (prixMax && prixAnnonce > Number(prixMax)) return false;
+        
+        return true;
+      });
+      
+      if (tri === "croissant") {
+        resultats.sort(function(a, b) { return Number(a.prix) - Number(b.prix); });
+      } else if (tri === "decroissant") {
+        resultats.sort(function(a, b) { return Number(b.prix) - Number(a.prix); });
+      }
+      
+      resultatsFiltres = resultats;
+      pageActuelle = 1;
+      afficherPage();
+    }
+
+    function afficherPage() {
+      const indexDebut = (pageActuelle - 1) * elementsParPage;
+      const indexFin = indexDebut + elementsParPage;
+      const annoncesPage = resultatsFiltres.slice(indexDebut, indexFin);
+      
+      afficherAnnonces(annoncesPage);
+      genererPagination();
+      
+      document.getElementById("recherche").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function genererPagination() {
+      const container = document.getElementById("pagination");
+      if (!container) return;
+      
+      const totalPages = Math.ceil(resultatsFiltres.length / elementsParPage);
+      
+      if (totalPages <= 1) {
+        container.innerHTML = "";
+        return;
+      }
+      
+      let html = '';
+      html += `<button class="pagination-btn" ${pageActuelle === 1 ? 'disabled' : ''} onclick="changerPage(${pageActuelle - 1})">← Précédent</button>`;
+      
+      for (let i = 1; i <= totalPages; i++) {
+        html += `<button class="pagination-btn ${i === pageActuelle ? 'active' : ''}" onclick="changerPage(${i})">${i}</button>`;
+      }
+      
+      html += `<button class="pagination-btn" ${pageActuelle === totalPages ? 'disabled' : ''} onclick="changerPage(${pageActuelle + 1})">Suivant →</button>`;
+      
+      container.innerHTML = html;
+    }
+
+    window.changerPage = function(nouvellePage) {
+      pageActuelle = nouvellePage;
+      afficherPage();
+    };
+
+    function afficherAnnonces(annonces) {
+      const liste = document.getElementById("liste");
+      const aucunResultat = document.getElementById("aucun-resultat");
+      
+      if (!liste) return;
+      
+      if (annonces.length === 0) {
+        liste.style.setProperty("display", "none", "important");
+        liste.innerHTML = "";
+        if (aucunResultat) aucunResultat.style.display = "block";
+        return;
+      }
+      
+      if (aucunResultat) aucunResultat.style.display = "none";
+      liste.innerHTML = annonces.map(creerCarte).join("");
+      liste.style.setProperty("display", "grid", "important");
+    }
+
+    function creerCarte(a) {
+      const photos = Array.isArray(a.photos) ? a.photos : [];
+      const photoUrl = photos.length > 0 ? photos[0] : "https://via.placeholder.com/400x300?text=Pas+de+photo";
+      
+      let favoris = [];
+      try {
+        favoris = JSON.parse(localStorage.getItem("brazza_favoris") || "[]");
+      } catch (e) {}
+      
+      const estFavori = favoris.includes(a.id);
+      const classeFavori = estFavori ? 'favori-actif' : '';
+      const emojiFavori = estFavori ? '❤️' : '🤍';
+      
+      return '<article class="annonce">' +
+        '<div class="carrousel">' +
+          '<a href="/annonce.html?id=' + a.id + '">' +
+            '<img src="' + photoUrl + '" alt="' + a.titre + '">' +
+          '</a>' +
+        '</div>' +
+        '<div class="annonce-corps">' +
+          '<div class="annonce-actions">' +
+            '<button class="btn-favori ' + classeFavori + '" onclick="toggleFavori(' + a.id + ', event)">' + emojiFavori + '</button>' +
+            '<button class="btn-partage" onclick="partagerAnnonce(' + a.id + ', event)">📤</button>' +
+          '</div>' +
+          '<a href="/annonce.html?id=' + a.id + '" style="text-decoration:none;color:inherit;">' +
+            '<h2>' + a.titre + '</h2>' +
+            '<p class="prix">' + Number(a.prix).toLocaleString() + ' FCFA</p>' +
+            '<p class="infos">📍 ' + a.quartier + '</p>' +
+            (a.nom_proprietaire ? '<p class="infos proprietaire">👤 ' + a.nom_proprietaire + '</p>' : '') +
+            '<p class="temps">🕐 ' + new Date(a.created_at).toLocaleDateString() + '</p>' +
+          '</a>' +
+        '</div>' +
+      '</article>';
+    }
+
+    window.toggleFavori = function(id, event) {
+      event.stopPropagation();
+      
+      let favoris = [];
+      try {
+        favoris = JSON.parse(localStorage.getItem("brazza_favoris") || "[]");
+      } catch (e) {}
+      
+      const index = favoris.indexOf(id);
+      
+      if (index > -1) {
+        favoris.splice(index, 1);
+      } else {
+        favoris.push(id);
+      }
+      
+      localStorage.setItem("brazza_favoris", JSON.stringify(favoris));
+      
+      const bouton = event.target;
+      if (index > -1) {
+        bouton.classList.remove('favori-actif');
+        bouton.textContent = '🤍';
+      } else {
+        bouton.classList.add('favori-actif');
+        bouton.textContent = '❤️';
+      }
+    };
+
+    window.partagerAnnonce = function(id, event) {
+      event.stopPropagation();
+      const url = window.location.origin + "/annonce.html?id=" + id;
+      const annonce = toutesLesAnnonces.find(function(a) { return a.id === id; });
+      const titre = annonce ? annonce.titre : "Annonce";
+      
+      if (navigator.share) {
+        navigator.share({ title: titre, text: titre + "\n" + url, url: url }).catch(function() {});
+      } else {
+        navigator.clipboard.writeText(titre + "\n" + url).then(function() {
+          alert("Lien copié !");
+        });
+      }
+    };
+
+    function initialiserBoutonRetour() {
+      const btnRetourHaut = document.getElementById("btn-retour-haut");
+      if (btnRetourHaut) {
+        window.addEventListener("scroll", function() {
+          if (window.scrollY > 300) {
+            btnRetourHaut.classList.add("visible");
+          } else {
+            btnRetourHaut.classList.remove("visible");
+          }
+        });
+        
+        btnRetourHaut.addEventListener("click", function() {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      }
+    }
+
+    function initialiserBoutonsNavigation() {
+      const btnFavoris = document.getElementById("btn-favoris");
+      if (btnFavoris) {
+        btnFavoris.addEventListener("click", function() {
+          window.location.href = "favoris.html";
+        });
+      }
+      
+      const btnHistorique = document.getElementById("btn-historique");
+      if (btnHistorique) {
+        btnHistorique.addEventListener("click", function() {
+          window.location.href = "historique.html";
+        });
+      }
+    }
+
+    // ✅ NOUVELLE FONCTION : CHARGER ET AFFICHER LES TÉMOIGNAGES PUBLICS
+    async function chargerTemoignagesPublics() {
+      try {
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // On récupère les 3 derniers témoignages validés
+        const { data, error } = await supabase
+          .from('temoignages')
+          .select('*')
+          .eq('est_valide', true)
+          .order('created_at', { ascending: false })
+          .limit(3);
+
+        if (error || !data || data.length === 0) {
+          // Si pas de témoignages, on cache la section
+          const section = document.getElementById("section-temoignages-public");
+          if(section) section.style.display = "none";
+          return;
+        }
+
+        const grille = document.getElementById("grille-temoignages");
+        const section = document.getElementById("section-temoignages-public");
+        
+        if(grille && section) {
+          grille.innerHTML = data.map(t => `
+            <div class="carte-temoin">
+              <div class="stars-temoin">${'⭐'.repeat(t.note)}</div>
+              <p class="message-temoin">"${t.message}"</p>
+              <div class="auteur-temoin">${t.nom_client}</div>
+              <span class="ville-temoin">${t.ville}</span>
+            </div>
+          `).join("");
+          
+          // Afficher la section
+          section.style.display = "block";
+        }
+
+      } catch (err) {
+        console.error("Erreur chargement témoignages:", err);
+      }
+    }
+  </script>
+
+  <script src="js/theme.js"></script>
+  <script src="js/header.js"></script>
+  <script src="js/footer.js"></script>
+
+	
+  <!-- ✅ VÉRIFICATION DU MODE MAINTENANCE (avec exclusion admin) -->
+  <script>
+    (async function() {
+      const SUPABASE_URL_M = 'https://buymgwahouwcwwgdiogn.supabase.co';
+      const SUPABASE_KEY_M = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDYyODQxOSwiZXhwIjoyMTA2MjA0NDE5fQ.4m7vMaiQvDEV5NtptuGlGcdh4gcxNMxHdD-8sPo6M4k';
+      const EMAIL_ADMIN = 'josuechampush@gmail.com';
+      
+      try {
+        const supabase = window.supabase.createClient(SUPABASE_URL_M, SUPABASE_KEY_M);
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (user && user.email === EMAIL_ADMIN) {
+          console.log('Mode maintenance ignoré pour l\'administrateur');
+          return;
+        }
+        
+        const { data, error } = await supabase
+          .from('parametres')
+          .select('valeur')
+          .eq('cle', 'mode_maintenance')
+          .single();
+        
+        if (!error && data && data.valeur === 'true') {
+          window.location.href = 'maintenance.html';
+        }
+      } catch (error) {
+        console.error('Erreur vérification maintenance:', error);
+      }
+    })();
+  </scrip>
+
+</body>
+</html>
+

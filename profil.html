@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon profil — Braza-Immobilier</title>
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/profil.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/bottom-nav.css">
+</head>
+
+<body>
+
+  <header class="header-pro">
+    <div class="header-contenu">
+      <div class="header-logo">
+        <h1 class="site-nom">
+          Braza<span class="separateur">–</span>Immobilier
+        </h1>
+        <p class="site-slogan">Trouvez votre logement idéal à Brazzaville</p>
+      </div>
+      <div class="header-actions">
+        <button id="btn-theme" class="btn-theme" title="Changer de thème">🌙</button>
+        <a href="index.html" class="btn-publier-pro">
+          <span class="btn-icone">←</span>
+          <span class="btn-texte">Retour</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="profil-page">
+    
+    <!-- Titre de la page -->
+    <div class="page-header">
+      <div class="profil-avatar">👤</div>
+      <h2 class="page-titre">Mon profil</h2>
+      <p class="page-description">Gérez vos informations personnelles</p>
+    </div>
+
+    <!-- Message si non connecté -->
+    <div id="non-connecte" style="display:none;">
+      <p class="message-info">⚠️ Vous devez être connecté pour accéder à votre profil.</p>
+      <a href="login.html" class="btn-primaire">🔐 Se connecter</a>
+    </div>
+
+    <!-- Profil connecté -->
+    <div id="profil-connecte" style="display:none;">
+      
+      <!-- Section : Informations personnelles -->
+      <div class="profil-section">
+        <div class="profil-section-header">
+          <span class="profil-section-icone">👤</span>
+          <div>
+            <h3 class="profil-section-titre">Informations personnelles</h3>
+            <p class="profil-section-sous-titre">Modifiez votre nom et vos informations</p>
+          </div>
+        </div>
+        
+        <div class="profil-groupe">
+          <label class="profil-label">
+            <span class="label-icone">📧</span>
+            <span>Adresse email</span>
+          </label>
+          <input type="email" id="profil-email" class="profil-input" disabled>
+          <span class="profil-aide">L'email ne peut pas être modifié</span>
+        </div>
+
+        <div class="profil-groupe">
+          <label class="profil-label">
+            <span class="label-icone">✏️</span>
+            <span>Nom complet</span>
+          </label>
+          <input type="text" id="profil-nom" class="profil-input" placeholder="Votre nom">
+          <span class="profil-aide">Ce nom apparaîtra sur vos annonces</span>
+        </div>
+
+        <!-- ✅ NOUVEAU : Champ Téléphone -->
+        <div class="profil-groupe">
+          <label class="profil-label">
+            <span class="label-icone">📱</span>
+            <span>Numéro de téléphone</span>
+          </label>
+          <input type="tel" id="profil-telephone" class="profil-input" placeholder="+242 06 xxx xxxx">
+          <span class="profil-aide">Utilisé pour la connexion par numéro</span>
+        </div>
+
+        <button id="btn-sauvegarder-infos" class="btn-profil">
+          <span>💾</span>
+          <span>Sauvegarder Nom & Téléphone</span>
+        </button>
+
+        <p id="message-infos" class="profil-message"></p>
+      </div>
+
+      <!-- Section : Sécurité -->
+      <div class="profil-section">
+        <div class="profil-section-header">
+          <span class="profil-section-icone">🔒</span>
+          <div>
+            <h3 class="profil-section-titre">Sécurité</h3>
+            <p class="profil-section-sous-titre">Changez votre mot de passe</p>
+          </div>
+        </div>
+        
+        <div class="profil-groupe">
+          <label class="profil-label">
+            <span class="label-icone">🔑</span>
+            <span>Nouveau mot de passe</span>
+          </label>
+          <input type="password" id="profil-password" class="profil-input" placeholder="Minimum 6 caractères">
+        </div>
+
+        <div class="profil-groupe">
+          <label class="profil-label">
+            <span class="label-icone">🔑</span>
+            <span>Confirmer le mot de passe</span>
+          </label>
+          <input type="password" id="profil-password-confirm" class="profil-input" placeholder="Retapez le mot de passe">
+        </div>
+
+        <button id="btn-changer-password" class="btn-profil">
+          <span>🔒</span>
+          <span>Changer le mot de passe</span>
+        </button>
+
+        <p id="message-password" class="profil-message"></p>
+      </div>
+
+      <!-- Section : Déconnexion -->
+      <div class="profil-section">
+        <div class="profil-section-header">
+          <span class="profil-section-icone">🚪</span>
+          <div>
+            <h3 class="profil-section-titre">Déconnexion</h3>
+            <p class="profil-section-sous-titre">Fermez votre session</p>
+          </div>
+        </div>
+        
+        <button id="btn-deconnexion-profil" class="btn-deconnexion-profil">
+          <span>🚪</span>
+          <span>Se déconnecter</span>
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Barre de navigation en bas -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">🏠</span>
+      <span class="bottom-nav-texte">Accueil</span>
+    </a>
+    <a href="carte.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">🗺️</span>
+      <span class="bottom-nav-texte">Carte</span>
+    </a>
+    <a href="mes-annonces.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">📋</span>
+      <span class="bottom-nav-texte">Mes annonces</span>
+    </a>
+    <a href="favoris.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">❤️</span>
+      <span class="bottom-nav-texte">Favoris</span>
+    </a>
+    <a href="plus.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">⚙️</span>
+      <span class="bottom-nav-texte">Plus</span>
+    </a>
+  </nav>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/profil.js"></script>
+  <script src="js/header.js"></script>
+  <script src="js/footer.js"></script>
+
+</body>
+</html>

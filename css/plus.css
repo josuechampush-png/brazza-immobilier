@@ -1,0 +1,274 @@
+/* ==================================================
+   plus.css — PAGE PARAMÈTRES
+   ================================================== */
+
+.plus-page {
+  background: var(--couleur-fond);
+  min-height: 100vh;
+  padding: 80px 16px 100px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.page-titre {
+  font-size: 22px;
+  color: var(--couleur-primaire);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.page-description {
+  font-size: 13px;
+  color: var(--couleur-texte-clair);
+}
+
+/* Sections */
+.plus-section {
+  background: var(--couleur-carte);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: var(--ombre-legere);
+  border: 1px solid #e2e8f0;
+  animation: slideUp 0.4s ease-out backwards;
+}
+
+.plus-section:nth-child(1) { animation-delay: 0.05s; }
+.plus-section:nth-child(2) { animation-delay: 0.1s; }
+.plus-section:nth-child(3) { animation-delay: 0.15s; }
+.plus-section:nth-child(4) { animation-delay: 0.2s; }
+.plus-section:nth-child(5) { animation-delay: 0.25s; }
+
+.plus-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #edf2f7;
+}
+
+.plus-section-icone {
+  font-size: 28px;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+  flex-shrink: 0;
+}
+
+.plus-section-titre {
+  font-size: 16px;
+  color: var(--couleur-primaire);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.plus-section-sous-titre {
+  font-size: 12px;
+  color: var(--couleur-texte-clair);
+  font-weight: 400;
+}
+
+/* Option avec switch */
+.plus-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+}
+
+.plus-option-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.plus-option-icone {
+  font-size: 24px;
+}
+
+.plus-option-titre {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--couleur-texte);
+  margin-bottom: 2px;
+}
+
+.plus-option-description {
+  font-size: 12px;
+  color: var(--couleur-texte-clair);
+}
+
+/* Switch toggle */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cbd5e0;
+  transition: 0.3s;
+  border-radius: 26px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--couleur-succes);
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+/* Boutons d'action */
+.plus-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px;
+  background: var(--couleur-fond);
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  color: var(--couleur-texte);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.plus-action-btn:hover {
+  background: #edf2f7;
+  border-color: var(--couleur-accent);
+}
+
+.plus-action-btn:last-child {
+  margin-bottom: 0;
+}
+
+.plus-action-icone {
+  font-size: 20px;
+}
+
+.plus-action-arrow {
+  margin-left: auto;
+  color: var(--couleur-texte-clair);
+  font-size: 18px;
+}
+
+/* Informations */
+.plus-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.plus-info-item:last-child {
+  border-bottom: none;
+}
+
+.plus-info-label {
+  font-size: 13px;
+  color: var(--couleur-texte-clair);
+  font-weight: 500;
+}
+
+.plus-info-value {
+  font-size: 13px;
+  color: var(--couleur-texte);
+  font-weight: 600;
+}
+
+/* ==================================================
+   BOUTON ADMIN — JAUNE CITRON CLAIR
+   ================================================== */
+
+.bouton-admin-jaune {
+  background: #fef9c3 !important;
+  border: 2px solid #fde047 !important;
+}
+
+.bouton-admin-jaune:hover {
+  background: #fef08a !important;
+  border-color: #eab308 !important;
+}
+
+.bouton-admin-jaune span:nth-child(2) {
+  color: #854d0e !important;
+  font-weight: 700 !important;
+}
+
+/* Mode sombre */
+body.theme-sombre .plus-section {
+  background: var(--couleur-carte);
+  border-color: #4a5568;
+}
+
+body.theme-sombre .plus-section-header {
+  border-bottom-color: #4a5568;
+}
+
+body.theme-sombre .plus-action-btn {
+  background: #2d3748;
+  border-color: #4a5568;
+  color: var(--couleur-texte);
+}
+
+body.theme-sombre .plus-action-btn:hover {
+  background: #1a202c;
+  border-color: var(--couleur-accent);
+}
+
+body.theme-sombre .plus-info-item {
+  border-bottom-color: #4a5568;
+}
+
+body.theme-sombre .bouton-admin-jaune {
+  background: #713f12 !important;
+  border-color: #eab308 !important;
+}
+
+body.theme-sombre .bouton-admin-jaune:hover {
+  background: #854d0e !important;
+}
+
+body.theme-sombre .bouton-admin-jaune span:nth-child(2) {
+  color: #fef08a !important;
+}

@@ -1,0 +1,33 @@
+/* ==================================================
+   base.css — RESET ET STYLES DE BASE
+   Supprime les marges par défaut et définit
+   le style global du body
+   ================================================== */
+
+/* ===== RESET UNIVERSEL ===== */
+* {
+  margin: 0;              /* Pas de marge extérieure */
+  padding: 0;             /* Pas de marge intérieure */
+  box-sizing: border-box; /* Bordures incluses dans largeur/hauteur */
+}
+
+/* ===== STYLE DU BODY ===== */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--couleur-fond);    /* Fond gris clair */
+  max-width: 600px;                   /* Largeur max pour mobile */
+  margin: 0 auto;                     /* Centré horizontalement */
+  min-height: 100vh;                  /* Hauteur minimum = écran complet */
+  color: var(--couleur-texte);        /* Couleur du texte */
+  line-height: 1.6;                   /* Espacement entre lignes */
+  transition: background 0.3s ease, color 0.3s ease; /* Transition mode sombre */
+}
+
+/* ===== MODE SOMBRE ===== */
+body.theme-sombre {
+  --couleur-fond: #1a202c;            /* Fond sombre */
+  --couleur-carte: #2d3748;           /* Cartes sombres */
+  --couleur-texte: #e2e8f0;           /* Texte clair */
+  --couleur-texte-clair: #a0aec0;     /* Texte secondaire clair */
+}
+

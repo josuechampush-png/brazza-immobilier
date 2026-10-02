@@ -1,0 +1,270 @@
+/* ==================================================
+   components.css — COMPOSANTS PARTAGÉS
+   Contient les composants réutilisables sur
+   plusieurs pages : skeleton, pull-to-refresh,
+   modal d'édition, bouton retour en haut
+   ================================================== */
+
+/* ===== BOUTON RETOUR EN HAUT ===== */
+.btn-retour-haut {
+  position: fixed;
+  bottom: 85px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--couleur-primaire) 0%, var(--couleur-secondaire) 100%);
+  color: white;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: var(--ombre-forte);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: var(--transition);
+  z-index: 99;
+}
+
+.btn-retour-haut.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.btn-retour-haut:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 20px rgba(0,0,0,0.2);
+}
+
+.btn-retour-haut:active {
+  transform: translateY(0);
+}
+
+/* ===== SKELETON SCREENS (CHARGEMENT) ===== */
+.skeleton-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 10px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.skeleton-container.cache {
+  display: none !important;
+}
+
+.skeleton-card {
+  background: var(--couleur-carte);
+  border-radius: 12px;
+  height: 280px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--ombre-moyenne);
+}
+
+/* Animation de shimmer (effet de brillance qui passe) */
+.skeleton-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: skeleton-shimmer 1.5s infinite;
+}
+
+/* Zone image du skeleton */
+.skeleton-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+  border-radius: 12px 12px 0 0;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Animation d'apparition des cartes réelles */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== PULL-TO-REFRESH ===== */
+.pull-indicator {
+  position: fixed;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--couleur-carte);
+  padding: 10px 20px;
+  border-radius: 20px;
+  box-shadow: var(--ombre-moyenne);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 101;
+  transition: transform 0.3s ease;
+}
+
+.pull-indicator.ready {
+  background: var(--couleur-succes);
+  color: white;
+}
+
+.pull-icon {
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.pull-indicator.ready .pull-icon {
+  transform: rotate(180deg);
+}
+
+.pull-icon.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pull-text {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ===== MODAL D'ÉDITION ===== */
+.modal-edition {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-contenu {
+  background: var(--couleur-carte);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-contenu h3 {
+  font-size: 18px;
+  color: var(--couleur-primaire);
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.modal-contenu label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--couleur-primaire);
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+.modal-contenu input,
+.modal-contenu textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+/* Mode sombre pour modal */
+body.theme-sombre .modal-contenu input,
+body.theme-sombre .modal-contenu textarea {
+  background: var(--couleur-fond);
+  color: var(--couleur-texte);
+  border-color: #4a5568;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-modal {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-annuler {
+  background: #e2e8f0;
+  color: var(--couleur-texte);
+}
+
+.btn-annuler:hover {
+  background: #cbd5e0;
+}
+
+.btn-sauvegarder {
+  background: linear-gradient(135deg, var(--couleur-primaire) 0%, var(--couleur-secondaire) 100%);
+  color: white;
+}
+
+.btn-sauvegarder:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ombre-forte);
+}

@@ -1,0 +1,216 @@
+/* ==================================================
+   detail.css — PAGE DÉTAIL D'UNE ANNONCE
+   Photos moins zoomées (ratio 4:3 au lieu de 1:1)
+   ================================================== */
+
+/* ===== PAGE DÉTAIL ===== */
+.detail {
+  background: var(--couleur-carte);
+  min-height: 100vh;
+  padding-bottom: 20px;
+  padding-top: 70px;
+}
+
+.detail h2 {
+  padding: 16px 16px 0;
+  font-size: 22px;
+  color: var(--couleur-primaire);
+  font-weight: 700;
+}
+
+.prix-detail {
+  padding: 8px 16px;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--couleur-succes);
+}
+
+.infos-detail {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--couleur-texte-clair);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.infos-detail p { 
+  margin: 6px 0;
+}
+
+.bloc-description { 
+  padding: 16px;
+}
+
+.bloc-description h3 {
+  font-size: 17px;
+  color: var(--couleur-primaire);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.bloc-description p {
+  font-size: 14px;
+  color: var(--couleur-texte);
+  line-height: 1.6;
+}
+
+/* Bouton WhatsApp détail */
+.btn-whatsapp-detail {
+  display: block;
+  margin: 16px;
+  background: var(--couleur-succes);
+  color: white;
+  text-align: center;
+  padding: 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+/* ===== ACTIONS SUR PAGE DÉTAIL ===== */
+.detail-actions {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--couleur-fond);
+}
+
+.btn-action-detail {
+  flex: 1;
+  padding: 10px 8px;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-action-detail:hover {
+  border-color: var(--couleur-accent);
+  background: var(--couleur-fond);
+}
+
+.btn-action-detail.favori-actif {
+  background: #fed7d7;
+  border-color: #e53e3e;
+  color: #c53030;
+}
+
+/* ===== STATISTIQUES DE VUES ===== */
+.stats-vues {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--couleur-fond);
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 13px;
+  color: var(--couleur-texte-clair);
+}
+
+.stats-icon {
+  font-size: 16px;
+}
+
+.stats-nombre {
+  font-weight: 700;
+  color: var(--couleur-primaire);
+}
+
+.stats-texte {
+  font-size: 12px;
+}
+
+/* ===== WRAPPER DU CARROUSEL ===== */
+.carrousel-wrapper {
+  position: relative;
+  width: 100%;
+  margin-top: 5px;
+}
+
+/* ===== CARROUSEL HORIZONTAL ===== */
+.carrousel {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  width: 100%;
+  background: #f7fafc; /* Fond gris clair pour les espaces vides */
+}
+
+.carrousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* ✅ CHANGEMENT ICI : ratio 4:3 au lieu de 1:1, et object-fit: contain */
+.carrousel img {
+  width: 100%;
+  flex-shrink: 0;
+  scroll-snap-align: center;
+  aspect-ratio: 4/3; /* Plus large, moins haut → moins de zoom */
+  object-fit: contain; /* Affiche la photo entière sans couper */
+  display: block;
+  background: #f7fafc; /* Fond gris pour les espaces vides */
+}
+
+/* ===== INDICATEURS DE CARROUSEL (POINTS) ===== */
+.indicateurs {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 6px 12px;
+  border-radius: 20px;
+  z-index: 10;
+}
+
+.indicateur-point {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.indicateur-point.actif {
+  background: white;
+  width: 24px;
+  border-radius: 4px;
+}
+
+/* ===== COMPTEUR DE PHOTOS ===== */
+.compteur-photos {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 10;
+}
+
+/* ===== MESSAGE ANNONCE INTROUVABLE ===== */
+#detail-introuvable {
+  text-align: center;
+  padding: 30px 16px;
+  color: var(--couleur-texte-clair);
+  font-size: 15px;
+}
+
+#detail-introuvable a {
+  color: var(--couleur-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+

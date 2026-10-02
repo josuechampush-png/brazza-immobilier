@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administration — Braza-Immobilier</title>
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/bottom-nav.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div id="acces-refuse" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:var(--couleur-fond, #f7fafc); z-index:99999; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:20px; text-align:center;">
+    <div style="font-size:80px; margin-bottom:20px;">🔒</div>
+    <h1 style="font-size:28px; color:#e53e3e; margin-bottom:15px;">Accès refusé</h1>
+    <p style="font-size:18px; color:var(--couleur-texte, #2d3748); margin-bottom:30px; max-width:500px;">
+      Cet espace est réservé à l'administrateur.<br>
+      Vous n'avez pas les permissions nécessaires pour accéder à cette page.
+    </p>
+    <a href="index.html" style="padding:12px 24px; background:#ed8936; color:white; border-radius:8px; text-decoration:none; font-weight:600; display:inline-block;">
+      ← Retour à l'accueil
+    </a>
+  </div>
+
+  <header class="header-pro">
+    <div class="header-contenu">
+      <div class="header-logo">
+        <h1 class="site-nom">Braza<span class="separateur">–</span>Immobilier</h1>
+        <p class="site-slogan">Tableau de bord de gestion</p>
+      </div>
+      <div class="header-actions">
+        <button id="btn-theme" class="btn-theme" title="Changer de thème">🌙</button>
+        <a href="index.html" class="btn-publier-pro">
+          <span class="btn-icone">←</span>
+          <span class="btn-texte">Retour</span>
+        </a>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="index.html" class="nav-link"><span class="nav-icone">🏠</span><span class="nav-texte">Accueil</span></a></li>
+        <li class="nav-item"><a href="index.html#recherche" class="nav-link"><span class="nav-icone">🔍</span><span class="nav-texte">Rechercher</span></a></li>
+        <li class="nav-item"><a href="publier.html" class="nav-link"><span class="nav-icone">📝</span><span class="nav-texte">Publier</span></a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="admin-badge">
+    <span class="admin-badge-icone">🛡️</span>
+    <span class="admin-badge-texte">Espace Admin</span>
+  </div>
+
+  <main class="admin-page" id="contenu-admin">
+    <section class="admin-stats">
+      <div class="stat-card clickable">
+        <span class="stat-icone">📢</span>
+        <div class="stat-info"><span class="stat-nombre" id="stat-annonces">0</span><span class="stat-label">Annonces actives</span></div>
+      </div>
+      <div class="stat-card clickable" onclick="document.getElementById('section-utilisateurs').scrollIntoView({behavior: 'smooth'})">
+        <span class="stat-icone">👥</span>
+        <div class="stat-info"><span class="stat-nombre" id="stat-utilisateurs">0</span><span class="stat-label">Utilisateurs inscrits</span></div>
+      </div>
+      <div class="stat-card clickable">
+        <span class="stat-icone">🚫</span>
+        <div class="stat-info"><span class="stat-nombre" id="stat-bloques">0</span><span class="stat-label">Comptes bloqués</span></div>
+      </div>
+    </section>
+
+    <!-- GRAPHIQUE 1 : ARRONDISSEMENTS -->
+    <section class="admin-section">
+      <div class="admin-section-header"><h2 class="admin-section-titre">📊 Répartition par Arrondissement</h2></div>
+      <div class="chart-container"><canvas id="chartAnnonces"></canvas></div>
+    </section>
+
+    <!-- ✅ MODIFIÉ : GRAPHIQUE 2 : TYPES DE BIENS (HAUTEUR RÉDUITE À 250PX) -->
+    <section class="admin-section">
+      <div class="admin-section-header"><h2 class="admin-section-titre">🏠 Répartition par Type de Bien</h2></div>
+      <div class="chart-container" style="height: 250px !important;"><canvas id="chartTypes"></canvas></div>
+    </section>
+
+    <section class="admin-section">
+      <div class="admin-section-header">
+        <h2 class="admin-section-titre">🛠️ Mode Maintenance</h2>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:16px; background:var(--couleur-fond, #f7fafc); border-radius:8px;">
+        <div>
+          <p style="margin:0 0 4px 0; font-weight:600; font-size:16px;">Activer le mode maintenance</p>
+          <p style="margin:0; font-size:13px; color:var(--couleur-texte-clair);">
+            Quand activé, les visiteurs voient une page de maintenance au lieu de l'accueil.
+          </p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="toggle-maintenance">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <style>
+        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e0; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #ed8936; }
+        input:checked + .slider:before { transform: translateX(26px); }
+      </style>
+    </section>
+
+    <div class="admin-tabs">
+      <button class="admin-tab" onclick="afficherOnglet('utilisateurs')">👥 Utilisateurs</button>
+      <button class="admin-tab" onclick="afficherOnglet('annonces')">📋 Annonces</button>
+      <button class="admin-tab" onclick="afficherOnglet('signalements')">🚨 Signalements</button>
+      <!-- ✅ NOUVEAU : Onglet Quartiers -->
+      <button class="admin-tab" onclick="afficherOnglet('quartiers')">🏘️ Quartiers</button>
+      <!-- ✅ NOUVEAU : Onglet Témoignages -->
+      <button class="admin-tab" onclick="afficherOnglet('temoignages')">⭐ Témoignages</button>
+    </div>
+
+    <section class="admin-section" id="section-utilisateurs" style="display:none;">
+      <div class="admin-section-header">
+        <h2 class="admin-section-titre">👥 Gestion des Utilisateurs</h2>
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <input type="text" id="admin-recherche-users" class="admin-input" placeholder="Rechercher par email ou nom..." style="flex: 1; min-width: 200px;">
+          <button onclick="exporterUtilisateurs()" class="btn-export" title="Exporter les utilisateurs en CSV">📥 Exporter</button>
+        </div>
+      </div>
+      <div id="admin-skeleton-users" class="skeleton-container"><div class="skeleton-card"></div><div class="skeleton-card"></div></div>
+      <div id="admin-liste-users" class="admin-liste" style="display:none;"></div>
+      <p id="admin-aucun-users" style="display:none; text-align:center; padding:20px; color:var(--couleur-texte-clair);">Aucun utilisateur trouvé.</p>
+    </section>
+
+    <section class="admin-section" id="section-annonces" style="display:none;">
+      <div class="admin-section-header">
+        <h2 class="admin-section-titre">📋 Gestion des Annonces</h2>
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <input type="text" id="admin-recherche" class="admin-input" placeholder="Rechercher une annonce..." style="flex: 1; min-width: 200px;">
+          <button onclick="exporterAnnonces()" class="btn-export" title="Exporter les annonces en CSV">📥 Exporter</button>
+        </div>
+      </div>
+      <div id="admin-skeleton" class="skeleton-container"><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div></div>
+      <div id="admin-liste" class="admin-liste" style="display:none;"></div>
+      <p id="admin-aucun" style="display:none; text-align:center; padding:20px; color:var(--couleur-texte-clair);">Aucune annonce trouvée.</p>
+    </section>
+
+    <section class="admin-section" id="section-signalements" style="display:none;">
+      <div class="admin-section-header">
+        <h2 class="admin-section-titre">🚨 Signalements reçus</h2>
+      </div>
+      <div id="admin-skeleton-sig" class="skeleton-container"><div class="skeleton-card"></div><div class="skeleton-card"></div></div>
+      <div id="admin-liste-sig" class="admin-liste" style="display:none;"></div>
+      <p id="admin-aucun-sig" style="display:none; text-align:center; padding:20px; color:var(--couleur-texte-clair);">Aucun signalement pour le moment. Tout va bien ! 🎉</p>
+    </section>
+
+    <!-- ✅ NOUVEAU : Section Gestion des Quartiers -->
+    <section class="admin-section" id="section-quartiers" style="display:none;">
+      <div class="admin-section-header">
+        <h2 class="admin-section-titre">🏘️ Gestion des Quartiers</h2>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <select id="select-arrondissement-new" class="admin-input" style="flex:1; min-width:200px;">
+            <option value="">Choisir un arrondissement...</option>
+            <option value="1er - Makélékélé">1er - Makélékélé</option>
+            <option value="2e - Bacongo">2e - Bacongo</option>
+            <option value="3e - Poto-Poto">3e - Poto-Poto</option>
+            <option value="4e - Moungali">4e - Moungali</option>
+            <option value="5e - Ouenzé">5e - Ouenzé</option>
+            <option value="6e - Talangaï">6e - Talangaï</option>
+            <option value="7e - Mfilou">7e - Mfilou</option>
+            <option value="8e - Madibou">8e - Madibou</option>
+            <option value="9e - Djiri">9e - Djiri</option>
+            <option value="10e - Kintélé">10e - Kintélé</option>
+          </select>
+          <input type="text" id="input-quartier-new" class="admin-input" placeholder="Nom du nouveau quartier" style="flex:1; min-width:200px;">
+          <button onclick="ajouterQuartier()" class="btn-export" style="background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);">➕ Ajouter</button>
+        </div>
+      </div>
+      <div id="admin-liste-quartiers" class="admin-liste" style="display:none;"></div>
+      <p id="admin-aucun-quartier" style="display:none; text-align:center; padding:20px; color:var(--couleur-texte-clair);">Aucun quartier trouvé.</p>
+    </section>
+
+    <!-- ✅ NOUVELLE SECTION : GESTION DES TÉMOIGNAGES (STYLE RESPONSIVE) -->
+    <section class="admin-section" id="section-temoignages" style="display:none;">
+      <div class="admin-section-header">
+        <h2 class="admin-section-titre">⭐ Gestion des Témoignages Clients</h2>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+           <button onclick="ouvrirFormAjoutTemoin()" class="btn-export" style="background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);">➕ Ajouter un témoignage</button>
+        </div>
+      </div>
+      
+      <!-- Formulaire caché par défaut -->
+      <div id="form-ajout-temoin" style="display:none; background:#f7fafc; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #e2e8f0;">
+         
+         <!-- Ligne Nom/Ville : S'empile sur mobile grâce à flex-wrap -->
+         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+            <input type="text" id="temoin-nom" class="admin-input" placeholder="Nom du client" style="flex:1; min-width:150px;">
+            <input type="text" id="temoin-ville" class="admin-input" placeholder="Ville (ex: Brazzaville)" style="flex:1; min-width:150px;">
+         </div>
+         
+         <textarea id="temoin-message" class="admin-input" rows="3" placeholder="Message du témoignage..." style="width:100%; margin-bottom:10px; box-sizing:border-box;"></textarea>
+         
+         <!-- Ligne Note/Boutons : S'empile sur mobile -->
+         <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <div style="display:flex; align-items:center; gap:5px;">
+                <label style="font-weight:600; font-size:14px;">Note:</label>
+                <select id="temoin-note" class="admin-input" style="width:auto; min-width:80px;">
+                   <option value="5">⭐⭐⭐⭐⭐</option>
+                   <option value="4">⭐⭐⭐⭐</option>
+                   <option value="3">⭐⭐⭐</option>
+                   <option value="2">⭐⭐</option>
+                   <option value="1">⭐</option>
+                </select>
+            </div>
+            
+            <div style="display:flex; gap:10px; flex:1; justify-content:flex-end; flex-wrap:wrap;">
+                <button onclick="sauvegarderTemoin()" class="btn-export" style="background:#3182ce; flex-shrink:0;">Valider & Sauvegarder</button>
+                <button onclick="fermerFormAjoutTemoin()" class="btn-export" style="background:#718096; flex-shrink:0;">Annuler</button>
+            </div>
+         </div>
+      </div>
+
+      <div id="admin-liste-temoins" class="admin-liste" style="display:none;"></div>
+      <p id="admin-aucun-temoin" style="display:none; text-align:center; padding:20px; color:var(--couleur-texte-clair);">Aucun témoignage enregistré.</p>
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-item"><span class="bottom-nav-icone">🏠</span><span class="bottom-nav-texte">Accueil</span></a>
+    <a href="carte.html" class="bottom-nav-item"><span class="bottom-nav-icone">🗺️</span><span class="bottom-nav-texte">Carte</span></a>
+    <a href="mes-annonces.html" class="bottom-nav-item"><span class="bottom-nav-icone">📋</span><span class="bottom-nav-texte">Mes annonces</span></a>
+    <a href="favoris.html" class="bottom-nav-item"><span class="bottom-nav-icone">❤️</span><span class="bottom-nav-texte">Favoris</span></a>
+    <a href="plus.html" class="bottom-nav-item"><span class="bottom-nav-icone">⚙️</span><span class="bottom-nav-texte">Plus</span></a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <script>
+    (function() {
+      const SUPABASE_URL = 'https://buymgwahouwcwwgdiogn.supabase.co';
+      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDYyODQxOSwiZXhwIjoyMTA2MjA0NDE5fQ.4m7vMaiQvDEV5NtptuGlGcdh4gcxNMxHdD-8sPo6M4k';
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      const EMAIL_ADMIN = 'josuechampush@gmail.com';
+      
+      async function verifierAccesAdmin() {
+        const { data: { user }, error } = await supabase.auth.getUser();
+        if (error || !user) {
+          document.getElementById('acces-refuse').style.display = 'flex';
+          document.getElementById('contenu-admin').style.display = 'none';
+          return false;
+        }
+        if (user.email !== EMAIL_ADMIN) {
+          document.getElementById('acces-refuse').style.display = 'flex';
+          document.getElementById('contenu-admin').style.display = 'none';
+          return false;
+        }
+        document.getElementById('acces-refuse').style.display = 'none';
+        document.getElementById('contenu-admin').style.display = 'block';
+        return true;
+      }
+      verifierAccesAdmin();
+    })();
+  </script>
+  
+  <script src="js/theme.js"></script>
+  <script src="js/header.js"></script>
+  <script src="js/footer.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

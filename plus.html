@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plus — Braza-Immobilier</title>
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/plus.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/bottom-nav.css">
+</head>
+
+<body>
+
+  <header class="header-pro">
+    <div class="header-contenu">
+      <div class="header-logo">
+        <h1 class="site-nom">
+          Braza<span class="separateur">–</span>Immobilier
+        </h1>
+        <p class="site-slogan">Trouvez votre logement idéal à Brazzaville</p>
+      </div>
+      <div class="header-actions">
+        <button id="btn-theme" class="btn-theme" title="Changer de thème">🌙</button>
+        <a href="index.html" class="btn-publier-pro">
+          <span class="btn-icone">←</span>
+          <span class="btn-texte">Retour</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="plus-page">
+    
+    <div class="page-header">
+      <h2 class="page-titre">⚙️ Plus</h2>
+      <p class="page-description">Paramètres et informations</p>
+    </div>
+
+    <!-- Section : Apparence -->
+    <div class="plus-section">
+      <div class="plus-section-header">
+        <span class="plus-section-icone">🎨</span>
+        <div>
+          <h3 class="plus-section-titre">Apparence</h3>
+          <p class="plus-section-sous-titre">Personnalisez l'interface</p>
+        </div>
+      </div>
+      
+      <div class="plus-option">
+        <div class="plus-option-info">
+          <span class="plus-option-icone">🌙</span>
+          <div>
+            <p class="plus-option-titre">Mode sombre</p>
+            <p class="plus-option-description">Réduire la luminosité de l'écran</p>
+          </div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="switch-theme">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Section : Mes activités (NOUVEAU) -->
+    <div class="plus-section">
+      <div class="plus-section-header">
+        <span class="plus-section-icone">🕐</span>
+        <div>
+          <h3 class="plus-section-titre">Mes activités</h3>
+          <p class="plus-section-sous-titre">Retrouvez vos recherches</p>
+        </div>
+      </div>
+      
+      <a href="historique.html" class="plus-action-btn">
+        <span class="plus-action-icone">🕐</span>
+        <span>Historique de navigation</span>
+        <span class="plus-action-arrow">→</span>
+      </a>
+    </div>
+
+    <!-- Section : Données -->
+    <div class="plus-section">
+      <div class="plus-section-header">
+        <span class="plus-section-icone">💾</span>
+        <div>
+          <h3 class="plus-section-titre">Données</h3>
+          <p class="plus-section-sous-titre">Gérez vos données locales</p>
+        </div>
+      </div>
+      
+      <button id="btn-vider-cache" class="plus-action-btn">
+        <span class="plus-action-icone">🗑️</span>
+        <span>Vider le cache</span>
+        <span class="plus-action-arrow">→</span>
+      </button>
+
+      <button id="btn-voir-stats" class="plus-action-btn">
+        <span class="plus-action-icone">📊</span>
+        <span>Voir les statistiques</span>
+        <span class="plus-action-arrow">→</span>
+      </button>
+    </div>
+
+    <!-- Section : À propos -->
+    <div class="plus-section">
+      <div class="plus-section-header">
+        <span class="plus-section-icone">ℹ️</span>
+        <div>
+          <h3 class="plus-section-titre">À propos</h3>
+          <p class="plus-section-sous-titre">Informations sur l'application</p>
+        </div>
+      </div>
+      
+      <a href="a-propos.html" class="plus-action-btn">
+        <span class="plus-action-icone">🏙️</span>
+        <span>À propos du site</span>
+        <span class="plus-action-arrow">→</span>
+      </a>
+      
+      <div class="plus-info-item">
+        <span class="plus-info-label">Version</span>
+        <span class="plus-info-value">1.0.0</span>
+      </div>
+
+      <div class="plus-info-item">
+        <span class="plus-info-label">Développeur</span>
+        <span class="plus-info-value">Josué Champush</span>
+      </div>
+
+      <div class="plus-info-item">
+        <span class="plus-info-label">Dernière mise à jour</span>
+        <span class="plus-info-value">30 septembre 2026</span>
+      </div>
+    </div>
+
+    <!-- Section : Administration -->
+    <div class="plus-section">
+      <div class="plus-section-header">
+        <span class="plus-section-icone">🛡️</span>
+        <div>
+          <h3 class="plus-section-titre">Administration</h3>
+          <p class="plus-section-sous-titre">Réservé à l'administrateur</p>
+        </div>
+      </div>
+      
+      <a href="admin.html" class="plus-action-btn bouton-admin-jaune">
+        <span class="plus-action-icone">📊</span>
+        <span>Tableau de bord admin</span>
+        <span class="plus-action-arrow">→</span>
+      </a>
+    </div>
+
+    <!-- Section : Contact -->
+    <div class="plus-section">
+      <div class="plus-section-header">
+        <span class="plus-section-icone">📞</span>
+        <div>
+          <h3 class="plus-section-titre">Contact</h3>
+          <p class="plus-section-sous-titre">Besoin d'aide ?</p>
+        </div>
+      </div>
+      
+      <a href="https://wa.me/242064625730" class="plus-action-btn" target="_blank">
+        <span class="plus-action-icone">💬</span>
+        <span>Contacter le support</span>
+        <span class="plus-action-arrow">→</span>
+      </a>
+
+      <a href="mailto:josuechampush@gmail.com" class="plus-action-btn">
+        <span class="plus-action-icone">📧</span>
+        <span>Envoyer un email</span>
+        <span class="plus-action-arrow">→</span>
+      </a>
+    </div>
+
+    <!-- Section : Légal -->
+    <div class="plus-section">
+      <div class="plus-section-header">
+        <span class="plus-section-icone">⚖️</span>
+        <div>
+          <h3 class="plus-section-titre">Légal</h3>
+          <p class="plus-section-sous-titre">Conditions et politique</p>
+        </div>
+      </div>
+      
+      <button class="plus-action-btn" onclick="alert('Conditions d\\'utilisation :\n\n1. Les annonces doivent être véridiques\n2. Respectez les autres utilisateurs\n3. Pas de contenu illégal\n4. Signalez les abus')">
+        <span class="plus-action-icone">📄</span>
+        <span>Conditions d'utilisation</span>
+        <span class="plus-action-arrow">→</span>
+      </button>
+
+      <button class="plus-action-btn" onclick="alert('Politique de confidentialité :\n\nNous ne partageons pas vos données personnelles.\nVos annonces sont visibles publiquement.\nVos favoris et historique sont stockés localement.')">
+        <span class="plus-action-icone">🔒</span>
+        <span>Politique de confidentialité</span>
+        <span class="plus-action-arrow">→</span>
+      </button>
+    </div>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">🏠</span>
+      <span class="bottom-nav-texte">Accueil</span>
+    </a>
+    <a href="carte.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">🗺️</span>
+      <span class="bottom-nav-texte">Carte</span>
+    </a>
+    <a href="mes-annonces.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">📋</span>
+      <span class="bottom-nav-texte">Mes annonces</span>
+    </a>
+    <a href="favoris.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">❤️</span>
+      <span class="bottom-nav-texte">Favoris</span>
+    </a>
+    <a href="plus.html" class="bottom-nav-item actif">
+      <span class="bottom-nav-icone">⚙️</span>
+      <span class="bottom-nav-texte">Plus</span>
+    </a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/plus.js"></script>
+  <script src="js/header.js"></script>
+  <script src="js/footer.js"></script>
+
+</body>
+</html>

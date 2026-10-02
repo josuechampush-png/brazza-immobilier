@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Détail annonce — Braza-Immobilier</title>
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/detail.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/bottom-nav.css">
+  
+  <style>
+    /* ✅ STYLE POUR LE BADGE VÉRIFIÉ */
+    .badge-anonce-verifiee {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #c6f6d5;
+      color: #2f855a;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 8px;
+      border: 1px solid #9ae6b4;
+    }
+    .badge-anonce-verifiee::before {
+      content: "✔";
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header-pro">
+    <div class="header-contenu">
+      <div class="header-logo">
+        <h1 class="site-nom">Braza<span class="separateur">–</span>Immobilier</h1>
+        <p class="site-slogan">Trouvez votre logement idéal à Brazzaville</p>
+      </div>
+      <div class="header-actions">
+        <button id="btn-theme" class="btn-theme" title="Changer de thème">🌙</button>
+        <a href="index.html" class="btn-publier-pro">
+          <span class="btn-icone">←</span>
+          <span class="btn-texte">Retour</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="detail">
+    <div class="carrousel-wrapper">
+      <div id="carrousel" class="carrousel"></div>
+      <div id="indicateurs" class="indicateurs"></div>
+      <div id="compteur-photos" class="compteur-photos"></div>
+    </div>
+
+    <div class="detail-actions">
+      <button id="btn-favori-detail" class="btn-action-detail">❤️ Favori</button>
+      <button id="btn-partage-detail" class="btn-action-detail">📤 Partager</button>
+      <button id="btn-signaler-detail" class="btn-action-detail">🚨 Signaler</button>
+    </div>
+
+    <!-- ✅ MODALE POSITIONNÉE JUSTE EN DESSOUS DU BOUTON -->
+    <div id="modal-signalement" style="display:none; margin:10px 0; padding:20px; background:var(--couleur-carte, white); border:1px solid #e2e8f0; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h3 style="margin:0; font-size:18px; color:#e53e3e;">🚨 Signaler cette annonce</h3>
+        <button id="fermer-modal" style="background:none; border:none; font-size:24px; cursor:pointer; color:#718096;">✕</button>
+      </div>
+      
+      <p style="font-size:14px; color:#64748b; margin-bottom:15px;">
+        Votre signalement est anonyme pour le propriétaire, mais nous le vérifierons immédiatement.
+      </p>
+      
+      <label style="font-weight:600; font-size:14px; display:block; margin-bottom:5px;">Motif du signalement *</label>
+      <select id="signalement-motif" style="width:100%; padding:10px; border:1px solid #cbd5e0; border-radius:6px; margin-bottom:15px;">
+        <option value="Arnaque / Fausse annonce">🚨 Arnaque / Fausse annonce</option>
+        <option value="Prix incorrect ou trompeur">💰 Prix incorrect ou trompeur</option>
+        <option value="Photos volées ou ne correspondant pas">📸 Photos volées ou ne correspondant pas</option>
+        <option value="Description mensongère">📝 Description mensongère</option>
+        <option value="Bien déjà loué/vendu">❌ Bien déjà loué/vendu</option>
+        <option value="Numéro injoignable">📞 Numéro injoignable</option>
+        <option value="Autre">⚠️ Autre</option>
+      </select>
+
+      <label style="font-weight:600; font-size:14px; display:block; margin-bottom:5px;">Commentaire (optionnel)</label>
+      <textarea id="signalement-commentaire" rows="3" placeholder="Donnez plus de détails..." style="width:100%; padding:10px; border:1px solid #cbd5e0; border-radius:6px; margin-bottom:15px; resize:vertical;"></textarea>
+
+      <button id="btn-envoyer-signalement" class="btn-action-detail" style="width:100%; justify-content:center; background:#fed7d7; color:#c53030;">
+        Envoyer le signalement
+      </button>
+      
+      <p id="msg-signalement" style="margin-top:15px; font-size:14px; font-weight:600; text-align:center; display:none;"></p>
+    </div>
+
+    <div class="stats-vues">
+      <span class="stats-icon">👁️</span>
+      <span id="nombre-vues" class="stats-nombre">0</span>
+      <span class="stats-texte">vues</span>
+    </div>
+
+    <h2 id="detail-titre">Chargement...</h2>
+    
+    <!-- ✅ EMPLACEMENT POUR LE BADGE DE VÉRIFICATION -->
+    <div id="badge-verifie-container"></div>
+
+    <p id="detail-prix" class="prix-detail"></p>
+
+    <div class="infos-detail">
+      <p id="detail-quartier"></p>
+      <p id="detail-adresse"></p>
+      <p id="detail-pieces"></p>
+      <p id="detail-proprietaire"></p>
+      <p id="detail-temps"></p>
+    </div>
+
+    <div class="bloc-description">
+      <h3>Description</h3>
+      <p id="detail-description"></p>
+    </div>
+
+    <a id="btn-whatsapp" class="btn-whatsapp-detail" href="#" target="_blank">
+      💬 Contacter le propriétaire sur WhatsApp
+    </a>
+
+    <p id="detail-introuvable" style="display:none;">
+      Annonce introuvable 😕 <br>
+      <a href="index.html">← Retour à l'accueil</a>
+    </p>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-item"><span class="bottom-nav-icone">🏠</span><span class="bottom-nav-texte">Accueil</span></a>
+    <a href="carte.html" class="bottom-nav-item"><span class="bottom-nav-icone">🗺️</span><span class="bottom-nav-texte">Carte</span></a>
+    <a href="mes-annonces.html" class="bottom-nav-item"><span class="bottom-nav-icone">📋</span><span class="bottom-nav-texte">Mes annonces</span></a>
+    <a href="favoris.html" class="bottom-nav-item"><span class="bottom-nav-icone">❤️</span><span class="bottom-nav-texte">Favoris</span></a>
+    <a href="plus.html" class="bottom-nav-item"><span class="bottom-nav-icone">⚙️</span><span class="bottom-nav-texte">Plus</span></a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/detail.js"></script>
+  <script src="js/header.js"></script>
+  <script src="js/footer.js"></script>
+  <link rel="stylesheet" href="css/chatbot.css">
+  <script src="js/chatbot.js"></script>
+  <link rel="stylesheet" href="css/lightbox.css">
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const SUPABASE_URL = 'https://buymgwahouwcwwgdiogn.supabase.co';
+      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDYyODQxOSwiZXhwIjoyMTA2MjA0NDE5fQ.4m7vMaiQvDEV5NtptuGlGcdh4gcxNMxHdD-8sPo6M4k';
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+      const btnSignaler = document.getElementById("btn-signaler-detail");
+      const modal = document.getElementById("modal-signalement");
+      const btnFermer = document.getElementById("fermer-modal");
+      const btnEnvoyer = document.getElementById("btn-envoyer-signalement");
+      const msgStatus = document.getElementById("msg-signalement");
+      const badgeContainer = document.getElementById("badge-verifie-container"); // ✅ Élément ajouté
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const annonceId = urlParams.get('id');
+
+      function afficherMessage(texte, estErreur) {
+        msgStatus.textContent = texte;
+        msgStatus.style.color = estErreur ? "#e53e3e" : "#38a169";
+        msgStatus.style.display = "block";
+      }
+
+      // ✅ LOGIQUE AFFICHAGE BADGE VERIFIE
+      async function verifierBadgeAnnonce() {
+        if (!annonceId || !badgeContainer) return;
+        
+        const { data, error } = await supabase
+          .from('annonces')
+          .select('est_verifiee')
+          .eq('id', parseInt(annonceId))
+          .single();
+
+        if (!error && data && data.est_verifiee === true) {
+          badgeContainer.innerHTML = '<span class="badge-anonce-verifiee">Annonce Vérifiée par Braza-Immobilier</span>';
+        } else {
+          badgeContainer.innerHTML = ''; // Cache si non vérifié
+        }
+      }
+      verifierBadgeAnnonce();
+
+      // Vérifier si déjà signalé
+      async function verifierSignalement() {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user && annonceId) {
+          const { data } = await supabase
+            .from('signalements')
+            .select('id')
+            .eq('annonce_id', parseInt(annonceId))
+            .eq('utilisateur_id', user.id)
+            .limit(1);
+          
+          if (data && data.length > 0) {
+            btnSignaler.style.setProperty("background", "#fc8181", "important");
+            btnSignaler.style.setProperty("color", "white", "important");
+            btnSignaler.innerHTML = "🚨 Déjà signalé";
+            btnSignaler.disabled = true;
+          }
+        }
+      }
+      verifierSignalement();
+
+      // ✅ TOGGLE : Cliquer = affiche/cache la modale
+      if (btnSignaler) {
+        btnSignaler.addEventListener("click", async function() {
+          if (btnSignaler.disabled) return;
+
+          const { data: { user }, error } = await supabase.auth.getUser();
+          if (error || !user) {
+            afficherMessage("🔒 Connectez-vous pour signaler.", true);
+            setTimeout(() => { msgStatus.style.display = "none"; }, 3000);
+            return;
+          }
+          
+          // Toggle : si visible, cacher ; sinon, afficher
+          if (modal.style.display === 'block') {
+            modal.style.display = "none";
+          } else {
+            modal.style.display = "block";
+            msgStatus.style.display = "none";
+          }
+        });
+      }
+
+      // Fermer avec le bouton X
+      if (btnFermer) {
+        btnFermer.addEventListener("click", function() {
+          modal.style.display = "none";
+          msgStatus.style.display = "none";
+        });
+      }
+
+      // Envoyer le signalement
+      if (btnEnvoyer) {
+        btnEnvoyer.addEventListener("click", async function() {
+          const motif = document.getElementById("signalement-motif").value;
+          const commentaire = document.getElementById("signalement-commentaire").value;
+          const { data: { user } } = await supabase.auth.getUser();
+
+          if (!annonceId) {
+            afficherMessage("Erreur : ID annonce introuvable.", true);
+            return;
+          }
+
+          btnEnvoyer.textContent = "Envoi en cours...";
+          btnEnvoyer.disabled = true;
+          msgStatus.style.display = "none";
+
+          const { data, error } = await supabase.from('signalements').insert({
+            annonce_id: parseInt(annonceId),
+            utilisateur_id: user ? user.id : null,
+            email_utilisateur: user ? user.email : 'Anonyme',
+            motif: motif,
+            commentaire: commentaire,
+            statut: 'en attente'
+          });
+
+          if (error) {
+            afficherMessage("❌ Échec : " + error.message, true);
+            btnEnvoyer.textContent = "Envoyer le signalement";
+            btnEnvoyer.disabled = false;
+          } else {
+            afficherMessage("✅ Signalement envoyé avec succès !", false);
+            
+            btnSignaler.style.setProperty("background", "#fc8181", "important");
+            btnSignaler.style.setProperty("color", "white", "important");
+            btnSignaler.innerHTML = "🚨 Déjà signalé";
+            btnSignaler.disabled = true;
+
+            setTimeout(() => {
+              modal.style.display = "none";
+              document.getElementById("signalement-commentaire").value = "";
+              btnEnvoyer.textContent = "Envoyer le signalement";
+              btnEnvoyer.disabled = false;
+            }, 1500);
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

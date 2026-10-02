@@ -1,0 +1,1543 @@
+/* ==================================================
+   style.css — BRAZA-IMMOBILIER
+   Design professionnel avec header RÉDUIT (2/3)
+   Menu de navigation avec bordures arrondies
+   Formulaire stylé avec sections colorées
+   ================================================== */
+
+/* ==================================================
+   1. RESET & VARIABLES CSS
+   ================================================== */
+
+* {
+  margin: 0;              /* Pas de marge extérieure */
+  padding: 0;             /* Pas de marge intérieure */
+  box-sizing: border-box; /* Bordures incluses dans largeur/hauteur */
+}
+
+:root {
+  --couleur-primaire: #1e3a5f;      /* Bleu foncé principal */
+  --couleur-secondaire: #2c5282;    /* Bleu secondaire */
+  --couleur-accent: #3182ce;        /* Bleu clair pour liens */
+  --couleur-succes: #38a169;        /* Vert pour prix et WhatsApp */
+  --couleur-texte: #2d3748;         /* Gris foncé pour texte */
+  --couleur-texte-clair: #718096;   /* Gris clair pour infos */
+  --couleur-fond: #f7fafc;          /* Fond gris très clair */
+  --couleur-carte: #ffffff;         /* Blanc pour cartes */
+  --couleur-info: #4299e1;          /* Bleu info */
+  --couleur-warning: #ed8936;       /* Orange warning */
+  --couleur-danger: #e53e3e;        /* Rouge danger */
+  --ombre-legere: 0 1px 3px rgba(0,0,0,0.12);      /* Ombre subtile */
+  --ombre-moyenne: 0 4px 6px rgba(0,0,0,0.1);      /* Ombre moyenne */
+  --ombre-forte: 0 10px 15px rgba(0,0,0,0.1);      /* Ombre forte au hover */
+  --rayon-bord: 8px;                               /* Arrondi bordures */
+  --transition: all 0.3s ease;                     /* Animation fluide */
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--couleur-fond);    /* Fond gris clair */
+  max-width: 600px;                   /* Largeur max pour mobile */
+  margin: 0 auto;                     /* Centré horizontalement */
+  min-height: 100vh;                  /* Hauteur minimum = écran complet */
+  color: var(--couleur-texte);        /* Couleur du texte */
+  line-height: 1.6;                   /* Espacement entre lignes */
+  transition: background 0.3s ease, color 0.3s ease; /* Transition pour mode sombre */
+}
+
+/* ==================================================
+   2. MODE SOMBRE
+   ================================================== */
+
+body.theme-sombre {
+  --couleur-fond: #1a202c;            /* Fond sombre */
+  --couleur-carte: #2d3748;           /* Cartes sombres */
+  --couleur-texte: #e2e8f0;           /* Texte clair */
+  --couleur-texte-clair: #a0aec0;     /* Texte secondaire clair */
+}
+
+/* ==================================================
+   3. HEADER PROFESSIONNEL — RÉDUIT À 2/3
+   ================================================== */
+
+.header-pro {
+  background: linear-gradient(135deg, var(--couleur-primaire) 0%, var(--couleur-secondaire) 100%);
+  color: white;                        /* Texte blanc */
+  position: fixed;                     /* Position fixe */
+  top: 0;                              /* Collé en haut */
+  left: 50%;                           /* Centré horizontalement */
+  transform: translateX(-50%);         /* Correction centrage */
+  width: 100%;                         /* Pleine largeur */
+  max-width: 600px;                    /* Max 600px */
+  z-index: 100;                        /* Au-dessus des autres */
+  box-shadow: var(--ombre-forte);      /* Ombre forte */
+}
+
+/* Conteneur du header — RÉDUIT À 2/3 */
+.header-contenu {
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  justify-content: space-between;      /* Espace entre logo et actions */
+  padding: 7px 10px;                   /* RÉDUIT : était 10px 14px */
+  gap: 8px;                            /* RÉDUIT : était 10px */
+}
+
+/* Logo et nom du site */
+.header-logo {
+  flex: 1;                             /* Prend l'espace disponible */
+}
+
+/* Nom du site — RÉDUIT À 2/3 */
+.site-nom {
+  font-size: 12px;                     /* RÉDUIT : était 17px */
+  font-weight: 700;                    /* Très gras */
+  letter-spacing: -0.3px;              /* Espacement lettres RÉDUIT */
+  margin-bottom: 0;                    /* RÉDUIT : était 1px */
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  gap: 0;                              /* Pas d'espace entre les mots */
+}
+
+/* Séparateur : TIRET D'UNION — RÉDUIT */
+.separateur {
+  color: var(--couleur-accent);        /* Bleu clair */
+  margin: 0 3px;                       /* RÉDUIT : était 0 4px */
+  font-weight: 300;                    /* Léger */
+  font-size: 14px;                     /* RÉDUIT : était 19px */
+}
+
+/* Slogan du site — RÉDUIT À 2/3 */
+.site-slogan {
+  font-size: 8px;                      /* RÉDUIT : était 10px */
+  color: rgba(255, 255, 255, 0.8);     /* Blanc transparent */
+  font-weight: 400;                    /* Normal */
+  letter-spacing: 0.2px;               /* RÉDUIT : était 0.3px */
+}
+
+/* Actions du header */
+.header-actions {
+  display: flex;                       /* Mode flexbox */
+  gap: 5px;                            /* RÉDUIT : était 6px */
+  align-items: center;                 /* Centré verticalement */
+}
+
+/* Bouton thème — RÉDUIT À 2/3 */
+.btn-theme {
+  background: rgba(255, 255, 255, 0.15); /* Fond blanc transparent */
+  color: white;                        /* Texte blanc */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Bordure blanche */
+  width: 24px;                         /* RÉDUIT : était 32px */
+  height: 24px;                        /* RÉDUIT : était 32px */
+  border-radius: 50%;                  /* Rond */
+  font-size: 12px;                     /* RÉDUIT : était 16px */
+  cursor: pointer;                     /* Curseur main */
+  transition: var(--transition);       /* Animation */
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  justify-content: center;             /* Centré horizontalement */
+}
+
+.btn-theme:hover {
+  background: rgba(255, 255, 255, 0.25); /* Plus opaque au survol */
+  transform: scale(1.05);              /* Agrandit légèrement */
+}
+
+/* Bouton publier professionnel — RÉDUIT À 2/3 */
+.btn-publier-pro {
+  background: white !important;        /* Fond blanc FORCÉ */
+  color: var(--couleur-primaire) !important; /* Texte bleu foncé FORCÉ */
+  padding: 5px 10px !important;        /* RÉDUIT : était 8px 14px */
+  border-radius: 16px !important;      /* RÉDUIT : était 20px */
+  text-decoration: none !important;    /* Pas de soulignement FORCÉ */
+  font-size: 10px !important;          /* RÉDUIT : était 12px */
+  font-weight: 700 !important;         /* Très gras FORCÉ */
+  transition: var(--transition);       /* Animation */
+  display: flex !important;            /* Mode flexbox FORCÉ */
+  align-items: center !important;      /* Centré verticalement */
+  gap: 3px !important;                 /* RÉDUIT : était 4px */
+  box-shadow: var(--ombre-moyenne) !important; /* Ombre */
+  border: none !important;             /* Pas de bordure */
+  cursor: pointer;                     /* Curseur main */
+  white-space: nowrap;                 /* Texte sur une ligne */
+}
+
+.btn-publier-pro:hover {
+  transform: translateY(-2px) !important; /* Monte au survol */
+  box-shadow: var(--ombre-forte) !important; /* Ombre forte */
+  background: #f7fafc !important;      /* Fond gris très clair */
+}
+
+.btn-publier-pro:active {
+  transform: translateY(0) !important; /* Redescend au clic */
+}
+
+/* Icône du bouton — RÉDUITE */
+.btn-icone {
+  font-size: 11px;                     /* RÉDUIT : était 14px */
+  font-weight: 700;                    /* Très gras */
+}
+
+/* Texte du bouton — RÉDUIT */
+.btn-texte {
+  font-size: 10px;                     /* RÉDUIT : était 12px */
+  font-weight: 700;                    /* Très gras */
+}
+
+/* ==================================================
+   4. BARRE DE NAVIGATION — RÉDUITE À 2/3
+   ================================================== */
+
+.header-nav {
+  background: rgba(0, 0, 0, 0.15);     /* Fond noir transparent */
+  margin: 0 8px 6px 8px;               /* RÉDUIT : était 0 10px 8px 10px */
+  border-radius: 12px;                 /* RÉDUIT : était 14px */
+  padding: 3px;                        /* RÉDUIT : était 4px */
+  overflow: hidden;                    /* Cache les débordements */
+}
+
+/* Menu de navigation */
+.nav-menu {
+  display: flex;                       /* Mode flexbox */
+  list-style: none;                    /* Pas de puces */
+  justify-content: space-around;       /* Espace égal entre items */
+  padding: 0;                          /* Pas de padding */
+  margin: 0;                           /* Pas de marge */
+  background: rgba(255, 255, 255, 0.08); /* Fond blanc léger à l'intérieur */
+  border-radius: 9px;                  /* RÉDUIT : était 10px */
+  overflow: hidden;                    /* Cache les débordements */
+}
+
+/* Item de navigation */
+.nav-item {
+  flex: 1;                             /* Même largeur */
+}
+
+/* Lien de navigation — RÉDUIT À 2/3 */
+.nav-link {
+  display: flex;                       /* Mode flexbox */
+  flex-direction: column;              /* Icône au-dessus du texte */
+  align-items: center;                 /* Centré horizontalement */
+  padding: 4px 4px;                    /* RÉDUIT : était 6px 6px */
+  color: rgba(255, 255, 255, 0.85);    /* Blanc transparent */
+  text-decoration: none;               /* Pas de soulignement */
+  font-size: 8px;                      /* RÉDUIT : était 10px */
+  transition: var(--transition);       /* Animation */
+  border-radius: 6px;                  /* RÉDUIT : était 8px */
+  margin: 1px;                         /* RÉDUIT : était 2px */
+}
+
+.nav-link:hover {
+  color: white;                        /* Blanc pur au survol */
+  background: rgba(255, 255, 255, 0.1); /* Fond blanc transparent */
+}
+
+/* Lien actif */
+.nav-link.actif {
+  color: white;                        /* Blanc pur */
+  font-weight: 600;                    /* Gras */
+  background: rgba(255, 255, 255, 0.2); /* Fond plus visible */
+}
+
+/* Icône de navigation — RÉDUITE */
+.nav-icone {
+  font-size: 11px;                     /* RÉDUIT : était 15px */
+  margin-bottom: 0;                    /* RÉDUIT : était 1px */
+}
+
+/* Texte de navigation — RÉDUIT */
+.nav-texte {
+  font-size: 7px;                      /* RÉDUIT : était 9px */
+  letter-spacing: 0.2px;               /* RÉDUIT : était 0.3px */
+}
+
+/* ==================================================
+   5. SECTION INTRODUCTION (HERO) — PAGE ACCUEIL
+   ================================================== */
+
+.hero-section {
+  background: linear-gradient(135deg, var(--couleur-primaire) 0%, var(--couleur-secondaire) 100%);
+  color: white;                        /* Texte blanc */
+  padding: 50px 24px 40px;             /* RÉDUIT : était 60px 24px 50px */
+  margin-top: 65px;                    /* RÉDUIT : était 95px (header plus petit) */
+  text-align: center;                  /* Texte centré */
+}
+
+/* Contenu de l'introduction */
+.hero-contenu {
+  max-width: 500px;                    /* Largeur max */
+  margin: 0 auto;                      /* Centré horizontalement */
+}
+
+/* Titre principal */
+.hero-titre {
+  font-size: 22px;                     /* RÉDUIT : était 24px */
+  font-weight: 700;                    /* Très gras */
+  margin-bottom: 14px;                 /* RÉDUIT : était 16px */
+  line-height: 1.3;                    /* Espacement lignes */
+  letter-spacing: -0.5px;              /* Espacement lettres */
+}
+
+/* Description du site */
+.hero-description {
+  font-size: 13px;                     /* RÉDUIT : était 14px */
+  line-height: 1.6;                    /* Espacement lignes */
+  color: rgba(255, 255, 255, 0.9);     /* Blanc transparent */
+  margin-bottom: 20px;                 /* RÉDUIT : était 24px */
+}
+
+/* ==================================================
+   6. SECTION INTRODUCTION DU FORMULAIRE
+   ================================================== */
+
+.form-hero {
+  background: linear-gradient(135deg, var(--couleur-primaire) 0%, var(--couleur-secondaire) 100%);
+  color: white;                        /* Texte blanc */
+  padding: 24px 20px 20px;             /* RÉDUIT : était 30px 20px 24px */
+  margin-top: 50px;                    /* RÉDUIT : était 70px (header plus petit) */
+  text-align: center;                  /* Texte centré */
+  border-radius: 0 0 24px 24px;        /* Bords arrondis en bas */
+  box-shadow: var(--ombre-moyenne);    /* Ombre */
+}
+
+/* Icône principale du formulaire */
+.form-hero-icone {
+  font-size: 40px;                     /* RÉDUIT : était 48px */
+  margin-bottom: 10px;                 /* RÉDUIT : était 12px */
+  display: inline-block;               /* En ligne */
+  background: rgba(255, 255, 255, 0.15); /* Fond blanc transparent */
+  width: 68px;                         /* RÉDUIT : était 80px */
+  height: 68px;                        /* RÉDUIT : était 80px */
+  line-height: 68px;                   /* RÉDUIT : était 80px */
+  border-radius: 50%;                  /* Rond */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Ombre */
+}
+
+/* Titre du formulaire */
+.form-hero-titre {
+  font-size: 19px;                     /* RÉDUIT : était 22px */
+  font-weight: 700;                    /* Très gras */
+  margin-bottom: 6px;                  /* RÉDUIT : était 8px */
+  letter-spacing: -0.5px;              /* Espacement lettres */
+}
+
+/* Description du formulaire */
+.form-hero-description {
+  font-size: 12px;                     /* RÉDUIT : était 13px */
+  line-height: 1.5;                    /* Espacement lignes */
+  color: rgba(255, 255, 255, 0.9);     /* Blanc transparent */
+  margin-bottom: 16px;                 /* RÉDUIT : était 20px */
+  max-width: 400px;                    /* Largeur max */
+  margin-left: auto;                   /* Centré horizontalement */
+  margin-right: auto;                  /* Centré horizontalement */
+}
+
+/* Indicateurs d'étapes */
+.form-etapes {
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  justify-content: center;             /* Centré horizontalement */
+  gap: 6px;                            /* RÉDUIT : était 8px */
+  margin-top: 12px;                    /* RÉDUIT : était 16px */
+}
+
+/* Étape individuelle */
+.etape {
+  display: flex;                       /* Mode flexbox */
+  flex-direction: column;              /* Numéro au-dessus du label */
+  align-items: center;                 /* Centré horizontalement */
+  gap: 3px;                            /* RÉDUIT : était 4px */
+}
+
+/* Numéro d'étape */
+.etape-numero {
+  width: 24px;                         /* RÉDUIT : était 28px */
+  height: 24px;                        /* RÉDUIT : était 28px */
+  border-radius: 50%;                  /* Rond */
+  background: rgba(255, 255, 255, 0.25); /* Fond blanc transparent */
+  color: white;                        /* Texte blanc */
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  justify-content: center;             /* Centré horizontalement */
+  font-size: 11px;                     /* RÉDUIT : était 13px */
+  font-weight: 700;                    /* Très gras */
+  border: 2px solid rgba(255, 255, 255, 0.4); /* Bordure */
+}
+
+/* Étape active */
+.etape.etape-active .etape-numero {
+  background: white;                   /* Fond blanc */
+  color: var(--couleur-primaire);      /* Texte bleu */
+  border-color: white;                 /* Bordure blanche */
+}
+
+/* Label d'étape */
+.etape-label {
+  font-size: 9px;                      /* RÉDUIT : était 10px */
+  color: rgba(255, 255, 255, 0.8);     /* Blanc transparent */
+  text-transform: uppercase;           /* Majuscules */
+  letter-spacing: 0.5px;               /* Espacement lettres */
+  font-weight: 600;                    /* Gras */
+}
+
+/* Ligne entre les étapes */
+.etape-ligne {
+  width: 24px;                         /* RÉDUIT : était 30px */
+  height: 2px;                         /* Hauteur fine */
+  background: rgba(255, 255, 255, 0.3); /* Fond blanc transparent */
+  margin-bottom: 16px;                 /* RÉDUIT : était 18px */
+}
+
+/* ==================================================
+   7. FORMULAIRE — SECTIONS COLORÉES
+   ================================================== */
+
+.formulaire {
+  background: var(--couleur-fond);     /* Fond gris clair */
+  padding: 16px;                       /* Espace intérieur */
+  display: flex;                       /* Mode flexbox */
+  flex-direction: column;              /* Éléments empilés */
+  gap: 16px;                           /* Espace entre sections */
+}
+
+/* Section individuelle du formulaire */
+.form-section {
+  background: var(--couleur-carte);    /* Fond blanc */
+  border-radius: 12px;                 /* Bords arrondis */
+  padding: 16px;                       /* Espace intérieur */
+  box-shadow: var(--ombre-legere);     /* Ombre subtile */
+  border: 1px solid #e2e8f0;           /* Bordure grise claire */
+}
+
+/* En-tête de section */
+.form-section-header {
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  gap: 12px;                           /* Espace entre icône et texte */
+  padding-bottom: 12px;                /* Espace en bas */
+  margin-bottom: 16px;                 /* Espace en bas */
+  border-bottom: 2px solid #edf2f7;    /* Ligne de séparation */
+}
+
+/* Icône de section */
+.form-section-icone {
+  font-size: 28px;                     /* Grande taille */
+  width: 48px;                         /* Largeur fixe */
+  height: 48px;                        /* Hauteur fixe */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Dégradé violet */
+  border-radius: 12px;                 /* Bords arrondis */
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  justify-content: center;             /* Centré horizontalement */
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3); /* Ombre colorée */
+  flex-shrink: 0;                      /* Ne se réduit pas */
+}
+
+/* Titre de section */
+.form-section-titre {
+  font-size: 16px;                     /* Taille */
+  color: var(--couleur-primaire);      /* Bleu foncé */
+  font-weight: 700;                    /* Très gras */
+  margin-bottom: 2px;                  /* Espace en bas */
+}
+
+/* Sous-titre de section */
+.form-section-sous-titre {
+  font-size: 12px;                     /* Petite taille */
+  color: var(--couleur-texte-clair);   /* Gris clair */
+  font-weight: 400;                    /* Normal */
+}
+
+/* ==================================================
+   8. GROUPES DE FORMULAIRES
+   ================================================== */
+
+/* Groupe label + input */
+.form-groupe {
+  margin-bottom: 14px;                 /* Espace en bas */
+}
+
+.form-groupe:last-child {
+  margin-bottom: 0;                    /* Pas d'espace pour le dernier */
+}
+
+/* Label stylé avec icône */
+.form-label {
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  gap: 6px;                            /* Espace entre icône et texte */
+  font-size: 13px;                     /* Taille */
+  font-weight: 600;                    /* Gras */
+  color: var(--couleur-primaire);      /* Bleu foncé */
+  margin-bottom: 6px;                  /* Espace en bas */
+}
+
+/* Icône du label */
+.label-icone {
+  font-size: 14px;                     /* Taille icône */
+}
+
+/* Marqueur obligatoire */
+.obligatoire {
+  color: var(--couleur-danger);        /* Rouge */
+  font-weight: 700;                    /* Très gras */
+}
+
+/* Input stylé */
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;                         /* Pleine largeur */
+  padding: 12px 14px;                  /* Espace intérieur */
+  border: 2px solid #e2e8f0;           /* Bordure grise */
+  border-radius: 10px;                 /* Bords arrondis */
+  font-size: 14px;                     /* Taille */
+  background: white;                   /* Fond blanc */
+  color: var(--couleur-texte);         /* Couleur du texte */
+  transition: var(--transition);       /* Animation */
+  font-family: inherit;                /* Même police */
+}
+
+/* Focus sur input */
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;                       /* Pas de contour */
+  border-color: var(--couleur-accent); /* Bordure bleue */
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1); /* Ombre bleue */
+}
+
+/* Placeholder stylé */
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #a0aec0;                      /* Gris clair */
+}
+
+/* Select avec apparence personnalisée */
+.form-select {
+  appearance: none;                    /* Enlever l'apparence par défaut */
+  -webkit-appearance: none;            /* Safari */
+  -moz-appearance: none;               /* Firefox */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3e%3cpath fill='%23718096' d='M6 8L0 0h12z'/%3e%3c/svg%3e"); /* Flèche personnalisée */
+  background-repeat: no-repeat;        /* Pas de répétition */
+  background-position: right 14px center; /* Position de la flèche */
+  padding-right: 40px;                 /* Espace pour la flèche */
+  cursor: pointer;                     /* Curseur main */
+}
+
+/* Textarea */
+.form-textarea {
+  resize: vertical;                    /* Redimensionnable verticalement */
+  min-height: 100px;                   /* Hauteur minimum */
+  font-family: inherit;                /* Même police */
+  line-height: 1.5;                    /* Espacement lignes */
+}
+
+/* Texte d'aide sous les champs */
+.form-aide {
+  display: block;                      /* Bloc */
+  font-size: 11px;                     /* Petite taille */
+  color: var(--couleur-texte-clair);   /* Gris clair */
+  margin-top: 4px;                     /* Espace en haut */
+  font-style: italic;                  /* Italique */
+}
+
+/* ==================================================
+   9. INPUTS SPÉCIAUX (PRIX, WHATSAPP)
+   ================================================== */
+
+/* Conteneur pour input avec préfixe/suffixe */
+.form-input-prix {
+  display: flex;                       /* Mode flexbox */
+  align-items: stretch;                /* Étirer verticalement */
+  border: 2px solid #e2e8f0;           /* Bordure extérieure */
+  border-radius: 10px;                 /* Bords arrondis */
+  overflow: hidden;                    /* Cache les débordements */
+  transition: var(--transition);       /* Animation */
+}
+
+/* Focus sur le conteneur */
+.form-input-prix:focus-within {
+  border-color: var(--couleur-accent); /* Bordure bleue */
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1); /* Ombre bleue */
+}
+
+/* Input à l'intérieur du conteneur */
+.form-input-prix .form-input {
+  border: none;                        /* Pas de bordure interne */
+  border-radius: 0;                    /* Pas d'arrondi */
+  flex: 1;                             /* Prend l'espace */
+}
+
+.form-input-prix .form-input:focus {
+  box-shadow: none;                    /* Pas d'ombre interne */
+}
+
+/* Préfixe (ex: +) */
+.form-input-prefixe {
+  background: #edf2f7;                 /* Fond gris clair */
+  padding: 0 14px;                     /* Espace intérieur */
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  font-size: 14px;                     /* Taille */
+  font-weight: 600;                    /* Gras */
+  color: var(--couleur-texte-clair);   /* Gris */
+  border-right: 1px solid #e2e8f0;     /* Bordure droite */
+}
+
+/* Suffixe (ex: FCFA) */
+.form-input-suffixe {
+  background: linear-gradient(135deg, var(--couleur-succes) 0%, #2f855a 100%); /* Dégradé vert */
+  padding: 0 14px;                     /* Espace intérieur */
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  font-size: 13px;                     /* Taille */
+  font-weight: 700;                    /* Très gras */
+  color: white;                        /* Texte blanc */
+  letter-spacing: 0.5px;               /* Espacement lettres */
+}
+
+/* ==================================================
+   10. MODE SOMBRE POUR LE FORMULAIRE
+   ================================================== */
+
+body.theme-sombre .form-section {
+  background: var(--couleur-carte);    /* Fond sombre */
+  border-color: #4a5568;               /* Bordure sombre */
+}
+
+body.theme-sombre .form-section-header {
+  border-bottom-color: #4a5568;        /* Ligne sombre */
+}
+
+body.theme-sombre .form-input,
+body.theme-sombre .form-select,
+body.theme-sombre .form-textarea {
+  background: #2d3748;                 /* Fond sombre */
+  color: var(--couleur-texte);         /* Texte clair */
+  border-color: #4a5568;               /* Bordure sombre */
+}
+
+body.theme-sombre .form-input-prix {
+  border-color: #4a5568;               /* Bordure sombre */
+}
+
+body.theme-sombre .form-input-prefixe {
+  background: #2d3748;                 /* Fond sombre */
+  color: var(--couleur-texte-clair);   /* Texte clair */
+  border-right-color: #4a5568;         /* Bordure sombre */
+}
+
+body.theme-sombre .form-section-icone {
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2); /* Ombre plus douce */
+}
+
+/* ==================================================
+   11. BOUTON DE VALIDATION AMÉLIORÉ
+   ================================================== */
+
+#btn-valider {
+  margin-top: 8px;                     /* Espace en haut */
+  background: linear-gradient(135deg, var(--couleur-succes) 0%, #2f855a 100%); /* Dégradé vert */
+  color: white;                        /* Texte blanc */
+  border: none;                        /* Pas de bordure */
+  padding: 16px;                       /* Espace intérieur */
+  border-radius: 12px;                 /* Bords arrondis */
+  font-size: 16px;                     /* Grande taille */
+  font-weight: 700;                    /* Très gras */
+  cursor: pointer;                     /* Curseur main */
+  transition: var(--transition);       /* Animation */
+  box-shadow: 0 4px 12px rgba(56, 161, 105, 0.3); /* Ombre verte */
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  justify-content: center;             /* Centré horizontalement */
+  gap: 8px;                            /* Espace entre icône et texte */
+}
+
+#btn-valider:hover {
+  transform: translateY(-2px);         /* Monte au survol */
+  box-shadow: 0 6px 16px rgba(56, 161, 105, 0.4); /* Ombre plus forte */
+}
+
+#btn-valider:active {
+  transform: translateY(0);            /* Redescend au clic */
+}
+
+#btn-valider:disabled {
+  opacity: 0.6;                        /* Transparence */
+  cursor: not-allowed;                 /* Curseur interdit */
+  transform: none;                     /* Pas d'animation */
+}
+
+/* Icône du bouton de validation */
+.btn-valider-icone {
+  font-size: 18px;                     /* Taille icône */
+}
+
+/* Message sous le formulaire */
+#message {
+  text-align: center;                  /* Texte centré */
+  font-size: 14px;                     /* Taille normale */
+  margin-top: 12px;                    /* Espace en haut */
+  min-height: 20px;                    /* Hauteur minimum */
+  font-weight: 600;                    /* Gras */
+  padding: 12px;                       /* Espace intérieur */
+  border-radius: 10px;                 /* Bords arrondis */
+}
+
+/* ==================================================
+   12. BARRE DE RECHERCHE ET FILTRES (ACCUEIL)
+   ================================================== */
+
+.recherche {
+  background: var(--couleur-carte);    /* Fond blanc */
+  padding: 16px;                       /* Espace intérieur */
+  display: flex;                       /* Mode flexbox */
+  flex-direction: column;              /* Éléments empilés */
+  gap: 10px;                           /* Espace entre éléments */
+  box-shadow: var(--ombre-legere);     /* Ombre subtile */
+  border-bottom: 1px solid #e2e8f0;    /* Ligne séparation */
+}
+
+/* Titre de la section recherche */
+.recherche-titre {
+  font-size: 16px;                     /* Taille du titre */
+  color: var(--couleur-primaire);      /* Bleu foncé */
+  font-weight: 600;                    /* Gras */
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  gap: 8px;                            /* Espace entre icône et texte */
+  margin-bottom: 4px;                  /* Espace en bas */
+  padding-bottom: 10px;                /* Espace intérieur bas */
+  border-bottom: 2px solid #e2e8f0;    /* Ligne séparation */
+}
+
+.recherche-icone {
+  font-size: 20px;                     /* Taille icône */
+}
+
+.recherche input,
+.recherche select {
+  padding: 10px 12px;                  /* Espace intérieur */
+  border: 1.5px solid #e2e8f0;         /* Bordure grise */
+  border-radius: 8px;                  /* Bords arrondis */
+  font-size: 14px;                     /* Taille police */
+  width: 100%;                         /* Pleine largeur */
+  background: white;                   /* Fond blanc */
+  transition: var(--transition);       /* Animation */
+  font-family: inherit;                /* Même police */
+}
+
+/* Mode sombre pour inputs */
+body.theme-sombre .recherche input,
+body.theme-sombre .recherche select {
+  background: var(--couleur-carte);    /* Fond sombre */
+  color: var(--couleur-texte);         /* Texte clair */
+  border-color: #4a5568;               /* Bordure sombre */
+}
+
+.recherche input:focus,
+.recherche select:focus {
+  outline: none;                       /* Pas de contour */
+  border-color: var(--couleur-accent); /* Bordure bleue */
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1); /* Ombre bleue */
+}
+
+.ligne-prix {
+  display: flex;                       /* Mode flexbox */
+  gap: 10px;                           /* Espace entre inputs */
+}
+
+.ligne-prix input {
+  flex: 1;                             /* Même largeur */
+}
+
+/* ==================================================
+   13. LIGNE D'ACTIONS (TRI + FAVORIS + HISTORIQUE)
+   ================================================== */
+
+.ligne-actions {
+  display: flex;                       /* Mode flexbox */
+  gap: 8px;                            /* Espace entre éléments */
+  margin-top: 4px;                     /* Espace en haut */
+}
+
+.ligne-actions select {
+  flex: 1;                             /* Prend l'espace */
+}
+
+.btn-action {
+  padding: 10px 14px;                  /* Espace intérieur */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;                        /* Texte blanc */
+  border: none;                        /* Pas de bordure */
+  border-radius: 8px;                  /* Bords arrondis */
+  font-size: 13px;                     /* Taille normale */
+  font-weight: 600;                    /* Gras */
+  cursor: pointer;                     /* Curseur main */
+  transition: var(--transition);       /* Animation */
+  white-space: nowrap;                 /* Texte sur une ligne */
+}
+
+.btn-action:hover {
+  transform: translateY(-2px);         /* Monte au survol */
+  box-shadow: var(--ombre-forte);      /* Ombre forte */
+}
+
+.btn-action.btn-actif {
+  background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%); /* Rouge quand actif */
+}
+
+/* ==================================================
+   14. GRILLE 2 COLONNES
+   ================================================== */
+
+#liste {
+  display: grid !important;            /* Mode grille FORCÉ */
+  grid-template-columns: 1fr 1fr !important; /* 2 colonnes égales */
+  gap: 10px !important;                /* Espace 10px */
+  padding: 10px !important;            /* Espace autour */
+}
+
+/* ==================================================
+   15. CARTES D'ANNONCES
+   ================================================== */
+
+.annonce {
+  background: var(--couleur-carte);    /* Fond blanc */
+  border-radius: 12px;                 /* Bords arrondis */
+  box-shadow: var(--ombre-moyenne);    /* Ombre */
+  overflow: hidden;                    /* Cache dépassements */
+  transition: var(--transition);       /* Animation */
+  margin: 0 !important;                /* PAS DE MARGE */
+  width: 100% !important;              /* Pleine largeur */
+}
+
+.annonce:hover {
+  transform: translateY(-4px);         /* Monte au survol */
+  box-shadow: var(--ombre-forte);      /* Ombre forte */
+}
+
+.carrousel {
+  display: flex;                       /* Mode flexbox */
+  overflow-x: auto;                    /* Défilement horizontal */
+  scroll-snap-type: x mandatory;       /* Snap horizontal */
+  scrollbar-width: none;               /* Cache scrollbar Firefox */
+}
+
+.carrousel::-webkit-scrollbar {
+  display: none;                       /* Cache scrollbar Chrome */
+}
+
+.carrousel img {
+  width: 100%;                         /* Pleine largeur */
+  flex-shrink: 0;                      /* Ne se réduit pas */
+  scroll-snap-align: center;           /* Centre au snap */
+  aspect-ratio: 1/1;                   /* Image CARRÉE */
+  object-fit: cover;                   /* Remplit sans déformer */
+}
+
+.annonce-corps {
+  padding: 10px;                       /* Espace intérieur */
+  cursor: pointer;                     /* Curseur main */
+}
+
+/* ==================================================
+   16. ACTIONS SUR LES CARTES (FAVORIS + PARTAGE)
+   ================================================== */
+
+.annonce-actions {
+  display: flex;                       /* Mode flexbox */
+  gap: 6px;                            /* Espace entre boutons */
+  margin-bottom: 8px;                  /* Espace en bas */
+}
+
+.btn-favori,
+.btn-partage {
+  background: white;                   /* Fond blanc */
+  border: 2px solid #e2e8f0;           /* Bordure grise */
+  border-radius: 50%;                  /* Rond */
+  width: 32px;                         /* Largeur fixe */
+  height: 32px;                        /* Hauteur fixe */
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  justify-content: center;             /* Centré horizontalement */
+  cursor: pointer;                     /* Curseur main */
+  transition: var(--transition);       /* Animation */
+  font-size: 16px;                     /* Taille emoji */
+  padding: 0;                          /* Pas de padding */
+}
+
+.btn-favori:hover,
+.btn-partage:hover {
+  transform: scale(1.1);               /* Agrandit au survol */
+  border-color: var(--couleur-accent); /* Bordure bleue */
+}
+
+.btn-favori.favori-actif {
+  background: #fed7d7;                 /* Fond rouge clair */
+  border-color: #e53e3e;               /* Bordure rouge */
+}
+
+/* ==================================================
+   17. TEXTE DES CARTES
+   ================================================== */
+
+.annonce h2 {
+  font-size: 14px;                     /* Taille normale */
+  color: var(--couleur-primaire);      /* Bleu foncé */
+  margin-bottom: 6px;                  /* Espace en bas */
+  font-weight: 600;                    /* Gras */
+  line-height: 1.3;                    /* Espacement lignes */
+  display: -webkit-box;                /* Boîte flex */
+  -webkit-line-clamp: 2;               /* Max 2 lignes */
+  -webkit-box-orient: vertical;        /* Orientation verticale */
+  overflow: hidden;                    /* Cache dépassement */
+}
+
+.annonce .prix {
+  font-size: 16px;                     /* Taille prix */
+  font-weight: 700;                    /* Très gras */
+  color: var(--couleur-succes);        /* Vert */
+  margin-bottom: 6px;                  /* Espace en bas */
+}
+
+.annonce .infos {
+  font-size: 12px;                     /* Petite taille */
+  color: var(--couleur-texte-clair);   /* Gris clair */
+  margin: 4px 0;                       /* Espace haut/bas */
+  line-height: 1.4;                    /* Espacement lignes */
+  display: -webkit-box;                /* Boîte flex */
+  -webkit-line-clamp: 2;               /* Max 2 lignes */
+  -webkit-box-orient: vertical;        /* Orientation verticale */
+  overflow: hidden;                    /* Cache dépassement */
+}
+
+/* Statistiques de vues sur les cartes */
+.annonce .vues {
+  font-size: 11px;                     /* Petite taille */
+  color: var(--couleur-texte-clair);   /* Gris clair */
+  margin: 4px 0;                       /* Espace haut/bas */
+}
+
+.annonce .temps {
+  font-size: 11px;                     /* Petite taille */
+  color: #a0aec0;                      /* Gris très clair */
+  margin-top: 4px;                     /* Espace en haut */
+}
+
+/* ==================================================
+   18. BOUTON WHATSAPP
+   ================================================== */
+
+.contact {
+  display: inline-block;               /* En ligne */
+  margin-top: 10px;                    /* Espace en haut */
+  background: var(--couleur-succes);   /* Fond vert */
+  color: white;                        /* Texte blanc */
+  padding: 8px 14px;                   /* Espace intérieur */
+  border-radius: 20px;                 /* Bords arrondis */
+  text-decoration: none;               /* Pas de soulignement */
+  font-size: 12px;                     /* Petite taille */
+  font-weight: 600;                    /* Gras */
+  transition: var(--transition);       /* Animation */
+}
+
+/* ==================================================
+   19. PAGE DÉTAIL
+   ================================================== */
+
+.detail {
+  background: var(--couleur-carte);    /* Fond blanc */
+  min-height: 100vh;                   /* Hauteur minimum */
+  padding-bottom: 20px;                /* Espace en bas */
+  margin-top: 65px;                    /* RÉDUIT : était 95px (header plus petit) */
+}
+
+.detail h2 {
+  padding: 16px 16px 0;                /* Espace intérieur */
+  font-size: 22px;                     /* Taille titre */
+  color: var(--couleur-primaire);      /* Bleu foncé */
+  font-weight: 700;                    /* Très gras */
+}
+
+.prix-detail {
+  padding: 8px 16px;                   /* Espace intérieur */
+  font-size: 26px;                     /* Grande taille */
+  font-weight: 700;                    /* Très gras */
+  color: var(--couleur-succes);        /* Vert */
+}
+
+.infos-detail {
+  padding: 12px 16px;                  /* Espace intérieur */
+  font-size: 14px;                     /* Taille normale */
+  color: var(--couleur-texte-clair);   /* Gris clair */
+  border-bottom: 1px solid #e2e8f0;    /* Ligne séparation */
+}
+
+.infos-detail p { 
+  margin: 6px 0;                       /* Espace paragraphes */
+}
+
+.bloc-description { 
+  padding: 16px;                       /* Espace intérieur */
+}
+
+.bloc-description h3 {
+  font-size: 17px;                     /* Taille sous-titre */
+  color: var(--couleur-primaire);      /* Bleu foncé */
+  margin-bottom: 10px;                 /* Espace en bas */
+  font-weight: 600;                    /* Gras */
+}
+
+.bloc-description p {
+  font-size: 14px;                     /* Taille normale */
+  color: var(--couleur-texte);         /* Gris foncé */
+  line-height: 1.6;                    /* Espacement lignes */
+}
+
+.btn-whatsapp-detail {
+  display: block;                      /* Pleine largeur */
+  margin: 16px;                        /* Espace autour */
+  background: var(--couleur-succes);   /* Fond vert */
+  color: white;                        /* Texte blanc */
+  text-align: center;                  /* Texte centré */
+  padding: 14px;                       /* Espace intérieur */
+  border-radius: 12px;                 /* Bords arrondis */
+  text-decoration: none;               /* Pas de soulignement */
+  font-size: 15px;                     /* Taille normale */
+  font-weight: 600;                    /* Gras */
+  transition: var(--transition);       /* Animation */
+}
+
+/* ==================================================
+   20. ACTIONS SUR PAGE DÉTAIL
+   ================================================== */
+
+.detail-actions {
+  display: flex;                       /* Mode flexbox */
+  gap: 8px;                            /* Espace entre boutons */
+  padding: 12px 16px;                  /* Espace intérieur */
+  background: var(--couleur-fond);     /* Fond gris clair */
+}
+
+.btn-action-detail {
+  flex: 1;                             /* Même largeur */
+  padding: 10px 8px;                   /* Espace intérieur */
+  background: white;                   /* Fond blanc */
+  border: 2px solid #e2e8f0;           /* Bordure grise */
+  border-radius: 8px;                  /* Bords arrondis */
+  font-size: 12px;                     /* Taille normale */
+  font-weight: 600;                    /* Gras */
+  cursor: pointer;                     /* Curseur main */
+  transition: var(--transition);       /* Animation */
+}
+
+.btn-action-detail:hover {
+  border-color: var(--couleur-accent); /* Bordure bleue */
+  background: var(--couleur-fond);     /* Fond gris */
+}
+
+.btn-action-detail.favori-actif {
+  background: #fed7d7;                 /* Fond rouge clair */
+  border-color: #e53e3e;               /* Bordure rouge */
+  color: #c53030;                      /* Texte rouge */
+}
+
+/* ==================================================
+   21. STATISTIQUES DE VUES
+   ================================================== */
+
+.stats-vues {
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  gap: 6px;                            /* Espace entre éléments */
+  padding: 8px 16px;                   /* Espace intérieur */
+  background: var(--couleur-fond);     /* Fond gris clair */
+  border-bottom: 1px solid #e2e8f0;    /* Ligne séparation */
+  font-size: 13px;                     /* Taille normale */
+  color: var(--couleur-texte-clair);   /* Gris clair */
+}
+
+.stats-icon {
+  font-size: 16px;                     /* Taille icône */
+}
+
+.stats-nombre {
+  font-weight: 700;                    /* Très gras */
+  color: var(--couleur-primaire);      /* Bleu foncé */
+}
+
+.stats-texte {
+  font-size: 12px;                     /* Petite taille */
+}
+
+/* ==================================================
+   22. MESSAGES (AUCUN RÉSULTAT, INTROUVABLE)
+   ================================================== */
+
+#aucun-resultat, #detail-introuvable {
+  text-align: center;                  /* Texte centré */
+  padding: 30px 16px;                  /* Espace intérieur */
+  color: var(--couleur-texte-clair);   /* Gris clair */
+  font-size: 15px;                     /* Taille normale */
+  grid-column: 1 / -1;                 /* Pleine largeur grille */
+}
+
+#aucun-resultat a, #detail-introuvable a {
+  color: var(--couleur-accent);        /* Bleu */
+  text-decoration: none;               /* Pas de soulignement */
+  font-weight: 600;                    /* Gras */
+}
+
+/* ==================================================
+   23. FOOTER
+   ================================================== */
+
+.footer {
+  background: linear-gradient(135deg, var(--couleur-primaire) 0%, var(--couleur-secondaire) 100%);
+  color: white;                        /* Texte blanc */
+  margin-top: 40px;                    /* Espace en haut */
+  padding: 30px 20px 20px;             /* Espace intérieur */
+}
+
+.footer-contenu {
+  display: flex;                       /* Mode flexbox */
+  flex-direction: column;              /* Éléments empilés */
+  gap: 24px;                           /* Espace entre sections */
+  margin-bottom: 20px;                 /* Espace en bas */
+}
+
+.footer-section h3 {
+  font-size: 16px;                     /* Taille titres */
+  font-weight: 600;                    /* Gras */
+  margin-bottom: 10px;                 /* Espace en bas */
+  color: white;                        /* Texte blanc */
+}
+
+.footer-section p {
+  font-size: 13px;                     /* Taille paragraphes */
+  line-height: 1.6;                    /* Espacement lignes */
+  color: rgba(255, 255, 255, 0.9);     /* Blanc transparent */
+  margin: 4px 0;                       /* Espace haut/bas */
+}
+
+.footer-section ul {
+  list-style: none;                    /* Pas de puces */
+}
+
+.footer-section ul li {
+  margin: 6px 0;                       /* Espace entre liens */
+}
+
+.footer-section ul li a {
+  color: rgba(255, 255, 255, 0.9);     /* Blanc transparent */
+  text-decoration: none;               /* Pas de soulignement */
+  font-size: 13px;                     /* Taille normale */
+  transition: var(--transition);       /* Animation */
+}
+
+.footer-section ul li a:hover {
+  color: white;                        /* Blanc pur */
+  text-decoration: underline;          /* Souligné au survol */
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.2); /* Ligne séparation */
+  padding-top: 16px;                   /* Espace en haut */
+  text-align: center;                  /* Texte centré */
+}
+
+.footer-bottom p {
+  font-size: 12px;                     /* Petite taille */
+  color: rgba(255, 255, 255, 0.8);     /* Blanc transparent */
+}
+
+/* ==================================================
+   24. SECTION PHOTOS (BOUTONS PERSONNALISÉS)
+   ================================================== */
+
+.bloc-photo {
+  margin-bottom: 4px;                  /* Espace entre blocs RÉDUIT */
+}
+
+.input-photo-cache {
+  display: none;                       /* Cache input original */
+}
+
+.btn-photo {
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  justify-content: center;             /* Centré horizontalement */
+  gap: 10px;                           /* Espace icône/texte */
+  padding: 14px 20px;                  /* Espace intérieur */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;                        /* Texte blanc */
+  border-radius: 10px;                 /* Bords arrondis */
+  cursor: pointer;                     /* Curseur main */
+  transition: var(--transition);       /* Animation */
+  font-size: 14px;                     /* Taille normale */
+  font-weight: 600;                    /* Gras */
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3); /* Ombre colorée */
+  text-align: center;                  /* Texte centré */
+  border: 2px dashed rgba(255, 255, 255, 0.3); /* Bordure pointillée */
+}
+
+.btn-photo:hover {
+  transform: translateY(-2px);         /* Monte au survol */
+  box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4); /* Ombre plus forte */
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.btn-photo:active {
+  transform: translateY(0);            /* Redescend au clic */
+}
+
+.icone-photo {
+  font-size: 20px;                     /* Taille icône */
+}
+
+.texte-photo {
+  flex: 1;                             /* Prend l'espace */
+}
+
+.btn-photo-selectionne {
+  background: linear-gradient(135deg, var(--couleur-succes) 0%, #2f855a 100%);
+  border-style: solid;                 /* Bordure pleine quand sélectionné */
+  border-color: rgba(255, 255, 255, 0.5); /* Bordure blanche */
+}
+
+.btn-photo-selectionne:hover {
+  background: linear-gradient(135deg, #2f855a 0%, var(--couleur-succes) 100%);
+}
+
+.apercu-photo {
+  margin-top: 10px;                    /* Espace en haut */
+  display: flex;                       /* Mode flexbox */
+  justify-content: center;             /* Centré horizontalement */
+}
+
+.apercu-photo img {
+  max-width: 100%;                     /* Largeur max 100% */
+  max-height: 200px;                   /* Hauteur max 200px */
+  border-radius: 10px;                 /* Bords arrondis */
+  border: 2px solid #e2e8f0;           /* Bordure grise */
+  box-shadow: var(--ombre-legere);     /* Ombre subtile */
+  object-fit: cover;                   /* Remplit sans déformer */
+}
+
+.erreur-apercu {
+  color: #c53030;                      /* Rouge */
+  background: #fed7d7;                 /* Fond rouge clair */
+  padding: 8px 12px;                   /* Espace intérieur */
+  border-radius: 6px;                  /* Bords arrondis */
+  font-size: 13px;                     /* Taille normale */
+  text-align: center;                  /* Texte centré */
+  width: 100%;                         /* Pleine largeur */
+}
+
+/* ==================================================
+   25. BOUTON RETOUR EN HAUT
+   ================================================== */
+
+.btn-retour-haut {
+  position: fixed;                     /* Position fixe */
+  bottom: 20px;                        /* 20px du bas */
+  right: 20px;                         /* 20px de la droite */
+  width: 50px;                         /* Largeur fixe */
+  height: 50px;                        /* Hauteur fixe */
+  border-radius: 50%;                  /* Rond */
+  background: linear-gradient(135deg, var(--couleur-primaire) 0%, var(--couleur-secondaire) 100%);
+  color: white;                        /* Texte blanc */
+  border: none;                        /* Pas de bordure */
+  font-size: 24px;                     /* Grande taille */
+  font-weight: bold;                   /* Très gras */
+  cursor: pointer;                     /* Curseur main */
+  box-shadow: var(--ombre-forte);      /* Ombre forte */
+  opacity: 0;                          /* Invisible par défaut */
+  visibility: hidden;                  /* Caché par défaut */
+  transform: translateY(20px);         /* Décalé vers le bas */
+  transition: var(--transition);       /* Animation */
+  z-index: 99;                         /* Au-dessus */
+}
+
+.btn-retour-haut.visible {
+  opacity: 1;                          /* Visible */
+  visibility: visible;                 /* Affiché */
+  transform: translateY(0);            /* Position normale */
+}
+
+.btn-retour-haut:hover {
+  transform: translateY(-5px);         /* Monte au survol */
+  box-shadow: 0 15px 20px rgba(0,0,0,0.2);
+}
+
+.btn-retour-haut:active {
+  transform: translateY(0);            /* Redescend au clic */
+}
+
+/* ==================================================
+   26. WRAPPER DU CARROUSEL
+   ================================================== */
+
+.carrousel-wrapper {
+  position: relative;                  /* Position relative */
+  width: 100%;                         /* Pleine largeur */
+}
+
+/* ==================================================
+   27. INDICATEURS DE CARROUSEL (POINTS)
+   ================================================== */
+
+.indicateurs {
+  position: absolute;                  /* Position absolue */
+  bottom: 10px;                        /* 10px du bas */
+  left: 50%;                           /* Centré horizontalement */
+  transform: translateX(-50%);         /* Correction centrage */
+  display: flex;                       /* Mode flexbox */
+  gap: 8px;                            /* Espace entre points */
+  background: rgba(0, 0, 0, 0.3);      /* Fond semi-transparent */
+  padding: 6px 12px;                   /* Espace intérieur */
+  border-radius: 20px;                 /* Bords arrondis */
+  z-index: 10;                         /* Au-dessus */
+}
+
+.indicateur-point {
+  width: 8px;                          /* Largeur fixe */
+  height: 8px;                         /* Hauteur fixe */
+  border-radius: 50%;                  /* Rond */
+  background: rgba(255, 255, 255, 0.5); /* Blanc semi-transparent */
+  transition: var(--transition);       /* Animation */
+  cursor: pointer;                     /* Curseur main */
+}
+
+.indicateur-point.actif {
+  background: white;                   /* Blanc pur */
+  width: 24px;                         /* Plus large */
+  border-radius: 4px;                  /* Moins rond */
+}
+
+/* ==================================================
+   28. COMPTEUR DE PHOTOS
+   ================================================== */
+
+.compteur-photos {
+  position: absolute;                  /* Position absolue */
+  top: 10px;                           /* 10px du haut */
+  right: 10px;                         /* 10px de la droite */
+  background: rgba(0, 0, 0, 0.6);      /* Fond semi-transparent */
+  color: white;                        /* Texte blanc */
+  padding: 4px 10px;                   /* Espace intérieur */
+  border-radius: 12px;                 /* Bords arrondis */
+  font-size: 12px;                     /* Petite taille */
+  font-weight: 600;                    /* Gras */
+  z-index: 10;                         /* Au-dessus */
+}
+
+/* ==================================================
+   29. SKELETON SCREENS
+   ================================================== */
+
+.skeleton-container {
+  display: grid;                       /* Mode grille */
+  grid-template-columns: 1fr 1fr;      /* 2 colonnes */
+  gap: 10px;                           /* Espace 10px */
+  padding: 10px;                       /* Espace autour */
+}
+
+.skeleton-container.cache {
+  display: none !important;            /* Cache complètement */
+}
+
+.skeleton-card {
+  background: var(--couleur-carte);    /* Fond blanc */
+  border-radius: 10px;                 /* Bords arrondis */
+  height: 280px;                       /* Hauteur fixe */
+  position: relative;                  /* Position relative */
+  overflow: hidden;                    /* Cache dépassements */
+}
+
+.skeleton-card::before {
+  content: '';                         /* Contenu vide */
+  position: absolute;                  /* Position absolue */
+  top: 0;                              /* Collé en haut */
+  left: -100%;                         /* Commence à gauche */
+  width: 100%;                         /* Pleine largeur */
+  height: 100%;                        /* Pleine hauteur */
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: skeleton-shimmer 1.5s infinite; /* Animation infinie */
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    left: -100%;                       /* Commence à gauche */
+  }
+  100% {
+    left: 100%;                        /* Finit à droite */
+  }
+}
+
+/* ==================================================
+   30. PULL-TO-REFRESH
+   ================================================== */
+
+.pull-indicator {
+  position: fixed;                     /* Position fixe */
+  top: -60px;                          /* Caché en haut */
+  left: 50%;                           /* Centré horizontalement */
+  transform: translateX(-50%);         /* Correction centrage */
+  background: var(--couleur-carte);    /* Fond blanc */
+  padding: 10px 20px;                  /* Espace intérieur */
+  border-radius: 20px;                 /* Bords arrondis */
+  box-shadow: var(--ombre-moyenne);    /* Ombre */
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  gap: 10px;                           /* Espace entre éléments */
+  z-index: 101;                        /* Au-dessus */
+  transition: transform 0.3s ease;     /* Animation */
+}
+
+.pull-indicator.ready {
+  background: var(--couleur-succes);   /* Fond vert */
+  color: white;                        /* Texte blanc */
+}
+
+.pull-icon {
+  font-size: 20px;                     /* Taille icône */
+  transition: transform 0.3s ease;     /* Animation */
+}
+
+.pull-indicator.ready .pull-icon {
+  transform: rotate(180deg);           /* Rotation 180° */
+}
+
+.pull-icon.spinning {
+  animation: spin 1s linear infinite;  /* Rotation infinie */
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);           /* Début */
+  }
+  to {
+    transform: rotate(360deg);         /* Fin */
+  }
+}
+
+.pull-text {
+  font-size: 13px;                     /* Taille normale */
+  font-weight: 600;                    /* Gras */
+}
+
+/* ==================================================
+   31. MODAL D'ÉDITION
+   ================================================== */
+
+.modal-edition {
+  position: fixed;                     /* Position fixe */
+  top: 0;                              /* Plein écran */
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);      /* Fond noir semi-transparent */
+  display: flex;                       /* Mode flexbox */
+  align-items: center;                 /* Centré verticalement */
+  justify-content: center;             /* Centré horizontalement */
+  z-index: 1000;                       /* Tout en haut */
+  padding: 20px;                       /* Espace autour */
+}
+
+.modal-contenu {
+  background: var(--couleur-carte);    /* Fond blanc */
+  border-radius: 12px;                 /* Bords arrondis */
+  padding: 20px;                       /* Espace intérieur */
+  max-width: 500px;                    /* Largeur max */
+  width: 100%;                         /* Pleine largeur */
+  max-height: 90vh;                    /* Hauteur max */
+  overflow-y: auto;                    /* Défilement vertical */
+}
+
+.modal-contenu h3 {
+  font-size: 18px;                     /* Taille titre */
+  color: var(--couleur-primaire);      /* Bleu foncé */
+  margin-bottom: 16px;                 /* Espace en bas */
+  font-weight: 700;                    /* Très gras */
+}
+
+.modal-contenu label {
+  display: block;                      /* Bloc */
+  font-size: 13px;                     /* Taille normale */
+  font-weight: 600;                    /* Gras */
+  color: var(--couleur-primaire);      /* Bleu foncé */
+  margin-top: 12px;                    /* Espace en haut */
+  margin-bottom: 4px;                  /* Espace en bas */
+}
+
+.modal-contenu input,
+.modal-contenu textarea {
+  width: 100%;                         /* Pleine largeur */
+  padding: 10px;                       /* Espace intérieur */
+  border: 1.5px solid #e2e8f0;         /* Bordure grise */
+  border-radius: 6px;                  /* Bords arrondis */
+  font-size: 14px;                     /* Taille normale */
+  font-family: inherit;                /* Même police */
+}
+
+/* Mode sombre pour modal */
+body.theme-sombre .modal-contenu input,
+body.theme-sombre .modal-contenu textarea {
+  background: var(--couleur-fond);     /* Fond sombre */
+  color: var(--couleur-texte);         /* Texte clair */
+  border-color: #4a5568;               /* Bordure sombre */
+}
+
+.modal-actions {
+  display: flex;                       /* Mode flexbox */
+  gap: 10px;                           /* Espace entre boutons */
+  margin-top: 20px;                    /* Espace en haut */
+}
+
+.btn-modal {
+  flex: 1;                             /* Même largeur */
+  padding: 12px;                       /* Espace intérieur */
+  border: none;                        /* Pas de bordure */
+  border-radius: 8px;                  /* Bords arrondis */
+  font-size: 14px;                     /* Taille normale */
+  font-weight: 600;                    /* Gras */
+  cursor: pointer;                     /* Curseur main */
+  transition: var(--transition);       /* Animation */
+}
+
+.btn-annuler {
+  background: #e2e8f0;                 /* Fond gris */
+  color: var(--couleur-texte);         /* Texte foncé */
+}
+
+.btn-annuler:hover {
+  background: #cbd5e0;                 /* Gris plus foncé */
+}
+
+.btn-sauvegarder {
+  background: linear-gradient(135deg, var(--couleur-primaire) 0%, var(--couleur-secondaire) 100%);
+  color: white;                        /* Texte blanc */
+}
+
+.btn-sauvegarder:hover {
+  transform: translateY(-2px);         /* Monte au survol */
+  box-shadow: var(--ombre-forte);      /* Ombre forte */
+}
+
+/* ==================================================
+   32. RESPONSIVE
+   ================================================== */
+
+@media (max-width: 380px) {
+  #liste {
+    grid-template-columns: 1fr !important; /* 1 seule colonne */
+  }
+}
+

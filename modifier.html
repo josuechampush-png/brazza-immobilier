@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modifier l'annonce — Braza-Immobilier</title>
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/form.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/bottom-nav.css">
+</head>
+
+<body>
+
+  <header class="header-pro">
+    <div class="header-contenu">
+      <div class="header-logo">
+        <h1 class="site-nom">
+          Braza<span class="separateur">–</span>Immobilier
+        </h1>
+        <p class="site-slogan">Trouvez votre logement idéal à Brazzaville</p>
+      </div>
+      <div class="header-actions">
+        <button id="btn-theme" class="btn-theme" title="Changer de thème">🌙</button>
+        <a href="mes-annonces.html" class="btn-publier-pro">
+          <span class="btn-icone">←</span>
+          <span class="btn-texte">Retour</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <section class="form-hero">
+    <div class="form-hero-icone">✏️</div>
+    <h2 class="form-hero-titre">Modifier votre annonce</h2>
+    <p class="form-hero-description">
+      Modifiez les informations de votre annonce. Les photos actuelles sont conservées si vous n'en ajoutez pas de nouvelles.
+    </p>
+  </section>
+
+  <main class="formulaire">
+
+    <!-- Photos actuelles -->
+    <div class="form-section" id="section-photos-actuelles" style="display:none;">
+      <div class="form-section-header">
+        <span class="form-section-icone">🖼️</span>
+        <div>
+          <h3 class="form-section-titre">Photos actuelles</h3>
+          <p class="form-section-sous-titre">Ces photos seront conservées si vous n'en ajoutez pas de nouvelles</p>
+        </div>
+      </div>
+      <div id="photos-actuelles" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+    </div>
+
+    <!-- Section 1 : Informations générales -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <span class="form-section-icone">🏷️</span>
+        <div>
+          <h3 class="form-section-titre">Informations générales</h3>
+          <p class="form-section-sous-titre">Titre, prix et nombre de pièces</p>
+        </div>
+      </div>
+      
+      <div class="form-groupe">
+        <label for="titre" class="form-label">
+          <span class="label-icone">✏️</span>
+          <span>Titre de l'annonce <span class="obligatoire">*</span></span>
+        </label>
+        <input type="text" id="titre" class="form-input" placeholder="Ex: Appartement 2 pièces à Poto-Poto">
+      </div>
+
+      <div class="form-groupe">
+        <label for="prix" class="form-label">
+          <span class="label-icone">💰</span>
+          <span>Prix mensuel <span class="obligatoire">*</span></span>
+        </label>
+        <div class="form-input-prix">
+          <input type="number" id="prix" class="form-input" placeholder="Ex: 80000">
+          <span class="form-input-suffixe">FCFA</span>
+        </div>
+      </div>
+
+      <div class="form-groupe">
+        <label for="pieces" class="form-label">
+          <span class="label-icone">🚪</span>
+          <span>Nombre de pièces</span>
+        </label>
+        <select id="pieces" class="form-select">
+          <option value="">Sélectionnez</option>
+          <option value="1">1 pièce</option>
+          <option value="2">2 pièces</option>
+          <option value="3">3 pièces</option>
+          <option value="4">4 pièces</option>
+          <option value="5">5 pièces</option>
+          <option value="6">6 pièces ou plus</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Section 2 : Localisation -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <span class="form-section-icone">📍</span>
+        <div>
+          <h3 class="form-section-titre">Localisation</h3>
+          <p class="form-section-sous-titre">Où se trouve votre bien ?</p>
+        </div>
+      </div>
+      
+      <!-- ARRONDISSEMENT : OPTIONS EN DUR DANS LE HTML -->
+      <div class="form-groupe">
+        <label for="arrondissement" class="form-label">
+          <span class="label-icone">🏛️</span>
+          <span>Arrondissement <span class="obligatoire">*</span></span>
+        </label>
+        <select id="arrondissement" class="form-select">
+          <option value="">Sélectionnez un arrondissement</option>
+          <option value="1er - Makélékélé">1er - Makélékélé</option>
+          <option value="2e - Bacongo">2e - Bacongo</option>
+          <option value="3e - Poto-Poto">3e - Poto-Poto</option>
+          <option value="4e - Moungali">4e - Moungali</option>
+          <option value="5e - Ouenzé">5e - Ouenzé</option>
+          <option value="6e - Talangaï">6e - Talangaï</option>
+          <option value="7e - Mfilou">7e - Mfilou</option>
+          <option value="8e - Madibou">8e - Madibou</option>
+          <option value="9e - Djiri">9e - Djiri</option>
+          <option value="10e - Kintélé">10e - Kintélé</option>
+        </select>
+      </div>
+
+      <!-- QUARTIER : sera rempli dynamiquement -->
+      <div class="form-groupe">
+        <label for="quartier" class="form-label">
+          <span class="label-icone">🏘️</span>
+          <span>Quartier <span class="obligatoire">*</span></span>
+        </label>
+        <select id="quartier" class="form-select" disabled>
+          <option value="">Choisissez d'abord un arrondissement</option>
+        </select>
+        <span class="form-aide">Sélectionnez d'abord un arrondissement</span>
+      </div>
+
+      <div class="form-groupe">
+        <label for="type" class="form-label">
+          <span class="label-icone">🏠</span>
+          <span>Type de logement <span class="obligatoire">*</span></span>
+        </label>
+        <select id="type" class="form-select">
+          <option value="">Sélectionnez un type</option>
+          <option value="maison">Maison</option>
+          <option value="appartement">Appartement</option>
+          <option value="chambre">Chambre</option>
+        </select>
+      </div>
+
+      <div class="form-groupe">
+        <label for="adresse" class="form-label">
+          <span class="label-icone">🗺️</span>
+          <span>Adresse précise <span class="obligatoire">*</span></span>
+        </label>
+        <input type="text" id="adresse" class="form-input" placeholder="Ex: Rue Moungali, près du marché Total">
+      </div>
+    </div>
+
+    <!-- Section 3 : Description -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <span class="form-section-icone">📋</span>
+        <div>
+          <h3 class="form-section-titre">Description</h3>
+          <p class="form-section-sous-titre">Décrivez votre bien</p>
+        </div>
+      </div>
+      
+      <div class="form-groupe">
+        <label for="description" class="form-label">
+          <span class="label-icone">📝</span>
+          <span>Description <span class="obligatoire">*</span></span>
+        </label>
+        <textarea id="description" class="form-textarea" rows="4" placeholder="Décrivez votre bien..."></textarea>
+      </div>
+    </div>
+
+    <!-- Section 4 : Contact -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <span class="form-section-icone">💬</span>
+        <div>
+          <h3 class="form-section-titre">Contact</h3>
+          <p class="form-section-sous-titre">Numéro WhatsApp</p>
+        </div>
+      </div>
+      
+      <div class="form-groupe">
+        <label for="whatsapp" class="form-label">
+          <span class="label-icone">📱</span>
+          <span>Numéro WhatsApp <span class="obligatoire">*</span></span>
+        </label>
+        <div class="form-input-prix">
+          <span class="form-input-prefixe">+</span>
+          <input type="tel" id="whatsapp" class="form-input" placeholder="242064625730">
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5 : Nouvelles photos (optionnel) -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <span class="form-section-icone">📸</span>
+        <div>
+          <h3 class="form-section-titre">Nouvelles photos (optionnel)</h3>
+          <p class="form-section-sous-titre">Ajoutez des photos pour remplacer les actuelles. Laissez vide pour garder les actuelles.</p>
+        </div>
+      </div>
+      
+      <div class="form-groupe">
+        <label class="form-label">
+          <span class="label-icone">🖼️</span>
+          <span>Nouvelle photo 1</span>
+        </label>
+        <div class="bloc-photo">
+          <input type="file" id="photo1" accept="image/*" class="input-photo-cache">
+          <label for="photo1" class="btn-photo">
+            <span class="icone-photo">📷</span>
+            <span class="texte-photo">Ajouter une photo (optionnel)</span>
+          </label>
+          <div id="apercu1" class="apercu-photo"></div>
+        </div>
+      </div>
+
+      <div class="form-groupe">
+        <label class="form-label">
+          <span class="label-icone">🖼️</span>
+          <span>Nouvelle photo 2</span>
+        </label>
+        <div class="bloc-photo">
+          <input type="file" id="photo2" accept="image/*" class="input-photo-cache">
+          <label for="photo2" class="btn-photo">
+            <span class="icone-photo">📷</span>
+            <span class="texte-photo">Ajouter une photo (optionnel)</span>
+          </label>
+          <div id="apercu2" class="apercu-photo"></div>
+        </div>
+      </div>
+
+      <div class="form-groupe">
+        <label class="form-label">
+          <span class="label-icone">🖼️</span>
+          <span>Nouvelle photo 3</span>
+        </label>
+        <div class="bloc-photo">
+          <input type="file" id="photo3" accept="image/*" class="input-photo-cache">
+          <label for="photo3" class="btn-photo">
+            <span class="icone-photo">📷</span>
+            <span class="texte-photo">Ajouter une photo (optionnel)</span>
+          </label>
+          <div id="apercu3" class="apercu-photo"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bouton de validation -->
+    <button id="btn-valider" type="button">
+      <span class="btn-valider-icone">💾</span>
+      <span>Enregistrer les modifications</span>
+    </button>
+
+    <p id="message"></p>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="mes-annonces.html" class="bottom-nav-item actif">
+      <span class="bottom-nav-icone">📋</span>
+      <span class="bottom-nav-texte">Mes annonces</span>
+    </a>
+    <a href="favoris.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">❤️</span>
+      <span class="bottom-nav-texte">Favoris</span>
+    </a>
+    <a href="historique.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">🕐</span>
+      <span class="bottom-nav-texte">Historique</span>
+    </a>
+    <a href="profil.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">👤</span>
+      <span class="bottom-nav-texte">Profil</span>
+    </a>
+    <a href="plus.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">⚙️</span>
+      <span class="bottom-nav-texte">Plus</span>
+    </a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/modifier.js"></script>
+  <script src="js/header.js"></script>
+  <script src="js/footer.js"></script>
+
+</body>
+</html>

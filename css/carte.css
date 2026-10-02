@@ -1,0 +1,177 @@
+.carte-page {
+  margin-top: 65px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 65px - 60px);
+  background: var(--couleur-fond);
+}
+
+.carte-filtres {
+  padding: 12px;
+  background: var(--couleur-carte);
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recherche-conteneur {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.carte-filtres input[type="text"] {
+  width: 100%;
+  padding: 12px 50px 12px 12px;
+  border: 2px solid #3182ce;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  box-sizing: border-box;
+}
+
+.carte-filtres input[type="text"]::placeholder {
+  color: #718096;
+  font-weight: 400;
+}
+
+.carte-filtres input[type="text"]:focus {
+  outline: none;
+  border-color: #2b6cb0;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+}
+
+.btn-recherche {
+  position: absolute;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.btn-recherche:hover {
+  transform: scale(1.1);
+}
+
+.btn-recherche:active {
+  transform: scale(0.95);
+}
+
+.carte-filtres select {
+  width: 100%;
+  padding: 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #ffffff;
+  color: #000000;
+  font-family: inherit;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+body.theme-sombre .carte-filtres select {
+  background: var(--couleur-carte);
+  color: var(--couleur-texte);
+  border-color: #4a5568;
+}
+
+.carte-conteneur {
+  flex: 1;
+  width: 100%;
+  z-index: 1;
+}
+
+.info-annonces {
+  padding: 10px;
+  background: var(--couleur-carte);
+  text-align: center;
+  font-size: 13px;
+  color: var(--couleur-texte-clair);
+  border-top: 1px solid #e2e8f0;
+}
+
+.info-annonces span {
+  font-weight: 700;
+  color: var(--couleur-primaire);
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  padding: 0 !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  width: 220px !important;
+}
+
+.popup-annonce {
+  padding: 0;
+  font-family: inherit;
+}
+
+.popup-annonce img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+  display: block;
+}
+
+.popup-annonce-contenu {
+  padding: 10px 12px;
+}
+
+.popup-annonce-titre {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.popup-annonce-prix {
+  font-size: 14px;
+  font-weight: 700;
+  color: #38a169;
+  margin: 0 0 4px 0;
+}
+
+.popup-annonce-quartier {
+  font-size: 11px;
+  color: #718096;
+  margin: 0 0 8px 0;
+}
+
+.popup-annonce-btn {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.popup-annonce-btn:hover {
+  opacity: 0.9;
+}

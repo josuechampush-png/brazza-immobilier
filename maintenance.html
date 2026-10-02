@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site en maintenance — Braza-Immobilier</title>
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    
+    .maintenance-container {
+      text-align: center;
+      padding: 40px 20px;
+      max-width: 600px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      margin: 20px;
+    }
+    
+    .maintenance-icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    .maintenance-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #2d3748;
+      margin: 0 0 15px 0;
+    }
+    
+    .maintenance-text {
+      font-size: 18px;
+      color: #4a5568;
+      line-height: 1.6;
+      margin: 0 0 30px 0;
+    }
+    
+    .maintenance-info {
+      background: #f7fafc;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+    
+    .maintenance-info p {
+      margin: 8px 0;
+      font-size: 14px;
+      color: #718096;
+    }
+    
+    .maintenance-btn {
+      display: inline-block;
+      padding: 14px 32px;
+      background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .maintenance-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(237, 137, 54, 0.3);
+    }
+    
+    body.theme-sombre {
+      background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    }
+    
+    body.theme-sombre .maintenance-container {
+      background: #2d3748;
+    }
+    
+    body.theme-sombre .maintenance-title {
+      color: #f7fafc;
+    }
+    
+    body.theme-sombre .maintenance-text {
+      color: #cbd5e0;
+    }
+    
+    body.theme-sombre .maintenance-info {
+      background: #1a202c;
+    }
+    
+    body.theme-sombre .maintenance-info p {
+      color: #a0aec0;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="maintenance-container">
+    <div class="maintenance-icon">🛠️</div>
+    <h1 class="maintenance-title">Site en maintenance</h1>
+    <p class="maintenance-text">
+      Nous effectuons actuellement des améliorations pour vous offrir une meilleure expérience.
+    </p>
+    
+    <div class="maintenance-info">
+      <p>⏰ Nous serons de retour très bientôt !</p>
+      <p>💡 Merci de votre patience et de votre compréhension.</p>
+    </div>
+    
+    <a href="index.html" class="maintenance-btn">
+      🔄 Réessayer
+    </a>
+  </div>
+  
+  <script src="js/theme.js"></script>
+  
+</body>
+</html>

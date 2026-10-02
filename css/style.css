@@ -1,0 +1,34 @@
+/* ==================================================
+   style.css — FICHIER PRINCIPAL
+   Ce fichier importe tous les sous-fichiers CSS
+   Les pages HTML n'ont qu'à lier CE fichier
+   ================================================== */
+
+/* 1. Variables CSS (couleurs, ombres, etc.) */
+@import url("variables.css");
+
+/* 2. Reset et styles de base */
+@import url("base.css");
+
+/* 3. Header professionnel + navigation */
+@import url("header.css");
+
+/* 4. Page d'accueil (hero, recherche, cartes) */
+@import url("home.css");
+
+/* 5. Page détail d'annonce */
+@import url("detail.css");
+
+/* 6. Page publier (formulaire stylé) */
+@import url("form.css");
+
+/* 7. Footer */
+@import url("footer.css");
+
+/* 8. Composants partagés (boutons, skeleton, modal, etc.) */
+@import url("components.css");
+
+/* 9. Media queries (responsive mobile) */
+@import url("responsive.css");
+
+

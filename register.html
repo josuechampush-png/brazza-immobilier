@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<!-- ============================================
+     register.html — PAGE D'INSCRIPTION
+     Design professionnel et élégant
+     ============================================ -->
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscription — Braza-Immobilier</title>
+  
+  <!-- Fichiers CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+  <!-- ============================================
+       EN-TÊTE SIMPLIFIÉ (SANS BOUTON RETOUR)
+       ============================================ -->
+  <header class="header-pro" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+    <div class="header-contenu">
+      <div class="header-logo">
+        <h1 class="site-nom" style="color: white;">
+          Braza<span class="separateur">–</span>Immobilier
+        </h1>
+        <p class="site-slogan" style="color: rgba(255,255,255,0.8);">Trouvez votre logement idéal à Brazzaville</p>
+      </div>
+      <div class="header-actions">
+        <button id="btn-theme" class="btn-theme" title="Changer de thème">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================
+       CONTENEUR D'AUTHENTIFICATION
+       ============================================ -->
+  <main class="auth-container">
+    
+    <div class="auth-card">
+      
+      <!-- En-tête avec logo animé -->
+      <div class="auth-header">
+        <div class="auth-logo">🏠</div>
+        <h2 class="auth-titre">Rejoignez la communauté</h2>
+        <p class="auth-description">Créez votre compte et commencez à publier ou trouver des annonces</p>
+      </div>
+
+      <!-- Formulaire d'inscription -->
+      <form id="form-register" class="auth-form">
+        
+        <!-- Nom complet -->
+        <div class="form-groupe">
+          <label for="nom" class="form-label">
+            <span class="label-icone">👤</span>
+            <span>Nom complet</span>
+          </label>
+          <input type="text" id="nom" class="form-input" placeholder="Jean Dupont" required autocomplete="name">
+        </div>
+
+        <!-- Email -->
+        <div class="form-groupe">
+          <label for="email" class="form-label">
+            <span class="label-icone">📧</span>
+            <span>Adresse email</span>
+          </label>
+          <input type="email" id="email" class="form-input" placeholder="votre@email.com" required autocomplete="email">
+        </div>
+
+        <!-- ✅ NOUVEAU : Numéro de téléphone -->
+        <div class="form-groupe">
+          <label for="telephone" class="form-label">
+            <span class="label-icone">📱</span>
+            <span>Numéro de téléphone</span>
+          </label>
+          <input type="tel" id="telephone" class="form-input" placeholder="+242 06 xxx xxxx" required autocomplete="tel-national">
+          <span class="form-aide">Indispensable pour récupérer votre compte si vous oubliez votre mot de passe.</span>
+        </div>
+
+        <!-- Mot de passe -->
+        <div class="form-groupe">
+          <label for="password" class="form-label">
+            <span class="label-icone">🔒</span>
+            <span>Mot de passe</span>
+          </label>
+          <input type="password" id="password" class="form-input" placeholder="Minimum 6 caractères" required minlength="6" autocomplete="new-password">
+          <span class="form-aide">Le mot de passe doit contenir au moins 6 caractères</span>
+        </div>
+
+        <!-- Confirmation mot de passe -->
+        <div class="form-groupe">
+          <label for="password-confirm" class="form-label">
+            <span class="label-icone">🔒</span>
+            <span>Confirmer le mot de passe</span>
+          </label>
+          <input type="password" id="password-confirm" class="form-input" placeholder="Retapez votre mot de passe" required autocomplete="new-password">
+        </div>
+
+        <!-- Bouton d'inscription -->
+        <button type="submit" id="btn-register" class="btn-auth">
+          <span class="btn-icone">✅</span>
+          <span>Créer mon compte</span>
+        </button>
+
+        <!-- Message d'erreur/succès -->
+        <p id="message-auth" class="auth-message"></p>
+
+      </form>
+
+      <!-- Séparateur -->
+      <div class="auth-separateur">ou</div>
+
+      <!-- Lien vers la connexion -->
+      <div class="auth-footer">
+        <p>Déjà un compte ? <a href="login.html">Se connecter</a></p>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ============================================
+       SCRIPTS
+       ============================================ -->
+  
+  <!-- Librairie Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- Gestion du thème -->
+  <script src="js/theme.js"></script>
+  
+  <!-- Script d'authentification -->
+  <script src="js/auth.js"></script>
+  
+  <!-- Footer -->
+  <script src="js/footer.js"></script>
+
+</body>
+</html>
