@@ -24,7 +24,18 @@ document.addEventListener("DOMContentLoaded", async function () {
     const { data: { session } } = await client.auth.getSession();
     
     if (session) {
-      const nom = session.user.user_metadata?.nom || session.user.email.split('@')[0];
+      // ✅ CORRECTION : On récupère le nom brut des métadonnées.
+      // Si 'nom' existe, on l'utilise tel quel (avec ses espaces).
+      // Sinon, on prend la partie avant @ de l'email.
+      let nomAffiche = session.user.user_metadata?.nom;
+      
+      if (!nomAffiche || nomAffiche.trim() === "") {
+        nomAffiche = session.user.email.split('@')[0];
+      }
+      
+      // On nettoie juste les éventuels underscores au cas où, 
+      // mais on NE TOUCHE PAS aux espaces standards.
+      const nom = nomAffiche.replace(/_/g, ' ');
       
       // ✅ RESPECT DE LA STRUCTURE ORIGINALE (.user-container)
       const userContainer = document.createElement("div");
@@ -35,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       userContainer.innerHTML = 
         '<div style="position:relative; display:inline-flex; align-items:center; gap:10px;">' +
           '<button id="btn-notif-cloche" title="Notifications" style="background:none; border:none; font-size:20px; cursor:pointer; position:relative; padding:0; margin:0;">🔔<span id="badge-notif-count" style="display:none; position:absolute; top:-5px; right:-8px; background:#e53e3e; color:white; font-size:10px; font-weight:bold; padding:2px 5px; border-radius:10px;">0</span></button>' +
-          '<a href="profil.html" class="user-nom" style="text-decoration: none; color: inherit; cursor: pointer;">👤 ' + nom + ' </a>' +
+          '<a href="profil.html" class="user-nom" style="text-decoration: none; color: inherit; cursor: pointer; white-space: nowrap;">👤 ' + nom + '</a>' +
           '<div id="dropdown-notifs" style="display:none; position:absolute; top:100%; right:0; margin-top:10px; width:300px; background:white; border:1px solid #e2e8f0; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); z-index:1000; max-height:350px; overflow-y:auto;"></div>' +
         '</div>';
       
