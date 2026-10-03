@@ -1,16 +1,10 @@
 <!DOCTYPE html>
-<!-- ============================================
-     register.html — PAGE D'INSCRIPTION
-     Design professionnel et élégant
-     ============================================ -->
 <html lang="fr">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inscription — Braza-Immobilier</title>
   
-  <!-- Fichiers CSS -->
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/header.css">
@@ -19,18 +13,15 @@
   <link rel="stylesheet" href="css/footer.css">
   <link rel="stylesheet" href="css/responsive.css">
 
-		<!-- Ajoute ceci -->
+	<!-- PWA Config -->
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#ed8936">
+  <meta name="theme-color" content="#1e293b">
 	
 </head>
-
 <body>
 
-  <!-- ============================================
-       EN-TÊTE SIMPLIFIÉ (SANS BOUTON RETOUR)
-       ============================================ -->
-  <header class="header-pro" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+  <!-- Header simplifié et sombre -->
+  <header class="header-pro" style="background: #1e293b;">
     <div class="header-contenu">
       <div class="header-logo">
         <h1 class="site-nom" style="color: white;">
@@ -44,123 +35,119 @@
     </div>
   </header>
 
-  <!-- ============================================
-       CONTENEUR D'AUTHENTIFICATION
-       ============================================ -->
   <main class="auth-container">
     
     <div class="auth-card">
       
-      <!-- En-tête avec logo animé -->
+      <!-- En-tête avec Drapeau Congolais CORRECT + Logo Maison -->
       <div class="auth-header">
+        
+        <!-- 1. Le Logo Maison (Conservé tel quel) -->
         <div class="auth-logo">🏠</div>
-        <h2 class="auth-titre">Rejoignez la communauté</h2>
-        <p class="auth-description">Créez votre compte et commencez à publier ou trouver des annonces</p>
+        
+        <!-- 2. Le Drapeau Congolais Réaliste (SVG Inline - Grand Vert, Bande Jaune, Grand Rouge) -->
+        <div class="flag-wrapper">
+          <svg width="80" height="50" viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg" style="box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 4px;">
+            <!-- Triangle Vert (Haut Gauche) - Occupant une grande partie -->
+            <polygon points="0,0 80,0 0,50" fill="#009543" />
+            <!-- Triangle Rouge (Bas Droite) - Occupant une grande partie -->
+            <polygon points="80,0 80,50 0,50" fill="#DC241F" />
+            <!-- Bande Jaune Diagonale (Au centre, largeur significative) -->
+            <polygon points="0,50 80,0 80,12 12,50" fill="#FBDE4A" />
+          </svg>
+        </div>
+
+        <!-- 3. Le Texte -->
+        <h2 class="auth-titre">Créer un compte</h2>
+        <p class="auth-description">Rejoignez la communauté immobilière</p>
       </div>
 
-      <!-- Formulaire d'inscription -->
       <form id="form-register" class="auth-form">
         
         <!-- Nom complet -->
         <div class="form-groupe">
-          <label for="nom" class="form-label">
-            <span class="label-icone">👤</span>
-            <span>Nom complet</span>
-          </label>
-          <input type="text" id="nom" class="form-input" placeholder="Jean Dupont" required autocomplete="name">
+          <label for="nom" class="form-label">Nom complet</label>
+          <input type="text" id="nom" class="form-input" placeholder="Prénom Nom" required autocomplete="name">
         </div>
 
         <!-- Email -->
         <div class="form-groupe">
-          <label for="email" class="form-label">
-            <span class="label-icone">📧</span>
-            <span>Adresse email</span>
-          </label>
+          <label for="email" class="form-label">Adresse email</label>
           <input type="email" id="email" class="form-input" placeholder="votre@email.com" required autocomplete="email">
         </div>
 
-        <!-- ✅ NOUVEAU : Numéro de téléphone -->
+        <!-- Numéro de téléphone -->
         <div class="form-groupe">
-          <label for="telephone" class="form-label">
-            <span class="label-icone">📱</span>
-            <span>Numéro de téléphone</span>
-          </label>
+          <label for="telephone" class="form-label">Numéro de téléphone</label>
           <input type="tel" id="telephone" class="form-input" placeholder="+242 06 xxx xxxx" required autocomplete="tel-national">
-          <span class="form-aide">Indispensable pour récupérer votre compte si vous oubliez votre mot de passe.</span>
+          <span class="form-aide">Utilisé pour la récupération de compte.</span>
         </div>
 
         <!-- Mot de passe -->
         <div class="form-groupe">
-          <label for="password" class="form-label">
-            <span class="label-icone">🔒</span>
-            <span>Mot de passe</span>
-          </label>
-          <input type="password" id="password" class="form-input" placeholder="Minimum 6 caractères" required minlength="6" autocomplete="new-password">
-          <span class="form-aide">Le mot de passe doit contenir au moins 6 caractères</span>
+          <label for="password" class="form-label">Mot de passe</label>
+          <input type="password" id="password" class="form-input" placeholder="Min. 6 caractères" required minlength="6" autocomplete="new-password">
+          <button type="button" class="toggle-password" onclick="togglePassword('password', this)">👁️</button>
         </div>
 
         <!-- Confirmation mot de passe -->
         <div class="form-groupe">
-          <label for="password-confirm" class="form-label">
-            <span class="label-icone">🔒</span>
-            <span>Confirmer le mot de passe</span>
-          </label>
-          <input type="password" id="password-confirm" class="form-input" placeholder="Retapez votre mot de passe" required autocomplete="new-password">
+          <label for="password-confirm" class="form-label">Confirmer mot de passe</label>
+          <input type="password" id="password-confirm" class="form-input" placeholder="Retapez le mot de passe" required autocomplete="new-password">
+          <button type="button" class="toggle-password" onclick="togglePassword('password-confirm', this)">👁️</button>
         </div>
 
-        <!-- Bouton d'inscription -->
         <button type="submit" id="btn-register" class="btn-auth">
-          <span class="btn-icone">✅</span>
-          <span>Créer mon compte</span>
+          Créer mon compte
         </button>
 
-        <!-- Message d'erreur/succès -->
         <p id="message-auth" class="auth-message"></p>
 
       </form>
 
-      <!-- Séparateur -->
-      <div class="auth-separateur">ou</div>
+      <div class="auth-separateur">OU</div>
 
-      <!-- Lien vers la connexion -->
       <div class="auth-footer">
-        <p>Déjà un compte ? <a href="login.html">Se connecter</a></p>
+        <p>Déjà inscrit ? <a href="login.html">Se connecter</a></p>
       </div>
 
     </div>
 
   </main>
 
-  <!-- ============================================
-       SCRIPTS
-       ============================================ -->
-  
-  <!-- Librairie Supabase -->
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
-  <!-- Gestion du thème -->
   <script src="js/theme.js"></script>
-  
-  <!-- Script d'authentification -->
   <script src="js/auth.js"></script>
-  
-  <!-- Footer -->
-  <script src="js/footer.js"></script>
+	
 
 	<script>
-  // Enregistrement du Service Worker
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then(registration => {
-          console.log('SW enregistré avec succès : ', registration.scope);
-        })
-        .catch(error => {
-          console.log('Échec de l\'enregistrement du SW : ', error);
-        });
-    });
-  }
-</script>
+    // Fonction toggle password améliorée (Œil barré via CSS)
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      
+      if (input.type === "password") {
+        input.type = "text";
+        btn.classList.add('eye-off'); 
+      } else {
+        input.type = "password";
+        btn.classList.remove('eye-off'); 
+      }
+    }
+
+    // Enregistrement du Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('SW enregistré avec succès : ', registration.scope);
+          })
+          .catch(error => {
+            console.log('Échec de l\'enregistrement du SW : ', error);
+          });
+      });
+    }
+  </script>
 
 </body>
 </html>

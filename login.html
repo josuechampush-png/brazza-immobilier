@@ -14,34 +14,40 @@
   <link rel="stylesheet" href="css/responsive.css">
   
   <style>
-    /* Styles pour la modale Mot de passe oublié */
+    /* Styles spécifiques pour la modale Mot de passe oublié */
     .modal-overlay {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;
     }
     .modal-box {
-      background: white; padding: 2rem; border-radius: 12px; max-width: 400px; width: 90%;
+      background: white; padding: 2rem; border-radius: 8px; max-width: 400px; width: 90%;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative;
+      font-family: Arial, Helvetica, sans-serif;
     }
     body.theme-sombre .modal-box {
-      background: #2d3748; color: #f7fafc;
+      background: #1e293b; color: #f7fafc;
     }
     .close-modal {
       position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #718096;
     }
-    .link-secondary {
-      color: var(--couleur-primaire, #3182ce); text-decoration: underline; cursor: pointer; font-size: 14px; margin-top: 10px; display: block; text-align: center;
+    
+    /* Style spécifique au conteneur du drapeau pour l'alignement */
+    .flag-wrapper {
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: center;
     }
   </style>
 
-		<!-- Ajoute ceci -->
+	<!-- PWA Config -->
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#ed8936">
+  <meta name="theme-color" content="#1e293b">
 	
 </head>
 <body>
 
-  <header class="header-pro" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+  <!-- Header simplifié et sombre -->
+  <header class="header-pro" style="background: #1e293b;">
     <div class="header-contenu">
       <div class="header-logo">
         <h1 class="site-nom" style="color: white;">Braza<span class="separateur">–</span>Immobilier</h1>
@@ -55,46 +61,59 @@
 
   <main class="auth-container">
     <div class="auth-card">
+      
+      <!-- En-tête avec Drapeau Congolais CORRECT + Logo Maison -->
       <div class="auth-header">
-        <div class="auth-logo">🔐</div>
-        <h2 class="auth-titre">Bon retour parmi nous</h2>
-        <p class="auth-description">Connectez-vous avec votre Email ou Téléphone</p>
+        
+        <!-- 1. Le Logo Maison (Conservé tel quel) -->
+        <div class="auth-logo">🏠</div>
+        
+        <!-- 2. Le Drapeau Congolais Réaliste (SVG Inline - Grand Vert, Bande Jaune, Grand Rouge) -->
+        <div class="flag-wrapper">
+          <svg width="80" height="50" viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg" style="box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 4px;">
+            <!-- Triangle Vert (Haut Gauche) - Occupant une grande partie -->
+            <polygon points="0,0 80,0 0,50" fill="#009543" />
+            <!-- Triangle Rouge (Bas Droite) - Occupant une grande partie -->
+            <polygon points="80,0 80,50 0,50" fill="#DC241F" />
+            <!-- Bande Jaune Diagonale (Au centre, largeur significative) -->
+            <!-- On dessine un polygone jaune par-dessus pour créer la séparation nette -->
+            <polygon points="0,50 80,0 80,12 12,50" fill="#FBDE4A" />
+          </svg>
+        </div>
+
+        <!-- 3. Le Texte -->
+        <h2 class="auth-titre">Connexion</h2>
+        <p class="auth-description">Accédez à votre espace personnel</p>
       </div>
 
       <form id="form-login" class="auth-form">
         
         <!-- Champ fusionné Email/Téléphone -->
         <div class="form-groupe">
-          <label for="identifiant" class="form-label">
-            <span class="label-icone">🆔</span>
-            <span>Email ou Numéro de téléphone</span>
-          </label>
-          <input type="text" id="identifiant" class="form-input" placeholder="votre@email.com ou +242..." required>
+          <label for="identifiant" class="form-label">Email ou Téléphone</label>
+          <input type="text" id="identifiant" class="form-input" placeholder="votre@email.com ou 06..." required>
         </div>
 
-        <!-- Mot de passe -->
+        <!-- Mot de passe avec œil -->
         <div class="form-groupe">
-          <label for="mdp-login" class="form-label">
-            <span class="label-icone">🔒</span>
-            <span>Mot de passe</span>
-          </label>
-          <input type="password" id="mdp-login" class="form-input" placeholder="Votre mot de passe" required autocomplete="current-password">
+          <label for="mdp-login" class="form-label">Mot de passe</label>
+          <input type="password" id="mdp-login" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+          <button type="button" class="toggle-password" onclick="togglePassword('mdp-login', this)">👁️</button>
         </div>
 
         <!-- Lien Mot de passe oublié -->
         <span id="btn-forgot-password" class="link-secondary">Mot de passe oublié ?</span>
 
         <button type="submit" id="btn-login" class="btn-auth">
-          <span class="btn-icone">🔓</span>
-          <span>Se connecter</span>
+          Se connecter
         </button>
 
         <p id="message-auth" class="auth-message"></p>
       </form>
 
-      <div class="auth-separateur">ou</div>
+      <div class="auth-separateur">OU</div>
       <div class="auth-footer">
-        <p>Nouveau sur Braza-Immobilier ? <a href="register.html">Créer un compte gratuitement</a></p>
+        <p>Pas encore de compte ? <a href="register.html">Créer un compte</a></p>
       </div>
     </div>
   </main>
@@ -103,21 +122,45 @@
   <div id="modal-forgot-password" class="modal-overlay">
     <div class="modal-box">
       <span class="close-modal">&times;</span>
-      <h3>Récupérer mon accès</h3>
-      <p style="font-size:14px; color:#718096; margin-bottom:15px;">Entrez votre email ou votre numéro de téléphone. Nous vous enverrons un lien de réinitialisation par email.</p>
+      <h3 style="margin-bottom:15px; color:#1e293b;">Récupérer mon accès</h3>
+      <p style="font-size:14px; color:#64748b; margin-bottom:15px;">Entrez votre email ou téléphone.</p>
       
       <form id="form-forgot">
         <div class="form-groupe">
           <input type="text" id="forgot-contact" class="form-input" placeholder="Email ou Téléphone" required>
         </div>
-        <button type="submit" class="btn-auth" style="width:100%;">Envoyer le lien</button>
+        <button type="submit" class="btn-auth" style="width:100%; margin-top:10px;">Envoyer le lien</button>
       </form>
     </div>
   </div>
 
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/theme.js"></script>
   <script src="js/auth.js"></script>
-  <script src="js/footer.js"></script>
+   
+  
+  <script>
+    // Fonction toggle password améliorée (Œil barré via CSS)
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      
+      if (input.type === "password") {
+        input.type = "text";
+        btn.classList.add('eye-off'); 
+      } else {
+        input.type = "password";
+        btn.classList.remove('eye-off'); 
+      }
+    }
+    
+    // Enregistrement Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .catch(error => console.log('SW Error:', error));
+      });
+    }
+  </script>
 </body>
 </html>

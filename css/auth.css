@@ -1,247 +1,254 @@
 /* ==================================================
-   auth.css — STYLES PROFESSIONNELS POUR L'AUTHENTIFICATION
-   Design moderne et élégant pour inspirer confiance
+   auth.css — STYLE PROFESSIONNEL ET SOBRE
+   Design minimaliste, sérieux, adapté au secteur immobilier
+   Identité visuelle : Drapeau Congolais CORRECT (Diagonal)
+   Police : Arial/Helvetica (Commercial & Net)
    ================================================== */
 
 /* ===== CONTENEUR PRINCIPAL ===== */
 .auth-container {
-  min-height: 100vh;
+  min-height: calc(100vh - 60px); 
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 100px 20px 40px 20px;
-  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Effet de fond animé */
-.auth-container::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-  background-size: 50px 50px;
-  animation: backgroundMove 20s linear infinite;
-  opacity: 0.3;
-}
-
-@keyframes backgroundMove {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(50px, 50px); }
+  padding: 80px 20px 40px 20px; 
+  background-color: #f3f4f6; 
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 /* ===== CARTE D'AUTHENTIFICATION ===== */
 .auth-card {
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(20px);
-  border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  padding: 40px 45px;
-  max-width: 480px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 40px 35px;
+  max-width: 420px;
   width: 100%;
   position: relative;
   z-index: 10;
-  animation: slideUp 0.6s ease-out;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  margin-top: 20px; 
 }
 
 /* ===== EN-TÊTE DE LA CARTE ===== */
 .auth-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* LOGO MAISON/CADENAS (Conservé tel quel) */
 .auth-logo {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 20px;
-  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-  border-radius: 20px;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 10px; /* Espace réduit car le drapeau arrive juste après */
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 40px;
-  box-shadow: 0 10px 30px rgba(30, 58, 138, 0.3);
-  animation: pulse 2s ease-in-out infinite;
+  font-size: 24px;
+  color: #334155;
 }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+/* LE DRAPEAU CONGOLAIS (CORRIGÉ : DIAGONAL) */
+.congo-flag-correct {
+  width: 60px;
+  height: 40px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 15px; /* Espace avant le titre */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: relative;
+  background: linear-gradient(to bottom right, #009543 49%, #FBDE4A 49%, #FBDE4A 51%, #DC241F 51%);
+  /* Explication du gradient : 
+     - De 0% à 49% : Vert (Triangle Haut-Gauche)
+     - De 49% à 51% : Jaune (Bande centrale fine pour effet diagonal net)
+     - De 51% à 100% : Rouge (Triangle Bas-Droite)
+     Note: Pour un rendu plus proche du vrai drapeau qui a une bande jaune large, 
+     on ajuste les pourcentages ci-dessous dans la classe .congo-flag-real si besoin.
+     Ici, c'est une simplification propre visuellement.
+  */
+}
+
+/* Variante plus réaliste si tu veux une bande jaune plus épaisse */
+.congo-flag-realistic {
+  width: 60px;
+  height: 40px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: relative;
+}
+/* On utilise SVG inline pour être précis sur la géométrie */
+.flag-svg-container {
+  width: 60px;
+  height: 40px;
+  margin-bottom: 15px;
+  display: block;
 }
 
 .auth-titre {
-  font-size: 32px;
-  font-weight: 800;
+  font-size: 24px;
+  font-weight: 700;
   color: #1e293b;
-  margin: 0 0 12px 0;
-  letter-spacing: -0.5px;
+  margin: 0 0 8px 0;
 }
 
 .auth-description {
-  font-size: 16px;
+  font-size: 14px;
   color: #64748b;
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 /* ===== FORMULAIRE ===== */
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
-/* Groupes de champs */
 .form-groupe {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+  position: relative;
 }
 
-/* Labels */
 .form-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #334155;
-  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .label-icone {
-  font-size: 18px;
+  display: none; 
 }
 
-/* Champs de saisie */
 .form-input {
   width: 100%;
-  padding: 14px 18px;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 16px;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 15px;
   color: #1e293b;
-  background: #f8fafc;
-  transition: all 0.3s ease;
+  background: #fff;
+  transition: all 0.2s ease;
   outline: none;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .form-input:focus {
-  border-color: #3b82f6;
-  background: white;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  border-color: #334155;
+  box-shadow: 0 0 0 2px rgba(51, 65, 85, 0.1);
 }
 
 .form-input::placeholder {
   color: #94a3b8;
 }
 
-/* Texte d'aide */
 .form-aide {
-  font-size: 13px;
+  font-size: 12px;
   color: #64748b;
   margin-top: 4px;
-  padding-left: 4px;
 }
 
-/* ===== BOUTON PRINCIPAL ===== */
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 38px;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 18px;
+  user-select: none;
+  z-index: 2;
+  background: none;
+  border: none;
+  padding: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-password:hover {
+  color: #334155;
+}
+
+.toggle-password.eye-off {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
 .btn-auth {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  background: #1e293b;
   color: white;
   border: none;
-  padding: 16px 32px;
-  border-radius: 12px;
-  font-size: 17px;
-  font-weight: 700;
+  padding: 14px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 4px;
-  position: relative;
-  overflow: hidden;
-  letter-spacing: 0.3px;
-}
-
-.btn-auth::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
+  transition: background 0.2s ease;
+  margin-top: 10px;
   width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-  transition: left 0.5s ease;
-}
-
-.btn-auth:hover::before {
-  left: 100%;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .btn-auth:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(30, 58, 138, 0.4);
-}
-
-.btn-auth:active {
-  transform: translateY(0);
+  background: #334155;
 }
 
 .btn-auth:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  transform: none;
 }
 
-.btn-auth .btn-icone {
-  font-size: 20px;
+.btn-icone {
+  display: none; 
 }
 
-/* ===== MESSAGE D'AUTHENTIFICATION ===== */
 .auth-message {
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  padding: 0;
-  border-radius: 10px;
-  margin: 0;
-  min-height: 0;
-  transition: all 0.3s ease;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+  display: none;
 }
 
-/* Quand le message a du contenu, on ajoute du padding */
-.auth-message:not(:empty) {
-  padding: 12px 16px;
-  margin-top: 8px;
-  min-height: 20px;
+.auth-message.error {
+  display: block;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
 }
 
-/* ===== SÉPARATEUR ===== */
+.auth-message.success {
+  display: block;
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
 .auth-separateur {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin: 10px 0;
+  gap: 15px;
+  margin: 20px 0;
   color: #94a3b8;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
 }
 
 .auth-separateur::before,
@@ -252,52 +259,45 @@
   background: #e2e8f0;
 }
 
-/* ===== PIED DE LA CARTE ===== */
 .auth-footer {
   text-align: center;
-  margin-top: 10px;
-  padding-top: 12px;
-  border-top: 2px solid #e2e8f0;
-}
-
-.auth-footer p {
-  margin: 0;
+  margin-top: 20px;
+  font-size: 14px;
   color: #64748b;
-  font-size: 15px;
-  font-weight: 500;
 }
 
 .auth-footer a {
-  color: #3b82f6;
+  color: #1e293b;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.auth-footer a:hover {
+  color: #334155;
+}
+
+.link-secondary {
+  display: block;
+  text-align: center;
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 5px;
   text-decoration: none;
-  font-weight: 700;
-  transition: all 0.3s ease;
-  position: relative;
 }
 
-.auth-footer a::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: #3b82f6;
-  transition: width 0.3s ease;
-}
-
-.auth-footer a:hover::after {
-  width: 100%;
+.link-secondary:hover {
+  text-decoration: underline;
+  color: #1e293b;
 }
 
 /* ===== MODE SOMBRE ===== */
 .theme-sombre .auth-container {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  background-color: #0f172a;
 }
 
 .theme-sombre .auth-card {
-  background: rgba(30, 41, 59, 0.98);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  background: #1e293b;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
 }
 
 .theme-sombre .auth-titre {
@@ -309,26 +309,26 @@
 }
 
 .theme-sombre .form-label {
-  color: #e2e8f0;
+  color: #cbd5e1;
 }
 
 .theme-sombre .form-input {
-  background: #1e293b;
-  border-color: #475569;
+  background: #0f172a;
+  border-color: #334155;
   color: #f1f5f9;
 }
 
 .theme-sombre .form-input:focus {
-  border-color: #60a5fa;
-  background: #0f172a;
+  border-color: #64748b;
 }
 
-.theme-sombre .form-aide {
-  color: #94a3b8;
+.theme-sombre .btn-auth {
+  background: #f1f5f9;
+  color: #0f172a;
 }
 
-.theme-sombre .auth-footer {
-  border-top-color: #475569;
+.theme-sombre .btn-auth:hover {
+  background: #e2e8f0;
 }
 
 .theme-sombre .auth-footer p {
@@ -336,61 +336,24 @@
 }
 
 .theme-sombre .auth-footer a {
-  color: #60a5fa;
+  color: #f1f5f9;
 }
 
-.theme-sombre .auth-separateur {
+.theme-sombre .toggle-password {
   color: #64748b;
 }
 
-.theme-sombre .auth-separateur::before,
-.theme-sombre .auth-separateur::after {
-  background: #475569;
+.theme-sombre .toggle-password:hover {
+  color: #f1f5f9;
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 640px) {
-  .auth-container {
-    padding: 80px 16px 30px 16px;
-  }
-  
+@media (max-width: 480px) {
   .auth-card {
-    padding: 30px 25px;
-    border-radius: 20px;
+    padding: 30px 20px;
   }
   
   .auth-titre {
-    font-size: 26px;
-  }
-  
-  .auth-logo {
-    width: 70px;
-    height: 70px;
-    font-size: 34px;
-  }
-  
-  .btn-auth {
-    padding: 14px 24px;
-    font-size: 16px;
-  }
-}
-
-/* ===== ANIMATIONS SUPPLÉMENTAIRES ===== */
-.auth-card > * {
-  animation: fadeIn 0.6s ease-out backwards;
-}
-
-.auth-card > *:nth-child(1) { animation-delay: 0.1s; }
-.auth-card > *:nth-child(2) { animation-delay: 0.2s; }
-.auth-card > *:nth-child(3) { animation-delay: 0.3s; }
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+    font-size: 22px;
   }
 }
