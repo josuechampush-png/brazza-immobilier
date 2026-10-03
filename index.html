@@ -138,6 +138,11 @@
       display: block;
     }
   </style>
+
+	<!-- Ajoute ceci -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#ed8936">
+	
 </head>
 
 <body>
@@ -750,6 +755,23 @@
       }
     })();
   </scrip>
+
+
+	<script>
+  // Enregistrement du Service Worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(registration => {
+          console.log('SW enregistré avec succès : ', registration.scope);
+        })
+        .catch(error => {
+          console.log('Échec de l\'enregistrement du SW : ', error);
+        });
+    });
+  }
+</script>
+		
 
 </body>
 </html>

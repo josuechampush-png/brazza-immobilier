@@ -3,6 +3,11 @@
      Informations de contact et liens utiles
      ============================================ -->
 <footer class="footer">
+
+  	<!-- Ajoute ceci -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#ed8936">
+	
   <div class="footer-contenu">
     
     <!-- Section À propos -->
@@ -23,8 +28,8 @@
     <!-- Section Contact -->
     <div class="footer-section">
       <h3>Contact</h3>
-      <p>📧 contact@brazza-immo.cg</p>
-      <p>📱 +242 06 123 45 67</p>
+      <p>📧 brazza-immobilier7@gmail.com</p>
+      <p>📱 +242 06 462 47 30</p>
       <p>📍 Brazzaville, Congo</p>
     </div>
 
@@ -34,4 +39,21 @@
   <div class="footer-bottom">
     <p>&copy; 2026 Brazza-Immobilier. Tous droits réservés.</p>
 	</div>
+
+	<script>
+  // Enregistrement du Service Worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(registration => {
+          console.log('SW enregistré avec succès : ', registration.scope);
+        })
+        .catch(error => {
+          console.log('Échec de l\'enregistrement du SW : ', error);
+        });
+    });
+  }
+</script>
+
+	
 </footer>
