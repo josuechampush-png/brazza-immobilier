@@ -61,8 +61,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         <div class="footer-section">
           <h3>Contact</h3>
-          <p>📧 contact@brazza-immo.cg</p>
-          <p>📱 +242 06 123 45 67</p>
+          <p>📧 brazza-immobilier7@gmail.com</p>
+          <p>📱 +242 06 462 57 30</p>
           <p>📍 Brazzaville, Congo</p>
         </div>
 
