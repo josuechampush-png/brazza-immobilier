@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   
+   <!-- Page d'accueil -->
+   <url>
+      <loc>https://brazza-immobilier.onrender.com/index.html</loc>
+      <lastmod>2026-10-04</lastmod>
+      <changefreq>daily</changefreq>
+      <priority>1.0</priority>
+   </url>
+
+   <!-- Pages principales de navigation publique -->
+   <url>
+      <loc>https://brazza-immobilier.onrender.com/carte.html</loc>
+      <lastmod>2026-10-04</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.8</priority>
+   </url>
+
+   <url>
+      <loc>https://brazza-immobilier.onrender.com/publier.html</loc>
+      <lastmod>2026-10-04</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.7</priority>
+   </url>
+
+   <url>
+      <loc>https://brazza-immobilier.onrender.com/a-propos.html</loc>
+      <lastmod>2026-10-04</lastmod>
+      <changefreq>yearly</changefreq>
+      <priority>0.5</priority>
+   </url>
+
+   <!-- Pages utilisateur (Accessibles mais moins prioritaires pour la découverte initiale) -->
+   <url>
+      <loc>https://brazza-immobilier.onrender.com/login.html</loc>
+      <lastmod>2026-10-04</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.5</priority>
+   </url>
+
+   <url>
+      <loc>https://brazza-immobilier.onrender.com/register.html</loc>
+      <lastmod>2026-10-04</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.5</priority>
+   </url>
+
+   <url>
+      <loc>https://brazza-immobilier.onrender.com/favoris.html</loc>
+      <lastmod>2026-10-04</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.3</priority>
+   </url>
+
+   <url>
+      <loc>https://brazza-immobilier.onrender.com/historique.html</loc>
+      <lastmod>2026-10-04</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.3</priority>
+   </url>
+
+   <url>
+      <loc>https://brazza-immobilier.onrender.com/mes-annonces.html</loc>
+      <lastmod>2026-10-04</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.3</priority>
+   </url>
+
+   <url>
+      <loc>https://brazza-immobilier.onrender.com/profil.html</loc>
+      <lastmod>2026-10-04</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.3</priority>
+   </url>
+
+   <url>
+      <loc>https://brazza-immobilier.onrender.com/modifier.html</loc>
+      <lastmod>2026-10-04</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.3</priority>
+   </url>
+
+   <url>
+      <loc>https://brazza-immobilier.onrender.com/plus.html</loc>
+      <lastmod>2026-10-04</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.3</priority>
+   </url>
+
+   <!-- Note : annonce.html est dynamique (?id=...). 
+        Il vaut mieux laisser Google découvrir les annonces via les liens sur index.html 
+        plutôt que de lister chaque ID dans le sitemap manuellement. -->
+
+</urlset>
+

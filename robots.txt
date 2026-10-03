@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /admin.html
+Disallow: /maintenance.html
+Disallow: /google7fe2e6d23c40d0c8.html
+
+Sitemap: https://brazza-immobilier.onrender.com/sitemap.xml
