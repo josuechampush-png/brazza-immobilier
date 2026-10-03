@@ -1,4 +1,4 @@
-const CACHE_NAME = 'braza-immo-cache-v2';
+const CACHE_NAME = 'brazza-immo-cache-v1';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
