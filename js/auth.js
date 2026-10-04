@@ -1,4 +1,4 @@
-// js/auth.js - VERSION FINALE AVEC ALERT EMAIL & REDIRECTION
+// js/auth.js - VERSION DIAGNOSTIC & CORRECTION EMAIL
 
 const SUPABASE_URL = 'https://buymgwahouwcwwgdiogn.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDYyODQxOSwiZXhwIjoyMTA2MjA0NDE5fQ.4m7vMaiQvDEV5NtptuGlGcdh4gcxNMxHdD-8sPo6M4k';
@@ -50,9 +50,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  /**
-   * ✅ FONCTION DE NORMALISATION TÉLÉPHONE
-   */
   function normaliserTelephone(telBrut) {
     if (!telBrut) return null;
     let digits = telBrut.replace(/\D/g, ''); 
@@ -101,7 +98,6 @@ document.addEventListener("DOMContentLoaded", function() {
     formRegister.addEventListener("submit", async function(e) {
       e.preventDefault();
       
-      // Désactiver bouton
       if(btnRegister) {
         btnRegister.disabled = true;
         btnRegister.innerHTML = "Envoi...";
@@ -141,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function() {
       }
 
       try {
-        // APPEL CRUCIAL : signUp avec Rôle
+        // APPEL CRUCIAL : signUp
         const { data, error } = await supabase.auth.signUp({
           email: email,
           password: password,
@@ -154,12 +150,18 @@ document.addEventListener("DOMContentLoaded", function() {
           }
         });
 
+        // ✅ DEBUG : Affiche la réponse brute dans la console
+        console.log("Réponse SignUp:", JSON.stringify(data, null, 2));
+        console.log("Erreur SignUp:", error);
+
         if (error) {
           throw error;
         }
 
-        // Tentative de sauvegarde directe en base (si permis par RLS)
-        if (data.user) {
+        // Vérification stricte : Est-ce que l'utilisateur existe vraiment ?
+        if (data && data.user) {
+           
+           // Mise à jour base de données (non bloquant)
            try {
              await supabase.from('profils_admin').update({
                role: roleChoisi,
@@ -170,22 +172,31 @@ document.addEventListener("DOMContentLoaded", function() {
            } catch (dbErr) {
              console.warn("Update profil admin ignoré:", dbErr.message);
            }
+
+           // ✅ LOGIQUE DE CONFIRMATION EMAIL
+           // Si data.session est null, c'est que Supabase exige une confirmation email.
+           // C'est le comportement attendu si "Confirm email" est activé dans le dashboard.
+           
+           alert("✅ Compte créé avec succès !\n\n📧 Un lien de confirmation a été envoyé à :\n" + email + "\n\nMerci de vérifier votre boîte mail (et vos spams) et de cliquer sur le lien pour activer votre compte.\n\nVous serez redirigé vers la connexion.");
+           
+           window.location.href = "login.html";
+
+        } else {
+           // Cas rare où user est null mais pas d'erreur
+           afficherMessage("❌ Erreur inattendue lors de la création du compte.", "error");
+           resetButton();
         }
 
-        // ✅ MODIFICATION ICI : ALERTE NATIVE + REDIRECTION
-        
-        // 1. Affiche une alerte bloquante que l'utilisateur doit fermer
-        alert("✅ Inscription réussie !\n\nMerci de vérifier votre boîte email et cliquer sur le lien de confirmation pour activer votre compte.\n\nVous serez redirigé vers la page de connexion.");
-        
-        // 2. Redirection immédiate après fermeture de l'alerte
-        window.location.href = "login.html";
-
       } catch (err) {
-        console.error("Erreur SignUp:", err);
+        console.error("Erreur SignUp Catch:", err);
+        
+        // Messages d'erreurs plus précis
         if (err.message.includes("already registered") || err.message.includes("User already registered")) {
            afficherMessage("❌ Cet email est déjà inscrit.", "error");
         } else if (err.message.includes("rate limit")) {
-           afficherMessage("❌ Trop de tentatives. Essayez plus tard.", "error");
+           afficherMessage("❌ Trop de tentatives. Attendez 24h.", "error");
+        } else if (err.message.includes("invalid_email")) {
+           afficherMessage("❌ Adresse email invalide.", "error");
         } else {
            afficherMessage("❌ Erreur technique : " + err.message, "error");
         }
@@ -194,7 +205,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Fonction helper pour réactiver le bouton
   function resetButton() {
     if(btnRegister) { 
       btnRegister.disabled = false; 
@@ -251,6 +261,8 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error(err);
         if (err.message.includes("Invalid login credentials")) {
            afficherMessage("❌ Identifiants incorrects.", "error");
+        } else if (err.message.includes("Email not confirmed")) {
+           afficherMessage("⚠️ Veuillez confirmer votre email avant de vous connecter.", "error");
         } else {
            afficherMessage("❌ Erreur : " + err.message, "error");
         }
@@ -312,3 +324,4 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 });
+
