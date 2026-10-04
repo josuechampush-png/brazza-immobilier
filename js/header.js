@@ -1,6 +1,5 @@
 /* ==================================================
-   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES
-   Structure Originale Préservée + Gestion Client/Prestataire
+   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES (V3 ROBUSTE)
    ================================================== */
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -24,49 +23,61 @@ document.addEventListener("DOMContentLoaded", async function () {
     const { data: { session } } = await client.auth.getSession();
     
     if (session) {
-      // ✅ CORRECTION : On récupère le nom brut des métadonnées.
+      // 1. Nom
       let nomAffiche = session.user.user_metadata?.nom;
-      
       if (!nomAffiche || nomAffiche.trim() === "") {
         nomAffiche = session.user.email.split('@')[0];
       }
-      
       const nom = nomAffiche.replace(/_/g, ' ');
       
-      // ✅ RÉCUPÉRATION DU RÔLE DEPUIS LES MÉTADONNÉES AUTH OU BASE DE DONNÉES
-      // Priorité aux metadata auth car disponibles instantanément
+      // 2. ROLE DETECTION (CRUCIAL)
       let roleUtilisateur = session.user.user_metadata?.role; 
 
-      // Si pas de rôle dans metadata, on essaie de le chercher en base (fallback)
+      // Fallback vers la base de données si pas dans metadata
       if (!roleUtilisateur) {
-        const { data: profilDb } = await client
-          .from('profils_admin')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
-        
-        if (profilDb && profilDb.role) {
-          roleUtilisateur = profilDb.role;
-        } else {
-          roleUtilisateur = 'client'; // Par défaut sécurisé
+        try {
+          const { data: profilDb, error } = await client
+            .from('profils_admin')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
+          
+          if (!error && profilDb && profilDb.role) {
+            roleUtilisateur = profilDb.role;
+          } else {
+            roleUtilisateur = 'client'; // Défaut sécurisé
+          }
+        } catch (dbErr) {
+          console.warn("Erreur lecture rôle DB:", dbErr);
+          roleUtilisateur = 'client';
         }
       }
 
-      // ✅ LOGIQUE D'AFFICHAGE SELON LE RÔLE
-      if (roleUtilisateur === 'client') {
-        // Cacher le bouton Publier en haut à droite
-        const btnPublierTop = document.querySelector('.btn-publier-pro');
-        if (btnPublierTop) btnPublierTop.style.display = 'none';
+      console.log("--- DEBUG HEADER ---");
+      console.log("Email:", session.user.email);
+      console.log("Role Final Détecté:", roleUtilisateur);
+      console.log("--------------------");
 
-        // Cacher l'onglet Publier dans le sous-menu nav
+      // 3. LOGIQUE D'AFFICHAGE CLIENT
+      if (roleUtilisateur === 'client') {
+        
+        // A. Cacher le bouton "+ Publier" en haut à droite
+        // On vise plusieurs sélecteurs possibles au cas où la classe change
+        const btnPubliers = document.querySelectorAll('.btn-publier-pro, a[href="publier.html"].btn-publier-pro');
+        btnPubliers.forEach(btn => {
+           if(btn) btn.style.display = 'none';
+        });
+
+        // B. Cacher l'onglet "Publier" dans le menu horizontal (si présent)
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
           if (link.href.includes('publier.html')) {
-            link.parentElement.style.display = 'none';
+            const parentLi = link.closest('li');
+            if(parentLi) parentLi.style.display = 'none';
           }
         });
 
-        // Cacher "Mes annonces" dans la barre du bas
+        // C. Cacher "Mes annonces" dans la barre du bas
         const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
         bottomNavItems.forEach(item => {
           if (item.href.includes('mes-annonces.html')) {
@@ -74,9 +85,9 @@ document.addEventListener("DOMContentLoaded", async function () {
           }
         });
       } 
-      // Si prestataire ou admin, tout reste visible par défaut
+      // Si prestataire/admin, on ne fait rien (tout reste visible)
       
-      // ✅ RESPECT DE LA STRUCTURE ORIGINALE (.user-container)
+      // 4. INJECTION USER CONTAINER (Nom + Cloche)
       const userContainer = document.createElement("div");
       userContainer.className = "user-container";
       
@@ -89,12 +100,12 @@ document.addEventListener("DOMContentLoaded", async function () {
       
       headerActions.appendChild(userContainer);
 
+      // ... (Le reste du code notifications reste identique) ...
       const btnCloche = document.getElementById("btn-notif-cloche");
       const dropdownNotifs = document.getElementById("dropdown-notifs");
       const badgeCount = document.getElementById("badge-notif-count");
       const userId = session.user.id;
 
-      // Fonction Badge
       async function majBadge() {
         if (!client) return;
         const { count, error: countError } = await client
@@ -113,7 +124,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       majBadge();
 
-      // Fonctions Globales pour Suppression
       window.delNotif = async (id) => {
         const { error } = await client.from('notifications').delete().eq('id', id).eq('user_id', userId);
         if (error) alert("Erreur: " + error.message);
@@ -133,7 +143,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
       };
 
-      // Chargement Liste
       async function chargerListeNotifs() {
         const { data: notifs, error } = await client
           .from('notifications')
@@ -174,7 +183,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         dropdownNotifs.innerHTML = html;
       }
 
-      // Événements Cloche
       if (btnCloche) {
         btnCloche.onclick = (e) => {
           e.stopPropagation();
@@ -187,7 +195,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         };
       }
 
-      // Fermer si clic dehors
       document.onclick = (e) => {
         if (dropdownNotifs && !e.target.closest(".notif-wrapper") && !e.target.closest("#btn-notif-cloche")) {
            if(!e.target.closest(".user-container")) {
@@ -197,7 +204,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       };
 
     } else {
-      // Utilisateur non connecté : Structure originale simple
+      // Non connecté
       const userContainer = document.createElement("div");
       userContainer.className = "user-container";
       userContainer.innerHTML = '<a href="login.html" class="btn-connexion-header">🔐</a>';
