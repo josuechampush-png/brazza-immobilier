@@ -1,5 +1,5 @@
 /* ==================================================
-   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES (V3 ROBUSTE)
+   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES (V4 FINAL)
    ================================================== */
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -30,10 +30,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
       const nom = nomAffiche.replace(/_/g, ' ');
       
-      // 2. ROLE DETECTION (CRUCIAL)
+      // 2. ROLE DETECTION
       let roleUtilisateur = session.user.user_metadata?.role; 
 
-      // Fallback vers la base de données si pas dans metadata
       if (!roleUtilisateur) {
         try {
           const { data: profilDb, error } = await client
@@ -45,10 +44,9 @@ document.addEventListener("DOMContentLoaded", async function () {
           if (!error && profilDb && profilDb.role) {
             roleUtilisateur = profilDb.role;
           } else {
-            roleUtilisateur = 'client'; // Défaut sécurisé
+            roleUtilisateur = 'client'; 
           }
         } catch (dbErr) {
-          console.warn("Erreur lecture rôle DB:", dbErr);
           roleUtilisateur = 'client';
         }
       }
@@ -58,17 +56,22 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.log("Role Final Détecté:", roleUtilisateur);
       console.log("--------------------");
 
-      // 3. LOGIQUE D'AFFICHAGE CLIENT
+      // 3. LOGIQUE CLIENT : GRISER LE BOUTON PUBLIER
       if (roleUtilisateur === 'client') {
         
-        // A. Cacher le bouton "+ Publier" en haut à droite
-        // On vise plusieurs sélecteurs possibles au cas où la classe change
-        const btnPubliers = document.querySelectorAll('.btn-publier-pro, a[href="publier.html"].btn-publier-pro');
-        btnPubliers.forEach(btn => {
-           if(btn) btn.style.display = 'none';
-        });
+        // A. Griser le bouton "+ Publier" en haut à droite
+        const btnPublier = document.querySelector('.btn-publier-pro');
+        if (btnPublier) {
+          btnPublier.style.opacity = '0.5';
+          btnPublier.style.pointerEvents = 'none'; // Empêche le clic
+          btnPublier.title = "Réservé aux prestataires";
+          
+          // Optionnel : Changer le texte pour clarifier
+          const spanTexte = btnPublier.querySelector('.btn-texte');
+          if(spanTexte) spanTexte.textContent = "Prestataire";
+        }
 
-        // B. Cacher l'onglet "Publier" dans le menu horizontal (si présent)
+        // B. Cacher l'onglet "Publier" dans le menu horizontal
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
           if (link.href.includes('publier.html')) {
@@ -85,9 +88,9 @@ document.addEventListener("DOMContentLoaded", async function () {
           }
         });
       } 
-      // Si prestataire/admin, on ne fait rien (tout reste visible)
+      // Si prestataire/admin, on laisse tel quel
       
-      // 4. INJECTION USER CONTAINER (Nom + Cloche)
+      // 4. INJECTION USER CONTAINER
       const userContainer = document.createElement("div");
       userContainer.className = "user-container";
       
@@ -100,7 +103,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       
       headerActions.appendChild(userContainer);
 
-      // ... (Le reste du code notifications reste identique) ...
+      // ... (Code Notifications identique à avant) ...
       const btnCloche = document.getElementById("btn-notif-cloche");
       const dropdownNotifs = document.getElementById("dropdown-notifs");
       const badgeCount = document.getElementById("badge-notif-count");
