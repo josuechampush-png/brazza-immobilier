@@ -1,6 +1,6 @@
 /* ==================================================
-   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES (V8 FINAL)
-   Correction : Lecture directe du nom depuis profils_admin (Source de vérité)
+   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES (V9 FINAL)
+   Correction : Masquage global des éléments .hide-for-client
    ================================================== */
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -68,21 +68,28 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.log("Role Détecté:", roleUtilisateur);
       console.log("--------------------");
 
-      // 4. LOGIQUE CLIENT : GRISER LE BOUTON PUBLIER
+      // 4. LOGIQUE CLIENT : MASQUAGE GLOBAL DES ÉLÉMENTS SENSIBLES
       if (roleUtilisateur === 'client') {
         
-        // A. Griser le bouton "+ Publier" en haut à droite
+        // A. Cacher TOUS les éléments avec la classe .hide-for-client
+        // Cela inclut le bouton Abonnement dans plus.html, mais aussi d'autres futurs éléments
+        const elementsHideForClient = document.querySelectorAll('.hide-for-client');
+        elementsHideForClient.forEach(el => {
+           el.style.display = 'none';
+        });
+
+        // B. Griser/Cacher le bouton "+ Publier" en haut à droite (spécifique header)
         const btnPublier = document.querySelector('.btn-publier-pro');
         if (btnPublier) {
           btnPublier.style.opacity = '0.5';
-          btnPublier.style.pointerEvents = 'none'; // Empêche le clic
+          btnPublier.style.pointerEvents = 'none'; 
           btnPublier.title = "Réservé aux prestataires";
           
           const spanTexte = btnPublier.querySelector('.btn-texte');
           if(spanTexte) spanTexte.textContent = "Prestataire";
         }
 
-        // B. Cacher l'onglet "Publier" dans le menu horizontal
+        // C. Cacher l'onglet "Publier" dans le menu horizontal
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
           if (link.href.includes('publier.html')) {
@@ -91,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           }
         });
 
-        // C. Cacher "Mes annonces" dans la barre du bas
+        // D. Cacher "Mes annonces" dans la barre du bas
         const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
         bottomNavItems.forEach(item => {
           if (item.href.includes('mes-annonces.html')) {
