@@ -16,8 +16,8 @@
 
   <style>
     /* ==================================================
-       STYLES SPÉCIFIQUES À LA PAGE AIDE
-       Design sobre, professionnel, cohérent avec le site
+       STYLES SPÉCIFIQUES À LA PAGE AIDE (V2 PRO)
+       Design épuré, séparation claire Client/Prestataire
        ================================================== */
     
     body {
@@ -28,9 +28,9 @@
     }
 
     .help-wrapper {
-      max-width: 800px;
+      max-width: 850px;
       margin: 0 auto;
-      padding: 80px 16px 40px 16px; /* Padding top augmenté pour éviter le chevauchement Header */
+      padding: 80px 16px 40px 16px; /* Marge haute pour éviter chevauchement header */
     }
 
     /* Hero Section */
@@ -57,85 +57,55 @@
       margin-bottom: 20px;
     }
 
-    /* Barre de Recherche */
-    .search-box {
-      position: relative;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 12px 40px 12px 15px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 15px;
-      outline: none;
-      transition: all 0.2s;
-      background: #f8fafc;
-    }
-
-    .search-input:focus {
-      border-color: #3182ce;
-      background: white;
-      box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
-    }
-
-    .search-icon {
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #94a3b8;
-      pointer-events: none;
-    }
-
-    /* Catégories Grid */
-    .categories-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
+    /* Sélecteur d'Onglet (Client vs Prestataire) */
+    .role-tabs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
       margin-bottom: 30px;
-    }
-
-    .category-card {
-      background: white;
-      padding: 20px;
+      background: #f1f5f9;
+      padding: 5px;
       border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
-      border: 1px solid transparent;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-      text-align: center;
+      transition: all 0.2s;
+      color: #64748b;
+      font-size: 14px;
     }
 
-    .category-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.08);
-      border-color: #e2e8f0;
+    .tab-btn.active {
+      background: white;
+      color: #1e293b;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
-    .cat-icon {
-      font-size: 28px;
-      margin-bottom: 10px;
-      display: block;
-      color: #3182ce;
-    }
-
-    .cat-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 5px;
+    .tab-btn:hover:not(.active) {
       color: #1e293b;
     }
 
-    .cat-desc {
-      font-size: 13px;
-      color: #64748b;
-      line-height: 1.4;
+    /* Contenu des Onglets */
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* Sections de Contenu */
@@ -337,7 +307,8 @@
     /* Responsive */
     @media (max-width: 600px) {
       .help-wrapper { padding-top: 70px; }
-      .categories-grid { grid-template-columns: 1fr; }
+      .role-tabs { width: 100%; }
+      .tab-btn { flex: 1; text-align: center; padding: 10px 5px; font-size: 13px;}
       .btn-contact-group { flex-direction: column; }
       .btn-contact { width: 100%; justify-content: center; }
     }
@@ -348,7 +319,7 @@
 </head>
 <body>
 
-  <!-- Header Standard (Héritant de css/header.css) -->
+  <!-- Header Standard -->
   <header class="header-pro">
     <div class="header-contenu">
       <div class="header-logo">
@@ -364,193 +335,276 @@
     <nav class="header-nav">
       <ul class="nav-menu">
         <li class="nav-item"><a href="index.html" class="nav-link"><span class="nav-icone">🏠</span><span class="nav-texte">Accueil</span></a></li>
-        <li class="nav-item"><a href="#guide-recherche" class="nav-link"><span class="nav-icone">🔍</span><span class="nav-texte">Rechercher</span></a></li>
-        <li class="nav-item"><a href="publier.html" class="nav-link"><span class="nav-icone">📝</span><span class="nav-texte">Publier</span></a></li>
+        <li class="nav-item"><a href="#recherche-guide" class="nav-link"><span class="nav-icone">🔍</span><span class="nav-texte">Rechercher</span></a></li>
+        <!-- Le lien Publier sera géré dynamiquement par JS selon le rôle, mais on le laisse ici pour structure -->
+        <li class="nav-item hide-for-client"><a href="publier.html" class="nav-link"><span class="nav-icone">📝</span><span class="nav-texte">Publier</span></a></li>
       </ul>
     </nav>
   </header>
 
   <main class="help-wrapper">
     
-    <!-- 1. HERO & RECHERCHE -->
+    <!-- 1. HERO -->
     <section class="help-hero">
       <h1>Comment pouvons-nous vous aider ?</h1>
-      <p>Trouvez des réponses rapides ou suivez nos guides pas-à-pas.</p>
+      <p>Sélectionnez votre profil pour accéder aux guides personnalisés.</p>
       
-      <div class="search-box">
-        <input type="text" id="help-search" class="search-input" placeholder="Ex: publier, mot de passe, carte...">
-        <span class="search-icon">🔍</span>
+      <!-- SÉLECTEUR CLIENT / PRESTATAIRE -->
+      <div class="role-tabs">
+        <button class="tab-btn active" onclick="switchTab('client')">👤 Je suis Client</button>
+        <button class="tab-btn" onclick="switchTab('prestataire')">🏢 Je suis Prestataire</button>
       </div>
     </section>
 
-    <!-- 2. CATÉGORIES PRINCIPALES -->
-    <section class="categories-grid">
-      <a href="#guide-publication" class="category-card search-target">
-        <span class="cat-icon">📝</span>
-        <h3 class="cat-title">Publier une annonce</h3>
-        <p class="cat-desc">Créer, modifier et gérer vos offres immobilières.</p>
-      </a>
+    <!-- ========================================== -->
+    <!-- SECTION CLIENT                             -->
+    <!-- ========================================== -->
+    <div id="tab-client" class="tab-content active">
       
-      <a href="#guide-recherche" class="category-card search-target">
-        <span class="cat-icon">🔎</span>
-        <h3 class="cat-title">Trouver un logement</h3>
-        <p class="cat-desc">Filtres avancés, carte interactive et favoris.</p>
-      </a>
-      
-      <a href="#guide-compte" class="category-card search-target">
-        <span class="cat-icon">👤</span>
-        <h3 class="cat-title">Mon Compte</h3>
-        <p class="cat-desc">Inscription, sécurité et profil personnel.</p>
-      </a>
-      
-      <a href="#guide-securite" class="category-card search-target">
-        <span class="cat-icon">🛡️</span>
-        <h3 class="cat-title">Sécurité & Aide</h3>
-        <p class="cat-desc">Éviter les arnaques et contacter le support.</p>
-      </a>
-    </section>
-
-    <!-- 3. GUIDE PUBLICATION -->
-    <section id="guide-publication" class="content-section search-target">
-      <div class="section-header">
-        <div class="section-icon-badge">📝</div>
-        <h2 class="section-title-text">Publier une annonce</h2>
-      </div>
-      
-      <div class="step-item">
-        <div class="step-number">1</div>
-        <div class="step-content">
-          <h4>Accéder au formulaire</h4>
-          <p>Cliquez sur le bouton <span class="ui-tag">+ Publier</span> en haut à droite de n'importe quelle page, ou utilisez l'onglet <span class="ui-tag">Publier</span> dans le menu de navigation.</p>
+      <!-- Navigation Générale -->
+      <section class="content-section">
+        <div class="section-header">
+          <div class="section-icon-badge">🧭</div>
+          <h2 class="section-title-text">Naviguer sur le site</h2>
         </div>
-      </div>
-
-      <div class="step-item">
-        <div class="step-number">2</div>
-        <div class="step-content">
-          <h4>Remplir les informations</h4>
-          <p>Saisissez le titre, le prix (FCFA), le type (Maison/Appart/Chambre), l'arrondissement et le quartier précis.</p>
-        </div>
-      </div>
-
-      <div class="step-item">
-        <div class="step-number">3</div>
-        <div class="step-content">
-          <h4>Ajouter des photos</h4>
-          <p>Uploitez entre 1 et 5 photos nettes et lumineuses du bien. Une bonne photo attire plus de contacts.</p>
-        </div>
-      </div>
-
-      <div class="step-item">
-        <div class="step-number">4</div>
-        <div class="step-content">
-          <h4>Description & Contact</h4>
-          <p>Décrivez les atouts (eau, électricité, parking...). Vérifiez votre numéro de téléphone avant de valider.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. GUIDE RECHERCHE & CARTE -->
-    <section id="guide-recherche" class="content-section search-target">
-      <div class="section-header">
-        <div class="section-icon-badge">🗺️</div>
-        <h2 class="section-title-text">Rechercher & Utiliser la Carte</h2>
-      </div>
-
-      <div class="step-item">
-        <div class="step-number">A</div>
-        <div class="step-content">
-          <h4>Filtres Avancés</h4>
-          <p>Sur la page d'accueil, utilisez les menus déroulants pour filtrer par <span class="ui-tag">Arrondissement</span>, <span class="ui-tag">Quartier</span>, <span class="ui-tag">Type</span> et <span class="ui-tag">Prix</span>.</p>
-        </div>
-      </div>
-
-      <div class="step-item">
-        <div class="step-number">B</div>
-        <div class="step-content">
-          <h4>La Carte Interactive</h4>
-          <p>Cliquez sur l'icône <span class="ui-tag">🗺️ Carte</span> dans la barre de navigation en bas. Vous verrez toutes les annonces géolocalisées. Cliquez sur un point pour voir le détail.</p>
-        </div>
-      </div>
-
-      <div class="step-item">
-        <div class="step-number">C</div>
-        <div class="step-content">
-          <h4>Favoris & Partage</h4>
-          <p>Cliquez sur le cœur <span class="ui-tag">❤️</span> pour sauvegarder une annonce. Utilisez l'icône <span class="ui-tag">📤 Partager</span> pour envoyer le lien via WhatsApp ou SMS.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. GUIDE COMPTE & PROFIL -->
-    <section id="guide-compte" class="content-section search-target">
-      <div class="section-header">
-        <div class="section-icon-badge">👤</div>
-        <h2 class="section-title-text">Gestion du Compte</h2>
-      </div>
-
-      <div class="faq-list">
-        <div class="faq-item">
-          <div class="faq-question" onclick="toggleFaq(this)">
-            <span>Modifier mon profil</span>
-            <span class="faq-arrow">▼</span>
-          </div>
-          <div class="faq-answer">
-            Allez dans <span class="ui-tag">Plus</span> > <span class="ui-tag">Profil</span>. Vous pouvez changer votre nom, photo et coordonnées de contact ici.
+        
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>L'Accueil</h4>
+            <p>C'est la page par défaut. Vous y voyez les dernières annonces publiées à Brazzaville.</p>
           </div>
         </div>
 
-        <div class="faq-item">
-          <div class="faq-question" onclick="toggleFaq(this)">
-            <span>Mot de passe oublié</span>
-            <span class="faq-arrow">▼</span>
-          </div>
-          <div class="faq-answer">
-            Sur la page de connexion, cliquez sur <span class="ui-tag">Mot de passe oublié ?</span>. Entrez votre email ou téléphone (+242...) pour recevoir un lien de réinitialisation.
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>La Carte Interactive</h4>
+            <p>Cliquez sur l'onglet <span class="ui-tag">Carte</span> dans la barre de navigation en bas. Visualisez géographiquement tous les biens disponibles. Utilisez les boutons <span class="ui-tag">+</span> et <span class="ui-tag">-</span> pour zoomer/dézoomer.</p>
           </div>
         </div>
 
-        <div class="faq-item">
-          <div class="faq-question" onclick="toggleFaq(this)">
-            <span>Voir mes annonces publiées</span>
-            <span class="faq-arrow">▼</span>
-          </div>
-          <div class="faq-answer">
-            Cliquez sur <span class="ui-tag">Mes annonces</span> dans la barre du bas. Vous pourrez y modifier ou supprimer vos biens existants.
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Recherche Avancée</h4>
+            <p>Dans le menu supérieur (sous le logo), cliquez sur <span class="ui-tag">Rechercher</span>. Filtrez par Arrondissement, Quartier, Type de bien ou Prix (croissant/décroissant).</p>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- 6. SÉCURITÉ & CONTACT ADMIN -->
-    <section id="guide-securite" class="content-section search-target" style="border-left: 4px solid #ef4444;">
-      <div class="section-header">
-        <div class="section-icon-badge" style="background:#fee2e2; color:#b91c1c;">⚠️</div>
-        <h2 class="section-title-text">Sécurité & Signalement</h2>
-      </div>
+      <!-- Gestion des Annonces (Client) -->
+      <section class="content-section">
+        <div class="section-header">
+          <div class="section-icon-badge">❤️</div>
+          <h2 class="section-title-text">Interagir avec une annonce</h2>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">A</div>
+          <div class="step-content">
+            <h4>Voir les détails</h4>
+            <p>Cliquez directement sur une carte d'annonce sur l'accueil ou la carte. Vous verrez les photos, la description complète, le prix exact et les coordonnées du vendeur.</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">B</div>
+          <div class="step-content">
+            <h4>Contacter le prestataire</h4>
+            <p>Sur la fiche détail, utilisez le bouton vert <span class="ui-tag">WhatsApp</span> pour discuter directement avec l'agent immobilier ou le propriétaire.</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">C</div>
+          <div class="step-content">
+            <h4>Mettre en Favori</h4>
+            <p>Cliquez sur l'icône Cœur 🤍 (blanc) sur la vignette de l'annonce. Si elle devient Rouge ❤️, c'est qu'elle est sauvegardée. Retrouvez-la via l'onglet <span class="ui-tag">Favoris</span> en bas.</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">D</div>
+          <div class="step-content">
+            <h4>Partager une annonce</h4>
+            <p>Cliquez sur l'icône Boîte avec Flèche 📤. Choisissez l'application (WhatsApp, SMS, Copier lien) pour envoyer l'annonce à vos proches.</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">E</div>
+          <div class="step-content">
+            <h4>Signaler une annonce suspecte</h4>
+            <p>Sur la fiche détail, cherchez le bouton <span class="ui-tag">Signaler</span> (souvent à droite). Sélectionnez le motif (Arnaque, Fausses infos...) et validez. L'admin recevra votre alerte immédiatement.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Compte & Données Client -->
+      <section class="content-section">
+        <div class="section-header">
+          <div class="section-icon-badge">⚙️</div>
+          <h2 class="section-title-text">Mon Compte & Historique</h2>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>Voir mon Profil</h4>
+            <p>Cliquez sur votre <strong>Nom</strong> en haut à droite. Vous accédez à votre espace personnel pour modifier vos infos (Nom, Téléphone, Mot de passe).</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>Historique de visite</h4>
+            <p>Allez dans <span class="ui-tag">Plus</span> > <span class="ui-tag">Mes Activités</span>. Vous retrouverez la liste des annonces que vous avez consultées récemment.</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Gestion des données</h4>
+            <p>Dans <span class="ui-tag">Plus</span> > <span class="ui-tag">Données</span>, vous pouvez vider le cache local ou voir vos statistiques d'utilisation.</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>Se déconnecter</h4>
+            <p>Descendez tout en bas de la page <span class="ui-tag">Profil</span> et cliquez sur le bouton rouge <span class="ui-tag">Se déconnecter</span>.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SECTION PRESTATAIRE                        -->
+    <!-- ========================================== -->
+    <div id="tab-prestataire" class="tab-content">
       
-      <div style="background: #fef2f2; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #fecaca;">
-        <strong style="color: #991b1b;">Règle d'Or :</strong> Ne payez jamais d'avance ni de frais de visite avant d'avoir vu le lieu physiquement et signé un contrat.
-      </div>
-
-      <div class="step-item">
-        <div class="step-number">!</div>
-        <div class="step-content">
-          <h4>Signaler une annonce suspecte</h4>
-          <p>Ouvrez l'annonce, cherchez l'option <span class="ui-tag">Signaler</span> (souvent une icône 🚩 ou dans le menu partage). Indiquez le motif (Arnaque, Fausses infos).</p>
+      <!-- Intro Prestataire -->
+      <section class="content-section" style="border-left: 4px solid #22c55e;">
+        <div class="section-header">
+          <div class="section-icon-badge" style="background:#dcfce7; color:#166534;">🏢</div>
+          <h2 class="section-title-text">Guide Exclusif Prestataire</h2>
         </div>
-      </div>
-      
-      <div class="step-item">
-        <div class="step-number">@</div>
-        <div class="step-content">
-          <h4>Contacter le propriétaire de l'annonce</h4>
-          <p>Sur la fiche détaillée de l'annonce, utilisez les boutons directs <span class="ui-tag">Appeler</span> ou <span class="ui-tag">WhatsApp</span> affichés près du numéro du vendeur/loueur.</p>
-        </div>
-      </div>
-    </section>
+        <p style="color:#64748b; font-size:14px; margin-bottom:15px;">
+          En tant que prestataire, vous avez accès à toutes les fonctionnalités clients PLUS la gestion professionnelle de vos annonces.
+        </p>
+      </section>
 
-    <!-- 7. CONTACT SUPPORT OFFICIEL -->
+      <!-- Publication d'Annonce -->
+      <section class="content-section">
+        <div class="section-header">
+          <div class="section-icon-badge">📝</div>
+          <h2 class="section-title-text">Publier une nouvelle annonce</h2>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>Accéder au formulaire</h4>
+            <p>Vous avez 3 moyens rapides :</p>
+            <ul style="margin: 10px 0 0 0; padding-left: 20px; color: #64748b; font-size: 14px;">
+              <li>Bouton <span class="ui-tag">+ Publier</span> en haut à droite du header.</li>
+              <li>Onglet <span class="ui-tag">Publier</span> dans le menu horizontal sous le logo.</li>
+              <li>Bouton <span class="ui-tag">Publier une annonce</span> si votre section "Mes annonces" est vide.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>Remplir les informations clés</h4>
+            <p>Saisissez impérativement :</p>
+            <ul style="margin: 10px 0 0 0; padding-left: 20px; color: #64748b; font-size: 14px;">
+              <li><strong>Titre :</strong> Clair et attractif (ex: "Villa moderne avec piscine").</li>
+              <li><strong>Prix :</strong> En FCFA.</li>
+              <li><strong>Type :</strong> Maison, Appartement, Chambre, Terrain.</li>
+              <li><strong>Localisation :</strong> Arrondissement et Quartier précis.</li>
+              <li><strong>Description :</strong> Détaillez les commodités (eau, électricité, parking, etc.).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Ajouter des photos</h4>
+            <p>Uploitez jusqu'à 3 photos de qualité. Privilégiez la luminosité et la netteté. Une belle photo augmente considérablement les contacts.</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>Valider</h4>
+            <p>Cliquez sur <span class="ui-tag">Publier l'annonce</span>. Votre offre apparaîtra immédiatement en tête de liste sur l'accueil (car triée par date récente).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Gestion des Annonces (Prestataire) -->
+      <section class="content-section">
+        <div class="section-header">
+          <div class="section-icon-badge">📋</div>
+          <h2 class="section-title-text">Gérer mes annonces publiées</h2>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>Accéder à "Mes annonces"</h4>
+            <p>Cliquez sur l'onglet <span class="ui-tag">Mes annonces</span> dans la barre de navigation basse.</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>Modifier une annonce</h4>
+            <p>Si le prix change ou si vous voulez corriger une faute, cliquez sur le crayon ✏️ ou le bouton <span class="ui-tag">Modifier</span> associé à l'annonce. Mettez à jour les champs et sauvegardez.</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Supprimer une annonce</h4>
+            <p>Si le bien est vendu ou loué, cliquez sur la corbeille 🗑️ ou <span class="ui-tag">Supprimer</span>. L'annonce disparaîtra définitivement du site public.</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>Voir les détails publics</h4>
+            <p>Cliquez sur l'œil 👁️ ou le titre de l'annonce pour prévisualiser comment elle apparaît pour vos clients.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rappel Fonctions Communes -->
+      <section class="content-section" style="background: #f8fafc;">
+        <div class="section-header">
+          <div class="section-icon-badge">ℹ️</div>
+          <h2 class="section-title-text">Rappel : Fonctions Clients Disponibles</h2>
+        </div>
+        <p style="font-size: 14px; color: #64748b; line-height: 1.6;">
+          N'oubliez pas que vous pouvez aussi utiliser toutes les fonctions décrites dans l'onglet <strong>"Je suis Client"</strong> : Recherche avancée, Carte interactive, Favoris, Partage, Signalement et Consultation de l'historique.
+        </p>
+      </section>
+
+    </div>
+
+    <!-- CONTACT SUPPORT COMMUN -->
     <section class="contact-support">
       <h3>Besoin d'une aide personnalisée ?</h3>
       <p>Contactez directement l'administrateur de Brazza-Immobilier.</p>
@@ -577,7 +631,8 @@
       <span class="bottom-nav-icone">🗺️</span>
       <span class="bottom-nav-texte">Carte</span>
     </a>
-    <a href="mes-annonces.html" class="bottom-nav-item">
+    <!-- Masqué pour client via JS, visible pour prestataire -->
+    <a href="mes-annonces.html" class="bottom-nav-item hide-for-client">
       <span class="bottom-nav-icone">📋</span>
       <span class="bottom-nav-texte">Mes annonces</span>
     </a>
@@ -585,7 +640,7 @@
       <span class="bottom-nav-icone">❤️</span>
       <span class="bottom-nav-texte">Favoris</span>
     </a>
-    <a href="plus.html" class="bottom-nav-item active">
+    <a href="plus.html" class="bottom-nav-item">
       <span class="bottom-nav-icone">⚙️</span>
       <span class="bottom-nav-texte">Plus</span>
     </a>
@@ -593,42 +648,28 @@
 
   <!-- Scripts -->
   <script src="js/theme.js"></script>
-  <script src="js/header.js"></script>
+  <script src="js/header.js"></script> <!-- Gère les rôles et masquage boutons -->
   <script src="js/footer.js"></script>
 
   <script>
-    // Fonction Toggle FAQ
+    // Logique de changement d'onglet Aide
+    function switchTab(role) {
+      // Retirer actif de tous les boutons
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      // Cacher tous les contenus
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      // Activer le bouton cliqué
+      event.target.classList.add('active');
+      // Afficher le contenu correspondant
+      document.getElementById('tab-' + role).classList.add('active');
+    }
+
+    // Fonction Toggle FAQ (si utilisé plus tard)
     function toggleFaq(element) {
       const parent = element.parentElement;
       parent.classList.toggle('active');
     }
-
-    // Recherche Dynamique
-    document.getElementById('help-search').addEventListener('keyup', function(e) {
-      const term = this.value.toLowerCase();
-      const targets = document.querySelectorAll('.search-target');
-      
-      targets.forEach(sec => {
-        const text = sec.innerText.toLowerCase();
-        if (term === "" || text.includes(term)) {
-          sec.style.display = ''; 
-        } else {
-          sec.style.display = 'none'; 
-        }
-      });
-    });
-    
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          targetElement.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    });
   </script>
 </body>
 </html>
