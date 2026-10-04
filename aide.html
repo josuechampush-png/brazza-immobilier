@@ -16,8 +16,8 @@
 
   <style>
     /* ==================================================
-       STYLES SPÉCIFIQUES À LA PAGE AIDE (V2 PRO)
-       Design épuré, séparation claire Client/Prestataire
+       STYLES SPÉCIFIQUES À LA PAGE AIDE (V3 PROPRE)
+       Design épuré, intégration parfaite Header/Footer
        ================================================== */
     
     body {
@@ -30,7 +30,7 @@
     .help-wrapper {
       max-width: 850px;
       margin: 0 auto;
-      padding: 80px 16px 40px 16px; /* Marge haute pour éviter chevauchement header */
+      padding: 20px 16px 40px 16px; /* Marge haute réduite car header est standard */
     }
 
     /* Hero Section */
@@ -194,58 +194,6 @@
       font-weight: 600;
     }
 
-    /* FAQ Accordion */
-    .faq-list {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-      margin-bottom: 30px;
-    }
-
-    .faq-item {
-      border-bottom: 1px solid #f1f5f9;
-    }
-
-    .faq-question {
-      padding: 15px 20px;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 600;
-      color: #1e293b;
-      background: white;
-      transition: background 0.2s;
-      font-size: 15px;
-    }
-
-    .faq-question:hover {
-      background: #f8fafc;
-    }
-
-    .faq-answer {
-      padding: 0 20px 15px 20px;
-      color: #64748b;
-      font-size: 14px;
-      line-height: 1.6;
-      display: none;
-    }
-
-    .faq-item.active .faq-answer {
-      display: block;
-    }
-
-    .faq-arrow {
-      transition: transform 0.3s;
-      font-size: 12px;
-      color: #94a3b8;
-    }
-
-    .faq-item.active .faq-arrow {
-      transform: rotate(180deg);
-    }
-
     /* Contact Support */
     .contact-support {
       text-align: center;
@@ -306,7 +254,7 @@
 
     /* Responsive */
     @media (max-width: 600px) {
-      .help-wrapper { padding-top: 70px; }
+      .help-wrapper { padding-top: 10px; }
       .role-tabs { width: 100%; }
       .tab-btn { flex: 1; text-align: center; padding: 10px 5px; font-size: 13px;}
       .btn-contact-group { flex-direction: column; }
@@ -319,24 +267,25 @@
 </head>
 <body>
 
-  <!-- Header Standard -->
+  <!-- ✅ HEADER STANDARD COMPLET (Identique aux autres pages) -->
   <header class="header-pro">
     <div class="header-contenu">
       <div class="header-logo">
         <h1 class="site-nom">
           Brazza<span class="separateur">–</span>Immobilier
         </h1>
-        <p class="site-slogan">Centre d'Aide & Support</p>
+        <p class="site-slogan">Trouvez votre logement idéal à Brazzaville</p>
       </div>
       <div class="header-actions">
         <button id="btn-theme" class="btn-theme" title="Changer de thème">🌙</button>
+        <!-- Le nom, la cloche et le bouton publier seront injectés ici par js/header.js -->
       </div>
     </div>
     <nav class="header-nav">
       <ul class="nav-menu">
         <li class="nav-item"><a href="index.html" class="nav-link"><span class="nav-icone">🏠</span><span class="nav-texte">Accueil</span></a></li>
         <li class="nav-item"><a href="#recherche-guide" class="nav-link"><span class="nav-icone">🔍</span><span class="nav-texte">Rechercher</span></a></li>
-        <!-- Le lien Publier sera géré dynamiquement par JS selon le rôle, mais on le laisse ici pour structure -->
+        <!-- Ce lien sera masqué si client via JS grâce à la classe hide-for-client -->
         <li class="nav-item hide-for-client"><a href="publier.html" class="nav-link"><span class="nav-icone">📝</span><span class="nav-texte">Publier</span></a></li>
       </ul>
     </nav>
@@ -649,6 +598,7 @@
   </nav>
 	
 	<!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/theme.js"></script>
   <script src="js/header.js"></script> <!-- Gère les rôles et masquage boutons -->
   <script src="js/footer.js"></script>
@@ -675,3 +625,4 @@
   </script>
 </body>
 </html>
+

@@ -24,7 +24,8 @@
       background-color: #f8fafc; 
       font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       color: #1e293b;
-      padding-bottom: 70px;
+      /* ✅ CORRECTION : Ajout du padding-bottom pour éviter le chevauchement/vide */
+      padding-bottom: 70px; 
     }
 
     .sub-wrapper {
@@ -476,6 +477,7 @@
   </nav>
 
   <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/theme.js"></script>
   <script src="js/header.js"></script>
   <script src="js/footer.js"></script>
