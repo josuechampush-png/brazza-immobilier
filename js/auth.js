@@ -40,7 +40,14 @@ document.addEventListener("DOMContentLoaded", function() {
     if (!messageAuth) return;
     messageAuth.textContent = msg;
     messageAuth.className = `auth-message ${type}`;
-    setTimeout(() => { messageAuth.textContent = ""; }, 5000);
+    
+    // ✅ MODIFICATION : On ne fait disparaître le message que si ce n'est PAS une inscription réussie.
+    // Si c'est une inscription réussie (type success), on laisse le message affiché tant que l'utilisateur est sur la page.
+    if (type !== 'success') {
+      setTimeout(() => { 
+        messageAuth.textContent = ""; 
+      }, 5000);
+    }
   }
 
   /**
@@ -200,13 +207,9 @@ document.addEventListener("DOMContentLoaded", function() {
              est_bloque: false
            }).eq('id', authData.user.id);
            
-           // ✅ MODIFICATION ICI : Message demandant de vérifier l'email
+           // ✅ MODIFICATION ICI : Message permanent demandant de vérifier l'email
+           // Pas de redirection, pas de timeout. Le message reste tant que l'utilisateur ne quitte pas la page.
            afficherMessage("📧 Inscription réussie ! Merci de vérifier votre boîte email et cliquer sur le lien de confirmation.", "success");
-           
-           // Optionnel : Tu peux rediriger vers login.html après un délai plus long, 
-           // ou laisser l'utilisateur sur place pour qu'il voie le message.
-           // Je garde la redirection mais avec un délai pour qu'il ait le temps de lire.
-           setTimeout(() => { window.location.href = "login.html"; }, 4000);
         }
 
       } catch (err) {
