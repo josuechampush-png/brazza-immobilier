@@ -29,7 +29,8 @@
       </div>
       <div class="header-actions">
         <button id="btn-theme" class="btn-theme" title="Changer de thème">🌙</button>
-        <a href="index.html" class="btn-publier-pro">
+        <!-- Le bouton Retour reste, mais Publier sera caché par header.js si client -->
+        <a href="index.html" class="btn-publier-pro" style="background: #3182ce;">
           <span class="btn-icone">←</span>
           <span class="btn-texte">Retour</span>
         </a>
@@ -79,6 +80,7 @@
       <span class="bottom-nav-icone">🗺️</span>
       <span class="bottom-nav-texte">Carte</span>
     </a>
+    <!-- Ce lien sera caché dynamiquement par header.js si rôle = client -->
     <a href="mes-annonces.html" class="bottom-nav-item">
       <span class="bottom-nav-icone">📋</span>
       <span class="bottom-nav-texte">Annonces</span>
@@ -101,6 +103,9 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/carte.js"></script>
+  
+  <!-- ✅ IMPORTANT : Ajouter header.js ici pour gérer les rôles (Client/Prestataire) -->
+  <script src="js/header.js"></script>
 
 	<script>
   // Enregistrement du Service Worker
@@ -119,3 +124,5 @@
 
 </body>
 </html>
+
+
