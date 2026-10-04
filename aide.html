@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="fr-CG">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aide & Support — Brazza-Immobilier</title>
+  
+  <!-- Styles globaux -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/bottom-nav.css">
+
+  <style>
+    /* ==================================================
+       STYLES SPÉCIFIQUES À LA PAGE AIDE
+       Design sobre, professionnel, cohérent avec le site
+       ================================================== */
+    
+    body {
+      background-color: #f9fafb; 
+      font-family: Arial, Helvetica, sans-serif;
+      color: #1e293b;
+      padding-bottom: 70px; /* Espace pour la bottom-nav fixe */
+    }
+
+    .help-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 80px 16px 40px 16px; /* Padding top augmenté pour éviter le chevauchement Header */
+    }
+
+    /* Hero Section */
+    .help-hero {
+      text-align: center;
+      padding: 30px 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 30px;
+      border-top: 4px solid #3182ce; /* Accent Bleu Pro */
+    }
+
+    .help-hero h1 {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #1e293b;
+    }
+
+    .help-hero p {
+      font-size: 15px;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+
+    /* Barre de Recherche */
+    .search-box {
+      position: relative;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 40px 12px 15px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      transition: all 0.2s;
+      background: #f8fafc;
+    }
+
+    .search-input:focus {
+      border-color: #3182ce;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      pointer-events: none;
+    }
+
+    /* Catégories Grid */
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .category-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      text-align: center;
+    }
+
+    .category-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+      border-color: #e2e8f0;
+    }
+
+    .cat-icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+      display: block;
+      color: #3182ce;
+    }
+
+    .cat-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: #1e293b;
+    }
+
+    .cat-desc {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.4;
+    }
+
+    /* Sections de Contenu */
+    .content-section {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      border: 1px solid #f1f5f9;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .section-icon-badge {
+      width: 32px;
+      height: 32px;
+      background: #eff6ff;
+      color: #3182ce;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .section-title-text {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    /* Étapes Visuelles */
+    .step-item {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+
+    .step-number {
+      background: #3182ce;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-content h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 0 0 6px 0;
+      color: #1e293b;
+    }
+
+    .step-content p {
+      font-size: 14px;
+      color: #64748b;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .ui-tag {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      color: #334155;
+      font-size: 12px;
+      border: 1px solid #e2e8f0;
+      font-weight: 600;
+    }
+
+    /* FAQ Accordion */
+    .faq-list {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      margin-bottom: 30px;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .faq-question {
+      padding: 15px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: #1e293b;
+      background: white;
+      transition: background 0.2s;
+      font-size: 15px;
+    }
+
+    .faq-question:hover {
+      background: #f8fafc;
+    }
+
+    .faq-answer {
+      padding: 0 20px 15px 20px;
+      color: #64748b;
+      font-size: 14px;
+      line-height: 1.6;
+      display: none;
+    }
+
+    .faq-item.active .faq-answer {
+      display: block;
+    }
+
+    .faq-arrow {
+      transition: transform 0.3s;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .faq-item.active .faq-arrow {
+      transform: rotate(180deg);
+    }
+
+    /* Contact Support */
+    .contact-support {
+      text-align: center;
+      padding: 30px 20px;
+      background: #1e293b;
+      color: white;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .contact-support h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .contact-support p {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 20px;
+    }
+
+    .btn-contact-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-contact {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+
+    .btn-whatsapp {
+      background: #25D366;
+      color: white;
+    }
+
+    .btn-whatsapp:hover {
+      background: #1da851;
+    }
+
+    .btn-email {
+      background: #3182ce;
+      color: white;
+    }
+
+    .btn-email:hover {
+      background: #2b6cb0;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .help-wrapper { padding-top: 70px; }
+      .categories-grid { grid-template-columns: 1fr; }
+      .btn-contact-group { flex-direction: column; }
+      .btn-contact { width: 100%; justify-content: center; }
+    }
+  </style>
+
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1e293b">
+</head>
+<body>
+
+  <!-- Header Standard (Héritant de css/header.css) -->
+  <header class="header-pro">
+    <div class="header-contenu">
+      <div class="header-logo">
+        <h1 class="site-nom">
+          Brazza<span class="separateur">–</span>Immobilier
+        </h1>
+        <p class="site-slogan">Centre d'Aide & Support</p>
+      </div>
+      <div class="header-actions">
+        <button id="btn-theme" class="btn-theme" title="Changer de thème">🌙</button>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="index.html" class="nav-link"><span class="nav-icone">🏠</span><span class="nav-texte">Accueil</span></a></li>
+        <li class="nav-item"><a href="#guide-recherche" class="nav-link"><span class="nav-icone">🔍</span><span class="nav-texte">Rechercher</span></a></li>
+        <li class="nav-item"><a href="publier.html" class="nav-link"><span class="nav-icone">📝</span><span class="nav-texte">Publier</span></a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="help-wrapper">
+    
+    <!-- 1. HERO & RECHERCHE -->
+    <section class="help-hero">
+      <h1>Comment pouvons-nous vous aider ?</h1>
+      <p>Trouvez des réponses rapides ou suivez nos guides pas-à-pas.</p>
+      
+      <div class="search-box">
+        <input type="text" id="help-search" class="search-input" placeholder="Ex: publier, mot de passe, carte...">
+        <span class="search-icon">🔍</span>
+      </div>
+    </section>
+
+    <!-- 2. CATÉGORIES PRINCIPALES -->
+    <section class="categories-grid">
+      <a href="#guide-publication" class="category-card search-target">
+        <span class="cat-icon">📝</span>
+        <h3 class="cat-title">Publier une annonce</h3>
+        <p class="cat-desc">Créer, modifier et gérer vos offres immobilières.</p>
+      </a>
+      
+      <a href="#guide-recherche" class="category-card search-target">
+        <span class="cat-icon">🔎</span>
+        <h3 class="cat-title">Trouver un logement</h3>
+        <p class="cat-desc">Filtres avancés, carte interactive et favoris.</p>
+      </a>
+      
+      <a href="#guide-compte" class="category-card search-target">
+        <span class="cat-icon">👤</span>
+        <h3 class="cat-title">Mon Compte</h3>
+        <p class="cat-desc">Inscription, sécurité et profil personnel.</p>
+      </a>
+      
+      <a href="#guide-securite" class="category-card search-target">
+        <span class="cat-icon">🛡️</span>
+        <h3 class="cat-title">Sécurité & Aide</h3>
+        <p class="cat-desc">Éviter les arnaques et contacter le support.</p>
+      </a>
+    </section>
+
+    <!-- 3. GUIDE PUBLICATION -->
+    <section id="guide-publication" class="content-section search-target">
+      <div class="section-header">
+        <div class="section-icon-badge">📝</div>
+        <h2 class="section-title-text">Publier une annonce</h2>
+      </div>
+      
+      <div class="step-item">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>Accéder au formulaire</h4>
+          <p>Cliquez sur le bouton <span class="ui-tag">+ Publier</span> en haut à droite de n'importe quelle page, ou utilisez l'onglet <span class="ui-tag">Publier</span> dans le menu de navigation.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>Remplir les informations</h4>
+          <p>Saisissez le titre, le prix (FCFA), le type (Maison/Appart/Chambre), l'arrondissement et le quartier précis.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>Ajouter des photos</h4>
+          <p>Uploitez entre 1 et 5 photos nettes et lumineuses du bien. Une bonne photo attire plus de contacts.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h4>Description & Contact</h4>
+          <p>Décrivez les atouts (eau, électricité, parking...). Vérifiez votre numéro de téléphone avant de valider.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. GUIDE RECHERCHE & CARTE -->
+    <section id="guide-recherche" class="content-section search-target">
+      <div class="section-header">
+        <div class="section-icon-badge">🗺️</div>
+        <h2 class="section-title-text">Rechercher & Utiliser la Carte</h2>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">A</div>
+        <div class="step-content">
+          <h4>Filtres Avancés</h4>
+          <p>Sur la page d'accueil, utilisez les menus déroulants pour filtrer par <span class="ui-tag">Arrondissement</span>, <span class="ui-tag">Quartier</span>, <span class="ui-tag">Type</span> et <span class="ui-tag">Prix</span>.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">B</div>
+        <div class="step-content">
+          <h4>La Carte Interactive</h4>
+          <p>Cliquez sur l'icône <span class="ui-tag">🗺️ Carte</span> dans la barre de navigation en bas. Vous verrez toutes les annonces géolocalisées. Cliquez sur un point pour voir le détail.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">C</div>
+        <div class="step-content">
+          <h4>Favoris & Partage</h4>
+          <p>Cliquez sur le cœur <span class="ui-tag">❤️</span> pour sauvegarder une annonce. Utilisez l'icône <span class="ui-tag">📤 Partager</span> pour envoyer le lien via WhatsApp ou SMS.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. GUIDE COMPTE & PROFIL -->
+    <section id="guide-compte" class="content-section search-target">
+      <div class="section-header">
+        <div class="section-icon-badge">👤</div>
+        <h2 class="section-title-text">Gestion du Compte</h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Modifier mon profil</span>
+            <span class="faq-arrow">▼</span>
+          </div>
+          <div class="faq-answer">
+            Allez dans <span class="ui-tag">Plus</span> > <span class="ui-tag">Profil</span>. Vous pouvez changer votre nom, photo et coordonnées de contact ici.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Mot de passe oublié</span>
+            <span class="faq-arrow">▼</span>
+          </div>
+          <div class="faq-answer">
+            Sur la page de connexion, cliquez sur <span class="ui-tag">Mot de passe oublié ?</span>. Entrez votre email ou téléphone (+242...) pour recevoir un lien de réinitialisation.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Voir mes annonces publiées</span>
+            <span class="faq-arrow">▼</span>
+          </div>
+          <div class="faq-answer">
+            Cliquez sur <span class="ui-tag">Mes annonces</span> dans la barre du bas. Vous pourrez y modifier ou supprimer vos biens existants.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. SÉCURITÉ & CONTACT ADMIN -->
+    <section id="guide-securite" class="content-section search-target" style="border-left: 4px solid #ef4444;">
+      <div class="section-header">
+        <div class="section-icon-badge" style="background:#fee2e2; color:#b91c1c;">⚠️</div>
+        <h2 class="section-title-text">Sécurité & Signalement</h2>
+      </div>
+      
+      <div style="background: #fef2f2; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #fecaca;">
+        <strong style="color: #991b1b;">Règle d'Or :</strong> Ne payez jamais d'avance ni de frais de visite avant d'avoir vu le lieu physiquement et signé un contrat.
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">!</div>
+        <div class="step-content">
+          <h4>Signaler une annonce suspecte</h4>
+          <p>Ouvrez l'annonce, cherchez l'option <span class="ui-tag">Signaler</span> (souvent une icône 🚩 ou dans le menu partage). Indiquez le motif (Arnaque, Fausses infos).</p>
+        </div>
+      </div>
+      
+      <div class="step-item">
+        <div class="step-number">@</div>
+        <div class="step-content">
+          <h4>Contacter le propriétaire de l'annonce</h4>
+          <p>Sur la fiche détaillée de l'annonce, utilisez les boutons directs <span class="ui-tag">Appeler</span> ou <span class="ui-tag">WhatsApp</span> affichés près du numéro du vendeur/loueur.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. CONTACT SUPPORT OFFICIEL -->
+    <section class="contact-support">
+      <h3>Besoin d'une aide personnalisée ?</h3>
+      <p>Contactez directement l'administrateur de Brazza-Immobilier.</p>
+      
+      <div class="btn-contact-group">
+        <a href="https://wa.me/242064625730" target="_blank" class="btn-contact btn-whatsapp">
+          💬 WhatsApp Support
+        </a>
+        <a href="mailto:josuechampush@gmail.com" class="btn-contact btn-email">
+          📧 Email Support
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BARRE DE NAVIGATION BASSE -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">🏠</span>
+      <span class="bottom-nav-texte">Accueil</span>
+    </a>
+    <a href="carte.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">🗺️</span>
+      <span class="bottom-nav-texte">Carte</span>
+    </a>
+    <a href="mes-annonces.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">📋</span>
+      <span class="bottom-nav-texte">Mes annonces</span>
+    </a>
+    <a href="favoris.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">❤️</span>
+      <span class="bottom-nav-texte">Favoris</span>
+    </a>
+    <a href="plus.html" class="bottom-nav-item active">
+      <span class="bottom-nav-icone">⚙️</span>
+      <span class="bottom-nav-texte">Plus</span>
+    </a>
+  </nav>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/header.js"></script>
+  <script src="js/footer.js"></script>
+
+  <script>
+    // Fonction Toggle FAQ
+    function toggleFaq(element) {
+      const parent = element.parentElement;
+      parent.classList.toggle('active');
+    }
+
+    // Recherche Dynamique
+    document.getElementById('help-search').addEventListener('keyup', function(e) {
+      const term = this.value.toLowerCase();
+      const targets = document.querySelectorAll('.search-target');
+      
+      targets.forEach(sec => {
+        const text = sec.innerText.toLowerCase();
+        if (term === "" || text.includes(term)) {
+          sec.style.display = ''; 
+        } else {
+          sec.style.display = 'none'; 
+        }
+      });
+    });
+    
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+

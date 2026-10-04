@@ -1,4 +1,4 @@
-// js/auth.js - VERSION FINALE SIMPLIFIÉE & ROBUSTE POUR ENVOI MAIL
+// js/auth.js - VERSION FINALE AVEC GESTION DES RÔLES
 
 const SUPABASE_URL = 'https://buymgwahouwcwwgdiogn.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDYyODQxOSwiZXhwIjoyMTA2MjA0NDE5fQ.4m7vMaiQvDEV5NtptuGlGcdh4gcxNMxHdD-8sPo6M4k';
@@ -24,6 +24,9 @@ document.addEventListener("DOMContentLoaded", function() {
   const inputPassReg = document.getElementById("password");
   const inputPassConfirm = document.getElementById("password-confirm");
   const btnRegister = document.getElementById("btn-register");
+  
+  // ✅ NOUVEAU CHAMP RÔLE
+  const inputRole = document.getElementById("role"); 
 
   // Champs Connexion
   const inputIdentifiantLog = document.getElementById("identifiant"); 
@@ -112,6 +115,9 @@ document.addEventListener("DOMContentLoaded", function() {
       const telephoneRaw = inputTelReg ? inputTelReg.value.trim() : "";
       const password = inputPassReg.value;
       const confirmPassword = inputPassConfirm.value;
+      
+      // ✅ RÉCUPÉRATION DU RÔLE CHOISI
+      const roleChoisi = inputRole ? inputRole.value : "";
 
       // Validations Front-end
       if (!nom || !email || !password) {
@@ -119,6 +125,14 @@ document.addEventListener("DOMContentLoaded", function() {
         resetButton();
         return;
       }
+      
+      // ✅ VÉRIFICATION DU RÔLE
+      if (!roleChoisi) {
+        afficherMessage("⚠️ Veuillez choisir votre profil (Client ou Prestataire).", "error");
+        resetButton();
+        return;
+      }
+
       if (password !== confirmPassword) {
         afficherMessage("❌ Les mots de passe ne correspondent pas.", "error");
         resetButton();
@@ -133,16 +147,15 @@ document.addEventListener("DOMContentLoaded", function() {
       }
 
       try {
-        // APPEL CRUCIAL : signUp
-        // On passe les metadata ici. C'est tout ce qu'on fait.
-        // Pas de update profils_admin ici pour éviter les blocages RLS/Trigger.
+        // APPEL CRUCIAL : signUp avec le Rôle inclus dans les metadata
         const { data, error } = await supabase.auth.signUp({
           email: email,
           password: password,
           options: {
             data: { 
               full_name: nom, 
-              phone_number: telephoneClean 
+              phone_number: telephoneClean,
+              role: roleChoisi // <-- LE RÔLE EST ENVOYÉ ICI
             }
           }
         });
@@ -151,9 +164,21 @@ document.addEventListener("DOMContentLoaded", function() {
           throw error;
         }
 
-        // Si on arrive ici, l'appel a réussi.
-        // Supabase enverra automatiquement l'email de confirmation si configuré ainsi.
-        
+        // Tentative de sauvegarde directe en base (si permis par RLS)
+        // Cela permet d'avoir le rôle dispo immédiatement dans profils_admin
+        if (data.user) {
+           try {
+             await supabase.from('profils_admin').update({
+               role: roleChoisi,
+               nom: nom,
+               telephone: telephoneClean,
+               est_bloque: false
+             }).eq('id', data.user.id);
+           } catch (dbErr) {
+             console.warn("Update profil admin ignoré (normal si RLS strict):", dbErr.message);
+           }
+        }
+
         // Affichage du message permanent
         afficherMessage("📧 Inscription réussie ! Merci de vérifier votre boîte email et cliquer sur le lien de confirmation.", "success");
         
@@ -161,6 +186,7 @@ document.addEventListener("DOMContentLoaded", function() {
         inputNom.value = "";
         inputEmailReg.value = "";
         if(inputTelReg) inputTelReg.value = "";
+        if(inputRole) inputRole.selectedIndex = 0; // Reset select
         inputPassReg.value = "";
         inputPassConfirm.value = "";
 
