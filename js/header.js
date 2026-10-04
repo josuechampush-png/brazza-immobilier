@@ -1,5 +1,6 @@
 /* ==================================================
-   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES (V4 FINAL)
+   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES (V6 FINAL)
+   Correction Affichage Nom Complet (Prénom + 2ème mot max)
    ================================================== */
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -23,13 +24,39 @@ document.addEventListener("DOMContentLoaded", async function () {
     const { data: { session } } = await client.auth.getSession();
     
     if (session) {
-      // 1. Nom
-      let nomAffiche = session.user.user_metadata?.nom;
-      if (!nomAffiche || nomAffiche.trim() === "") {
-        nomAffiche = session.user.email.split('@')[0];
-      }
-      const nom = nomAffiche.replace(/_/g, ' ');
+      // ✅ MODIFICATION ICI : Extraction des 2 premiers mots du nom
+      let nomCompletBrut = session.user.user_metadata?.nom;
       
+      // Fallback si pas de nom dans metadata, on prend l'email
+      if (!nomCompletBrut || nomCompletBrut.trim() === "") {
+        nomCompletBrut = session.user.email.split('@')[0];
+      }
+      
+      // Nettoyage : remplacer underscores par espaces
+      nomCompletBrut = nomCompletBrut.replace(/_/g, ' ');
+      
+      // Découper en mots (espaces multiples gérés)
+      const mots = nomCompletBrut.trim().split(/\s+/);
+      
+      // Prendre maximum les 2 premiers mots
+      let prenomPrincipal = mots[0] || "";
+      let secondMot = mots.length > 1 ? mots[1] : "";
+      
+      // Construire la chaîne finale proprement
+      let nomAfficheFinal = "";
+      if (secondMot) {
+        // Ex: "Jean Paul" -> Capitaliser chaque début de mot
+        nomAfficheFinal = prenomPrincipal.charAt(0).toUpperCase() + prenomPrincipal.slice(1).toLowerCase() 
+                        + " " 
+                        + secondMot.charAt(0).toUpperCase() + secondMot.slice(1).toLowerCase();
+      } else {
+        // Ex: "Jean" -> Juste capitalisé
+        nomAfficheFinal = prenomPrincipal.charAt(0).toUpperCase() + prenomPrincipal.slice(1).toLowerCase();
+      }
+      
+      // Si vide après tout ça, mettre défaut
+      if(!nomAfficheFinal) nomAfficheFinal = "Utilisateur";
+
       // 2. ROLE DETECTION
       let roleUtilisateur = session.user.user_metadata?.role; 
 
@@ -97,7 +124,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       userContainer.innerHTML = 
         '<div style="position:relative; display:inline-flex; align-items:center; gap:10px;">' +
           '<button id="btn-notif-cloche" title="Notifications" style="background:none; border:none; font-size:20px; cursor:pointer; position:relative; padding:0; margin:0;">🔔<span id="badge-notif-count" style="display:none; position:absolute; top:-5px; right:-8px; background:#e53e3e; color:white; font-size:10px; font-weight:bold; padding:2px 5px; border-radius:10px;">0</span></button>' +
-          '<a href="profil.html" class="user-nom" style="text-decoration: none; color: inherit; cursor: pointer; white-space: nowrap;">👤 ' + nom + '</a>' +
+          '<a href="profil.html" class="user-nom" style="text-decoration: none; color: inherit; cursor: pointer; white-space: nowrap;">👤 ' + nomAfficheFinal + '</a>' +
           '<div id="dropdown-notifs" style="display:none; position:absolute; top:100%; right:0; margin-top:10px; width:300px; background:white; border:1px solid #e2e8f0; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); z-index:1000; max-height:350px; overflow-y:auto;"></div>' +
         '</div>';
       
