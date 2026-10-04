@@ -16,21 +16,24 @@
 
   <style>
     /* ==================================================
-       STYLES SPÉCIFIQUES À LA PAGE AIDE (V3 PROPRE)
-       Design épuré, intégration parfaite Header/Footer
+       STYLES SPÉCIFIQUES À LA PAGE AIDE (V4 FINALE)
+       Correction Marges Hautes/Basses
        ================================================== */
     
     body {
       background-color: #f9fafb; 
       font-family: Arial, Helvetica, sans-serif;
       color: #1e293b;
-      padding-bottom: 70px; /* Espace pour la bottom-nav fixe */
+      /* Espace vital pour la barre de navigation fixe en bas */
+      padding-bottom: 70px; 
+      margin: 0;
     }
 
     .help-wrapper {
       max-width: 850px;
       margin: 0 auto;
-      padding: 20px 16px 40px 16px; /* Marge haute réduite car header est standard */
+      /* ✅ CORRECTION MARGE HAUTE : Augmentée à 90px pour passer sous le header */
+      padding: 90px 16px 40px 16px; 
     }
 
     /* Hero Section */
@@ -254,7 +257,10 @@
 
     /* Responsive */
     @media (max-width: 600px) {
-      .help-wrapper { padding-top: 10px; }
+      .help-wrapper { 
+        /* Sur mobile, on ajuste légèrement mais on garde assez de marge */
+        padding-top: 80px; 
+      }
       .role-tabs { width: 100%; }
       .tab-btn { flex: 1; text-align: center; padding: 10px 5px; font-size: 13px;}
       .btn-contact-group { flex-direction: column; }
@@ -267,7 +273,7 @@
 </head>
 <body>
 
-  <!-- ✅ HEADER STANDARD COMPLET (Identique aux autres pages) -->
+  <!-- Header Standard -->
   <header class="header-pro">
     <div class="header-contenu">
       <div class="header-logo">
