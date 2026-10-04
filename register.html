@@ -64,17 +64,6 @@
 
       <form id="form-register" class="auth-form">
         
-        <!-- ✅ NOUVEAU : SÉLECTEUR DE RÔLE (PLACÉ EN HAUT) -->
-        <div class="form-groupe">
-          <label for="role" class="form-label">Je souhaite :</label>
-          <select id="role" class="form-input" required>
-            <option value="" disabled selected>Choisir mon profil...</option>
-            <option value="client">🔎 Chercher un logement (Client)</option>
-            <option value="prestataire">📝 Publier des annonces (Prestataire)</option>
-          </select>
-          <span class="form-aide">Ce choix détermine vos accès sur la plateforme.</span>
-        </div>
-
         <!-- Nom complet -->
         <div class="form-groupe">
           <label for="nom" class="form-label">Nom complet</label>
@@ -92,6 +81,17 @@
           <label for="telephone" class="form-label">Numéro de téléphone</label>
           <input type="tel" id="telephone" class="form-input" placeholder="+242 06 xxx xxxx" required autocomplete="tel-national">
           <span class="form-aide">Utilisé pour la récupération de compte.</span>
+        </div>
+
+        <!-- ✅ NOUVEAU : SÉLECTEUR DE RÔLE -->
+        <div class="form-groupe">
+          <label for="role" class="form-label">Je souhaite :</label>
+          <select id="role" class="form-input" required>
+            <option value="" disabled selected>Choisir mon profil...</option>
+            <option value="client">🔎 Chercher un logement (Client)</option>
+            <option value="prestataire">📝 Publier des annonces (Prestataire)</option>
+          </select>
+          <span class="form-aide">Ce choix détermine vos accès sur la plateforme.</span>
         </div>
 
         <!-- Mot de passe -->
@@ -162,5 +162,4 @@
 
 </body>
 </html>
-
 

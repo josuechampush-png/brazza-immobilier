@@ -1,6 +1,6 @@
 /* ==================================================
-   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS
-   Structure Originale Préservée
+   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES
+   Structure Originale Préservée + Gestion Client/Prestataire
    ================================================== */
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -25,24 +25,61 @@ document.addEventListener("DOMContentLoaded", async function () {
     
     if (session) {
       // ✅ CORRECTION : On récupère le nom brut des métadonnées.
-      // Si 'nom' existe, on l'utilise tel quel (avec ses espaces).
-      // Sinon, on prend la partie avant @ de l'email.
       let nomAffiche = session.user.user_metadata?.nom;
       
       if (!nomAffiche || nomAffiche.trim() === "") {
         nomAffiche = session.user.email.split('@')[0];
       }
       
-      // On nettoie juste les éventuels underscores au cas où, 
-      // mais on NE TOUCHE PAS aux espaces standards.
       const nom = nomAffiche.replace(/_/g, ' ');
+      
+      // ✅ RÉCUPÉRATION DU RÔLE DEPUIS LES MÉTADONNÉES AUTH OU BASE DE DONNÉES
+      // Priorité aux metadata auth car disponibles instantanément
+      let roleUtilisateur = session.user.user_metadata?.role; 
+
+      // Si pas de rôle dans metadata, on essaie de le chercher en base (fallback)
+      if (!roleUtilisateur) {
+        const { data: profilDb } = await client
+          .from('profils_admin')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+        
+        if (profilDb && profilDb.role) {
+          roleUtilisateur = profilDb.role;
+        } else {
+          roleUtilisateur = 'client'; // Par défaut sécurisé
+        }
+      }
+
+      // ✅ LOGIQUE D'AFFICHAGE SELON LE RÔLE
+      if (roleUtilisateur === 'client') {
+        // Cacher le bouton Publier en haut à droite
+        const btnPublierTop = document.querySelector('.btn-publier-pro');
+        if (btnPublierTop) btnPublierTop.style.display = 'none';
+
+        // Cacher l'onglet Publier dans le sous-menu nav
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+          if (link.href.includes('publier.html')) {
+            link.parentElement.style.display = 'none';
+          }
+        });
+
+        // Cacher "Mes annonces" dans la barre du bas
+        const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+        bottomNavItems.forEach(item => {
+          if (item.href.includes('mes-annonces.html')) {
+            item.style.display = 'none';
+          }
+        });
+      } 
+      // Si prestataire ou admin, tout reste visible par défaut
       
       // ✅ RESPECT DE LA STRUCTURE ORIGINALE (.user-container)
       const userContainer = document.createElement("div");
       userContainer.className = "user-container";
       
-      // On injecte la cloche AVANT le lien profil, dans un wrapper relatif
-      // Pour ne pas casser le CSS .user-nom qui est défini ailleurs
       userContainer.innerHTML = 
         '<div style="position:relative; display:inline-flex; align-items:center; gap:10px;">' +
           '<button id="btn-notif-cloche" title="Notifications" style="background:none; border:none; font-size:20px; cursor:pointer; position:relative; padding:0; margin:0;">🔔<span id="badge-notif-count" style="display:none; position:absolute; top:-5px; right:-8px; background:#e53e3e; color:white; font-size:10px; font-weight:bold; padding:2px 5px; border-radius:10px;">0</span></button>' +
@@ -153,8 +190,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       // Fermer si clic dehors
       document.onclick = (e) => {
         if (dropdownNotifs && !e.target.closest(".notif-wrapper") && !e.target.closest("#btn-notif-cloche")) {
-           // Note: Le wrapper n'a pas la classe notif-wrapper ici car j'ai utilisé un div inline
-           // On vérifie juste si on clique hors du container user
            if(!e.target.closest(".user-container")) {
              dropdownNotifs.style.display = "none";
            }
