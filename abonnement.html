@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr-CG">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abonnements Prestataires — Brazza-Immobilier</title>
+  
+  <!-- Styles globaux -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/bottom-nav.css">
+
+  <style>
+    /* ==================================================
+       STYLES SPÉCIFIQUES À LA PAGE ABONNEMENT (V3 HIÉRARCHIQUE)
+       Design moderne, contrasté et professionnel
+       ================================================== */
+    
+    body {
+      background-color: #f8fafc; 
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding-bottom: 70px;
+    }
+
+    .sub-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 16px 40px 16px;
+    }
+
+    /* Hero Section */
+    .sub-hero {
+      text-align: center;
+      margin-bottom: 50px;
+      position: relative;
+    }
+
+    .sub-hero::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #3182ce, #22c55e);
+      margin: 20px auto 0;
+      border-radius: 2px;
+    }
+
+    .sub-hero h1 {
+      font-size: 34px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 15px;
+      letter-spacing: -0.5px;
+    }
+
+    .sub-hero p {
+      font-size: 17px;
+      color: #64748b;
+      max-width: 650px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Grille des Cartes d'Abonnement */
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px;
+      align-items: stretch;
+    }
+
+    .plan-card {
+      background: white;
+      border-radius: 20px;
+      padding: 35px 25px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .plan-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      border-color: #cbd5e1;
+    }
+
+    /* Effet Dégradé Haut pour les plans payants */
+    .plan-card.standard { border-top: 5px solid #3182ce; }
+    .plan-card.pro { border-top: 5px solid #22c55e; }
+    .plan-card.premium { border-top: 5px solid #f59e0b; } /* Orange/Jaune Congo */
+
+    /* Style spécifique pour le plan recommandé */
+    .plan-card.recommended {
+      transform: scale(1.03);
+      z-index: 2;
+      box-shadow: 0 20px 25px -5px rgba(49, 130, 206, 0.15);
+      border-color: #bfdbfe;
+    }
+    
+    .recommended-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #dbeafe;
+      color: #1d4ed8;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .plan-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .plan-price-container {
+      text-align: center;
+      margin-bottom: 25px;
+      padding-bottom: 25px;
+      border-bottom: 1px dashed #e2e8f0;
+    }
+
+    .plan-price {
+      font-size: 36px;
+      font-weight: 800;
+      color: #0f172a;
+      display: block;
+      line-height: 1;
+    }
+
+    .plan-period {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-top: 5px;
+      display: block;
+    }
+
+    .plan-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 30px 0;
+      flex-grow: 1;
+    }
+
+    .plan-features li {
+      padding: 12px 0;
+      font-size: 14px;
+      color: #475569;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      line-height: 1.4;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .plan-features li:last-child {
+      border-bottom: none;
+    }
+
+    .feature-icon {
+      min-width: 20px;
+      height: 20px;
+      background: #dcfce7;
+      color: #166534;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    
+    .feature-cross {
+      min-width: 20px;
+      height: 20px;
+      background: #fee2e2;
+      color: #991b1b;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    
+    /* Texte grisé pour les fonctionnalités non incluses */
+    .feature-disabled-text {
+      color: #94a3b8;
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    .btn-plan {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      text-align: center;
+      display: block;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-free {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #e2e8f0;
+    }
+    .btn-free:hover { background: #e2e8f0; border-color: #cbd5e1; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #3182ce 0%, #2563eb 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
+    }
+    .btn-primary:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 6px 16px rgba(49, 130, 206, 0.4);
+    }
+
+    .btn-pro {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+    .btn-pro:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+    }
+
+    .btn-premium {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+    .btn-premium:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+    }
+
+    /* Note légale LISIBLE */
+    .legal-note-box {
+      margin-top: 50px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .legal-note-title {
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+
+    .legal-note-text {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.6;
+      margin: 0;
+    }
+    
+    .payment-methods {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .pay-badge {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    @media (max-width: 768px) {
+      .plans-grid {
+        grid-template-columns: 1fr;
+      }
+      .plan-card.recommended {
+        transform: none;
+      }
+      .sub-hero h1 { font-size: 28px; }
+    }
+  </style>
+
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1e293b">
+</head>
+<body>
+
+  <!-- Header Standard -->
+  <header class="header-pro">
+    <div class="header-contenu">
+      <div class="header-logo">
+        <h1 class="site-nom">
+          Brazza<span class="separateur">–</span>Immobilier
+        </h1>
+        <p class="site-slogan">Espace Prestataire</p>
+      </div>
+      <div class="header-actions">
+        <button id="btn-theme" class="btn-theme" title="Changer de thème">🌙</button>
+        <a href="index.html" style="color:white; text-decoration:none; font-size:14px; margin-right:15px;">← Retour</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="sub-wrapper">
+    
+    <!-- HERO -->
+    <section class="sub-hero">
+      <h1>Boostez votre visibilité immobilière</h1>
+      <p>Chaque palier supérieur inclut tous les avantages du précédent, plus des fonctionnalités exclusives.</p>
+    </section>
+
+    <!-- CARTES D'OFFRES -->
+    <section class="plans-grid">
+      
+      <!-- 1. GRATUIT -->
+      <div class="plan-card">
+        <h3 class="plan-name">Découverte</h3>
+        <div class="plan-price-container">
+          <span class="plan-price">0 FCFA</span>
+          <span class="plan-period">Par mois</span>
+        </div>
+        
+        <ul class="plan-features">
+          <li><span class="feature-icon">✓</span> Jusqu'à <strong>5 annonces</strong></li>
+          <li><span class="feature-icon">✓</span> <strong>3 photos</strong> par annonce</li>
+          <li><span class="feature-icon">✓</span> Contact WhatsApp direct</li>
+          <li><span class="feature-cross">✗</span> <span class="feature-disabled-text">Badge Vérifié</span></li>
+          <li><span class="feature-cross">✗</span> <span class="feature-disabled-text">Priorité Recherche</span></li>
+          <li><span class="feature-cross">✗</span> <span class="feature-disabled-text">Statistiques Détaillées</span></li>
+          <li><span class="feature-cross">✗</span> <span class="feature-disabled-text">Export Données</span></li>
+          <li><span class="feature-cross">✗</span> <span class="feature-disabled-text">Support Prioritaire</span></li>
+        </ul>
+        
+        <a href="#" class="btn-plan btn-free">Commencer gratuitement</a>
+      </div>
+
+      <!-- 2. STANDARD (RECOMMANDÉ) -->
+      <div class="plan-card standard recommended">
+        <span class="recommended-badge">Populaire</span>
+        <h3 class="plan-name">Agent Local</h3>
+        <div class="plan-price-container">
+          <span class="plan-price">1 000 FCFA</span>
+          <span class="plan-period">Par mois</span>
+        </div>
+        
+        <ul class="plan-features">
+          <li><span class="feature-icon">✓</span> Tout du plan Découverte, plus :</li>
+          <li><span class="feature-icon">✓</span> Jusqu'à <strong>15 annonces</strong></li>
+          <li><span class="feature-icon">✓</span> Badge <strong>"Vérifié"</strong></li>
+          <li><span class="feature-icon">✓</span> Priorité moyenne dans les recherches</li>
+          <li><span class="feature-icon">✓</span> Statistiques basiques (vues)</li>
+          <li><span class="feature-cross">✗</span> <span class="feature-disabled-text">Badge Premium</span></li>
+          <li><span class="feature-cross">✗</span> <span class="feature-disabled-text">Export CSV Contacts</span></li>
+          <li><span class="feature-cross">✗</span> <span class="feature-disabled-text">Top Accueil Absolue</span></li>
+        </ul>
+        
+        <a href="#" class="btn-plan btn-primary">Choisir cet offre</a>
+      </div>
+
+      <!-- 3. PRO -->
+      <div class="plan-card pro">
+        <h3 class="plan-name">Expert Immo</h3>
+        <div class="plan-price-container">
+          <span class="plan-price">2 500 FCFA</span>
+          <span class="plan-period">Par mois</span>
+        </div>
+        
+        <ul class="plan-features">
+          <li><span class="feature-icon">✓</span> Tout du plan Agent Local, plus :</li>
+          <li><span class="feature-icon">✓</span> Jusqu'à <strong>40 annonces</strong></li>
+          <li><span class="feature-icon">✓</span> Badge <strong>"Premium"</strong></li>
+          <li><span class="feature-icon">✓</span> <strong>Priorité Haute</strong> dans les filtres</li>
+          <li><span class="feature-icon">✓</span> Statistiques avancées (clics, favoris)</li>
+          <li><span class="feature-icon">✓</span> Export CSV des contacts intéressés</li>
+          <li><span class="feature-cross">✗</span> <span class="feature-disabled-text">Annonces Illimitées</span></li>
+          <li><span class="feature-cross">✗</span> <span class="feature-disabled-text">Top Absolu sur Accueil</span></li>
+          <li><span class="feature-cross">✗</span> <span class="feature-disabled-text">Support Dédié 24/7</span></li>
+        </ul>
+        
+        <a href="#" class="btn-plan btn-pro">Passer à Expert</a>
+      </div>
+
+      <!-- 4. PREMIUM (ULTIMATE) -->
+      <div class="plan-card premium">
+        <h3 class="plan-name">Leader Marché</h3>
+        <div class="plan-price-container">
+          <span class="plan-price">5 000 FCFA</span>
+          <span class="plan-period">Par mois</span>
+        </div>
+        
+        <ul class="plan-features">
+          <li><span class="feature-icon">✓</span> Tout du plan Expert Immo, plus :</li>
+          <li><span class="feature-icon">✓</span> Annonces <strong>ILLIMITÉES</strong></li>
+          <li><span class="feature-icon">✓</span> Badge <strong>"Elite"</strong></li>
+          <li><span class="feature-icon">✓</span> <strong>Top Absolu</strong> sur la page d'accueil</li>
+          <li><span class="feature-icon">✓</span> Notifications Push aux clients ciblés</li>
+          <li><span class="feature-icon">✓</span> Support dédié prioritaire 24/7</li>
+          <li><span class="feature-icon">✓</span> Audit mensuel de vos performances</li>
+          <li><span class="feature-icon">✓</span> Aucune restriction ni faiblesse</li>
+        </ul>
+        
+        <a href="#" class="btn-plan btn-premium">Devenir Leader</a>
+      </div>
+
+    </section>
+
+    <!-- NOTE LÉGALE & PAIEMENTS (MISE À JOUR : MTN & AIRTEL SEULEMENT) -->
+    <div class="legal-note-box">
+      <p class="legal-note-title">💳 Modes de paiement acceptés</p>
+      <p class="legal-note-text">
+        Abonnement mensuel résiliable à tout moment. Aucun engagement long terme.
+      </p>
+      <div class="payment-methods">
+        <span class="pay-badge">MTN MoMo</span>
+        <span class="pay-badge">Airtel Money</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- BARRE DE NAVIGATION BASSE -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">🏠</span>
+      <span class="bottom-nav-texte">Accueil</span>
+    </a>
+    <a href="carte.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">🗺️</span>
+      <span class="bottom-nav-texte">Carte</span>
+    </a>
+    <a href="mes-annonces.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">📋</span>
+      <span class="bottom-nav-texte">Mes annonces</span>
+    </a>
+    <a href="favoris.html" class="bottom-nav-item">
+      <span class="bottom-nav-icone">❤️</span>
+      <span class="bottom-nav-texte">Favoris</span>
+    </a>
+    <a href="plus.html" class="bottom-nav-item active">
+      <span class="bottom-nav-icone">⚙️</span>
+      <span class="bottom-nav-texte">Plus</span>
+    </a>
+  </nav>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/header.js"></script>
+  <script src="js/footer.js"></script>
+
+</body>
+</html>
