@@ -1,4 +1,4 @@
-// js/auth.js - VERSION FINALE CORRIGÉE & ROBUSTE
+// js/auth.js - VERSION FINALE SIMPLIFIÉE & ROBUSTE POUR ENVOI MAIL
 
 const SUPABASE_URL = 'https://buymgwahouwcwwgdiogn.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDYyODQxOSwiZXhwIjoyMTA2MjA0NDE5fQ.4m7vMaiQvDEV5NtptuGlGcdh4gcxNMxHdD-8sPo6M4k';
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const inputTelReg = document.getElementById("telephone"); 
   const inputPassReg = document.getElementById("password");
   const inputPassConfirm = document.getElementById("password-confirm");
-  const btnRegister = document.getElementById("btn-register"); // Récupération du bouton
+  const btnRegister = document.getElementById("btn-register");
 
   // Champs Connexion
   const inputIdentifiantLog = document.getElementById("identifiant"); 
@@ -42,8 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
     messageAuth.textContent = msg;
     messageAuth.className = `auth-message ${type}`;
     
-    // Affiche le message. Si c'est une erreur, il disparaît après 5s.
-    // Si c'est un succès (inscription), il reste tant que l'utilisateur est sur la page.
+    // Erreurs disparaissent après 5s. Succès reste affiché.
     if (type === 'error') {
       setTimeout(() => { 
         messageAuth.textContent = ""; 
@@ -52,51 +51,32 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   /**
-   * ✅ FONCTION DE NORMALISATION ULTRA-ROBUSTE
+   * ✅ FONCTION DE NORMALISATION TÉLÉPHONE
    */
   function normaliserTelephone(telBrut) {
     if (!telBrut) return null;
-    
     let digits = telBrut.replace(/\D/g, ''); 
-    
-    if (digits.startsWith('242')) {
-      digits = digits.substring(3);
-    }
-    
-    if (digits.startsWith('242')) {
-       digits = digits.substring(3);
-    }
-
-    if (digits.startsWith('0')) {
-      digits = digits.substring(1);
-    }
-
-    if (digits.length < 8 || digits.length > 9) {
-      return null;
-    }
-
+    if (digits.startsWith('242')) digits = digits.substring(3);
+    if (digits.startsWith('242')) digits = digits.substring(3);
+    if (digits.startsWith('0')) digits = digits.substring(1);
+    if (digits.length < 8 || digits.length > 9) return null;
     return '+242' + digits;
   }
 
   async function getEmailFromPhone(phoneNumber) {
     const normalized = normaliserTelephone(phoneNumber);
     if (!normalized) return null;
-
     const sansPrefixe = normalized.replace('+242', '');
     const avecZeroInitial = '0' + sansPrefixe;
-    const formatInternational = normalized;
-
     try {
       const { data, error } = await supabase
         .from('profils_admin')
         .select('email')
-        .or(`telephone.eq.${formatInternational},telephone.eq.${avecZeroInitial},telephone.eq.${sansPrefixe}`)
+        .or(`telephone.eq.${normalized},telephone.eq.${avecZeroInitial},telephone.eq.${sansPrefixe}`)
         .single();
-
       if (error || !data) return null;
       return data.email;
     } catch (err) {
-      console.error("Erreur recherche tel:", err);
       return null;
     }
   }
@@ -108,18 +88,10 @@ document.addEventListener("DOMContentLoaded", function() {
         .select('*')
         .eq('id', userId)
         .single();
-
-      if (error || !profil) {
-        return false;
-      }
-      
-      if (profil.est_bloque === true) {
-        return false;
-      }
-
+      if (error || !profil) return false;
+      if (profil.est_bloque === true) return false;
       return true;
     } catch (err) {
-      console.error("Erreur vérification accès:", err);
       return false;
     }
   }
@@ -129,10 +101,10 @@ document.addEventListener("DOMContentLoaded", function() {
     formRegister.addEventListener("submit", async function(e) {
       e.preventDefault();
       
-      // Désactiver le bouton pour éviter les doubles soumissions
+      // Désactiver bouton
       if(btnRegister) {
         btnRegister.disabled = true;
-        btnRegister.innerHTML = "Création en cours...";
+        btnRegister.innerHTML = "Envoi...";
       }
 
       const nom = inputNom.value.trim();
@@ -141,72 +113,59 @@ document.addEventListener("DOMContentLoaded", function() {
       const password = inputPassReg.value;
       const confirmPassword = inputPassConfirm.value;
 
+      // Validations Front-end
       if (!nom || !email || !password) {
         afficherMessage("⚠️ Veuillez remplir tous les champs requis.", "error");
-        if(btnRegister) { btnRegister.disabled = false; btnRegister.innerHTML = "Créer mon compte"; }
+        resetButton();
         return;
       }
       if (password !== confirmPassword) {
         afficherMessage("❌ Les mots de passe ne correspondent pas.", "error");
-        if(btnRegister) { btnRegister.disabled = false; btnRegister.innerHTML = "Créer mon compte"; }
+        resetButton();
         return;
       }
       
       const telephoneClean = normaliserTelephone(telephoneRaw);
-      
       if (!telephoneClean) {
          afficherMessage("⚠️ Numéro de téléphone invalide.", "error");
-         if(btnRegister) { btnRegister.disabled = false; btnRegister.innerHTML = "Créer mon compte"; }
+         resetButton();
          return;
       }
 
       try {
-        // 1. Appel principal SignUp
-        const { data: authData, error: authError } = await supabase.auth.signUp({
+        // APPEL CRUCIAL : signUp
+        // On passe les metadata ici. C'est tout ce qu'on fait.
+        // Pas de update profils_admin ici pour éviter les blocages RLS/Trigger.
+        const { data, error } = await supabase.auth.signUp({
           email: email,
           password: password,
           options: {
-            data: { full_name: nom, phone_number: telephoneClean }
+            data: { 
+              full_name: nom, 
+              phone_number: telephoneClean 
+            }
           }
         });
 
-        if (authError) throw authError;
-
-        // Vérification cruciale : Est-ce que l'utilisateur a été créé ?
-        // Même si emailConfirmationRequired est vrai, authData.user devrait exister.
-        if (authData && authData.user) {
-           
-           // 2. Tentative de mise à jour du profil (Non bloquant)
-           // On essaie de compléter les infos dans profils_admin. 
-           // Si ça échoue (ex: table n'existe pas encore ou RLS strict), on continue car l'email est envoyé.
-           try {
-             await supabase.from('profils_admin').update({
-               telephone: telephoneClean,
-               nom: nom,
-               role: 'utilisateur',
-               est_bloque: false
-             }).eq('id', authData.user.id);
-           } catch (dbErr) {
-             console.warn("Update profil admin échoué (non critique):", dbErr.message);
-           }
-           
-           // 3. SUCCÈS : Message permanent
-           afficherMessage("📧 Inscription réussie ! Merci de vérifier votre boîte email et cliquer sur le lien de confirmation.", "success");
-           
-           // Optionnel : Vider les champs pour éviter confusion
-           inputNom.value = "";
-           inputEmailReg.value = "";
-           inputTelReg.value = "";
-           inputPassReg.value = "";
-           inputPassConfirm.value = "";
-
-        } else {
-           // Cas rare où user est null mais pas d'erreur (configuration bizarre)
-           afficherMessage("✅ Compte créé. Vérifiez vos emails.", "success");
+        if (error) {
+          throw error;
         }
 
+        // Si on arrive ici, l'appel a réussi.
+        // Supabase enverra automatiquement l'email de confirmation si configuré ainsi.
+        
+        // Affichage du message permanent
+        afficherMessage("📧 Inscription réussie ! Merci de vérifier votre boîte email et cliquer sur le lien de confirmation.", "success");
+        
+        // Vider les champs pour propreté visuelle
+        inputNom.value = "";
+        inputEmailReg.value = "";
+        if(inputTelReg) inputTelReg.value = "";
+        inputPassReg.value = "";
+        inputPassConfirm.value = "";
+
       } catch (err) {
-        console.error(err);
+        console.error("Erreur SignUp:", err);
         if (err.message.includes("already registered") || err.message.includes("User already registered")) {
            afficherMessage("❌ Cet email est déjà inscrit.", "error");
         } else if (err.message.includes("rate limit")) {
@@ -214,14 +173,17 @@ document.addEventListener("DOMContentLoaded", function() {
         } else {
            afficherMessage("❌ Erreur technique : " + err.message, "error");
         }
-        
-        // Réactiver le bouton en cas d'erreur
-        if(btnRegister) { 
-          btnRegister.disabled = false; 
-          btnRegister.innerHTML = "Créer mon compte"; 
-        }
+        resetButton();
       }
     });
+  }
+
+  // Fonction helper pour réactiver le bouton
+  function resetButton() {
+    if(btnRegister) { 
+      btnRegister.disabled = false; 
+      btnRegister.innerHTML = "Créer mon compte"; 
+    }
   }
 
   // --- GESTION CONNEXION ---
