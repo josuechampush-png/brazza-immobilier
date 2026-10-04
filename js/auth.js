@@ -1,4 +1,4 @@
-// js/auth.js - VERSION FINALE AVEC GESTION DES RÔLES
+// js/auth.js - VERSION FINALE AVEC ALERT EMAIL & REDIRECTION
 
 const SUPABASE_URL = 'https://buymgwahouwcwwgdiogn.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDYyODQxOSwiZXhwIjoyMTA2MjA0NDE5fQ.4m7vMaiQvDEV5NtptuGlGcdh4gcxNMxHdD-8sPo6M4k';
@@ -24,8 +24,6 @@ document.addEventListener("DOMContentLoaded", function() {
   const inputPassReg = document.getElementById("password");
   const inputPassConfirm = document.getElementById("password-confirm");
   const btnRegister = document.getElementById("btn-register");
-  
-  // ✅ NOUVEAU CHAMP RÔLE
   const inputRole = document.getElementById("role"); 
 
   // Champs Connexion
@@ -45,7 +43,6 @@ document.addEventListener("DOMContentLoaded", function() {
     messageAuth.textContent = msg;
     messageAuth.className = `auth-message ${type}`;
     
-    // Erreurs disparaissent après 5s. Succès reste affiché.
     if (type === 'error') {
       setTimeout(() => { 
         messageAuth.textContent = ""; 
@@ -115,8 +112,6 @@ document.addEventListener("DOMContentLoaded", function() {
       const telephoneRaw = inputTelReg ? inputTelReg.value.trim() : "";
       const password = inputPassReg.value;
       const confirmPassword = inputPassConfirm.value;
-      
-      // ✅ RÉCUPÉRATION DU RÔLE CHOISI
       const roleChoisi = inputRole ? inputRole.value : "";
 
       // Validations Front-end
@@ -126,7 +121,6 @@ document.addEventListener("DOMContentLoaded", function() {
         return;
       }
       
-      // ✅ VÉRIFICATION DU RÔLE
       if (!roleChoisi) {
         afficherMessage("⚠️ Veuillez choisir votre profil (Client ou Prestataire).", "error");
         resetButton();
@@ -147,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function() {
       }
 
       try {
-        // APPEL CRUCIAL : signUp avec le Rôle inclus dans les metadata
+        // APPEL CRUCIAL : signUp avec Rôle
         const { data, error } = await supabase.auth.signUp({
           email: email,
           password: password,
@@ -155,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function() {
             data: { 
               full_name: nom, 
               phone_number: telephoneClean,
-              role: roleChoisi // <-- LE RÔLE EST ENVOYÉ ICI
+              role: roleChoisi 
             }
           }
         });
@@ -165,7 +159,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Tentative de sauvegarde directe en base (si permis par RLS)
-        // Cela permet d'avoir le rôle dispo immédiatement dans profils_admin
         if (data.user) {
            try {
              await supabase.from('profils_admin').update({
@@ -175,20 +168,17 @@ document.addEventListener("DOMContentLoaded", function() {
                est_bloque: false
              }).eq('id', data.user.id);
            } catch (dbErr) {
-             console.warn("Update profil admin ignoré (normal si RLS strict):", dbErr.message);
+             console.warn("Update profil admin ignoré:", dbErr.message);
            }
         }
 
-        // Affichage du message permanent
-        afficherMessage("📧 Inscription réussie ! Merci de vérifier votre boîte email et cliquer sur le lien de confirmation.", "success");
+        // ✅ MODIFICATION ICI : ALERTE NATIVE + REDIRECTION
         
-        // Vider les champs pour propreté visuelle
-        inputNom.value = "";
-        inputEmailReg.value = "";
-        if(inputTelReg) inputTelReg.value = "";
-        if(inputRole) inputRole.selectedIndex = 0; // Reset select
-        inputPassReg.value = "";
-        inputPassConfirm.value = "";
+        // 1. Affiche une alerte bloquante que l'utilisateur doit fermer
+        alert("✅ Inscription réussie !\n\nMerci de vérifier votre boîte email et cliquer sur le lien de confirmation pour activer votre compte.\n\nVous serez redirigé vers la page de connexion.");
+        
+        // 2. Redirection immédiate après fermeture de l'alerte
+        window.location.href = "login.html";
 
       } catch (err) {
         console.error("Erreur SignUp:", err);
@@ -322,5 +312,3 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 });
-
-
