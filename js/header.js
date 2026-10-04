@@ -1,6 +1,6 @@
 /* ==================================================
-   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES (V7 FINAL)
-   Correction : Séparation automatique des noms collés (CamelCase)
+   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES (V8 FINAL)
+   Correction : Lecture directe du nom depuis profils_admin (Source de vérité)
    ================================================== */
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -24,72 +24,51 @@ document.addEventListener("DOMContentLoaded", async function () {
     const { data: { session } } = await client.auth.getSession();
     
     if (session) {
-      // ✅ LOGIQUE DE NETTOYAGE ET SÉPARATION DES NOMS COLLÉS
-      let nomBrut = session.user.user_metadata?.nom || "";
       
-      // Fallback email si nom vide
-      if (!nomBrut.trim()) {
-        nomBrut = session.user.email.split('@')[0];
-      }
+      // ✅ 1. RÉCUPÉRATION DIRECTE DU PROFIL EN BASE DE DONNÉES
+      // On ignore user_metadata pour le nom afin d'éviter les désynchronisations.
+      // On va chercher le nom ET le rôle dans un seul appel pour optimiser.
+      const { data: profilDb, error: errProfil } = await client
+        .from('profils_admin')
+        .select('nom, role')
+        .eq('id', session.user.id)
+        .single();
 
-      // 1. Remplacer underscores par espaces
-      let nomNettoye = nomBrut.replace(/_/g, ' ');
-
-      // 2. Si le nom semble collé (pas d'espace mais plusieurs majuscules internes), 
-      // on insère un espace avant chaque Majuscule qui suit une minuscule.
-      // Ex: "JeanPaul" -> "Jean Paul", "MarieClaire" -> "Marie Claire"
-      if (nomNettoye.indexOf(' ') === -1 && /[a-z][A-Z]/.test(nomNettoye)) {
-          nomNettoye = nomNettoye.replace(/([a-z])([A-Z])/g, '$1 $2');
-      }
-
-      // 3. Découper en mots
-      const mots = nomNettoye.trim().split(/\s+/).filter(w => w.length > 0);
+      // 2. DÉFINITION DU NOM À AFFICHER
+      let nomAfficheFinal = "Utilisateur";
       
-      // 4. Prendre max 2 premiers mots
-      let prenomPrincipal = mots[0] || "";
-      let secondMot = mots.length > 1 ? mots[1] : "";
-      
-      // 5. Capitalisation propre
-      const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-      
-      let nomAfficheFinal = "";
-      if (secondMot) {
-        nomAfficheFinal = capitalize(prenomPrincipal) + " " + capitalize(secondMot);
+      if (!errProfil && profilDb && profilDb.nom) {
+        // Si le nom existe en base, on l'utilise tel quel (avec ses espaces).
+        // On fait juste un trim() pour enlever les espaces superflus au début/fin.
+        nomAfficheFinal = profilDb.nom.trim();
       } else {
-        nomAfficheFinal = capitalize(prenomPrincipal);
-      }
-      
-      if(!nomAfficheFinal) nomAfficheFinal = "Utilisateur";
-
-      // 2. ROLE DETECTION
-      let roleUtilisateur = session.user.user_metadata?.role; 
-
-      if (!roleUtilisateur) {
-        try {
-          const { data: profilDb, error } = await client
-            .from('profils_admin')
-            .select('role')
-            .eq('id', session.user.id)
-            .single();
-          
-          if (!error && profilDb && profilDb.role) {
-            roleUtilisateur = profilDb.role;
-          } else {
-            roleUtilisateur = 'client'; 
-          }
-        } catch (dbErr) {
-          roleUtilisateur = 'client';
+        // Fallback si erreur DB ou nom vide : utiliser metadata auth ou email
+        let nomBrut = session.user.user_metadata?.nom || "";
+        if (!nomBrut.trim()) {
+          nomBrut = session.user.email.split('@')[0];
         }
+        // Nettoyage basique underscores -> espaces
+        nomAfficheFinal = nomBrut.replace(/_/g, ' ').trim();
+      }
+
+      // 3. DÉTECTION DU RÔLE
+      let roleUtilisateur = 'client'; // Défaut sécurisé
+      
+      if (!errProfil && profilDb && profilDb.role) {
+        roleUtilisateur = profilDb.role;
+      } else {
+        // Fallback metadata si pas trouvé en DB
+        roleUtilisateur = session.user.user_metadata?.role || 'client';
       }
 
       console.log("--- DEBUG HEADER ---");
       console.log("Email:", session.user.email);
-      console.log("Nom Brut Reçu:", nomBrut);
-      console.log("Nom Affiché Calculé:", nomAfficheFinal);
-      console.log("Role Final Détecté:", roleUtilisateur);
+      console.log("Nom Lu en Base:", profilDb ? profilDb.nom : "NULL");
+      console.log("Nom Affiché Final:", nomAfficheFinal);
+      console.log("Role Détecté:", roleUtilisateur);
       console.log("--------------------");
 
-      // 3. LOGIQUE CLIENT : GRISER LE BOUTON PUBLIER
+      // 4. LOGIQUE CLIENT : GRISER LE BOUTON PUBLIER
       if (roleUtilisateur === 'client') {
         
         // A. Griser le bouton "+ Publier" en haut à droite
@@ -99,7 +78,6 @@ document.addEventListener("DOMContentLoaded", async function () {
           btnPublier.style.pointerEvents = 'none'; // Empêche le clic
           btnPublier.title = "Réservé aux prestataires";
           
-          // Optionnel : Changer le texte pour clarifier
           const spanTexte = btnPublier.querySelector('.btn-texte');
           if(spanTexte) spanTexte.textContent = "Prestataire";
         }
@@ -123,10 +101,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       } 
       // Si prestataire/admin, on laisse tel quel
       
-      // 4. INJECTION USER CONTAINER
+      // 5. INJECTION USER CONTAINER
       const userContainer = document.createElement("div");
       userContainer.className = "user-container";
       
+      // On utilise ici nomAfficheFinal qui contient maintenant l'espace correct lu depuis la DB
       userContainer.innerHTML = 
         '<div style="position:relative; display:inline-flex; align-items:center; gap:10px;">' +
           '<button id="btn-notif-cloche" title="Notifications" style="background:none; border:none; font-size:20px; cursor:pointer; position:relative; padding:0; margin:0;">🔔<span id="badge-notif-count" style="display:none; position:absolute; top:-5px; right:-8px; background:#e53e3e; color:white; font-size:10px; font-weight:bold; padding:2px 5px; border-radius:10px;">0</span></button>' +
