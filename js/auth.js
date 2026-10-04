@@ -200,8 +200,13 @@ document.addEventListener("DOMContentLoaded", function() {
              est_bloque: false
            }).eq('id', authData.user.id);
            
-           afficherMessage("✅ Compte créé ! Redirection...", "success");
-           setTimeout(() => { window.location.href = "login.html"; }, 2000);
+           // ✅ MODIFICATION ICI : Message demandant de vérifier l'email
+           afficherMessage("📧 Inscription réussie ! Merci de vérifier votre boîte email et cliquer sur le lien de confirmation.", "success");
+           
+           // Optionnel : Tu peux rediriger vers login.html après un délai plus long, 
+           // ou laisser l'utilisateur sur place pour qu'il voie le message.
+           // Je garde la redirection mais avec un délai pour qu'il ait le temps de lire.
+           setTimeout(() => { window.location.href = "login.html"; }, 4000);
         }
 
       } catch (err) {
