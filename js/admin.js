@@ -63,25 +63,46 @@ document.addEventListener("DOMContentLoaded", async function() {
   }
 
   // ==================================================
-  // GESTION DES ONGLETS
+  // GESTION DES ONGLETS (MODIFIÉE POUR TOGGLE)
   // ==================================================
   window.afficherOnglet = function(onglet) {
     const sectionUtilisateurs = document.getElementById("section-utilisateurs");
     const sectionAnnonces = document.getElementById("section-annonces");
     const sectionSignalements = document.getElementById("section-signalements");
     const sectionQuartiers = document.getElementById("section-quartiers");
-    const sectionTemoignages = document.getElementById("section-temoignages"); // ✅ Ajout
+    const sectionTemoignages = document.getElementById("section-temoignages"); 
     
     const tabs = document.querySelectorAll(".admin-tab");
     
-    // Masquer toutes les sections d'abord
+    // Déterminer quelle section correspond à l'onglet cliqué
+    let currentSection = null;
+    if (onglet === 'utilisateurs') currentSection = sectionUtilisateurs;
+    else if (onglet === 'annonces') currentSection = sectionAnnonces;
+    else if (onglet === 'signalements') currentSection = sectionSignalements;
+    else if (onglet === 'quartiers') currentSection = sectionQuartiers;
+    else if (onglet === 'temoignages') currentSection = sectionTemoignages;
+
+    if (!currentSection) return;
+
+    // VÉRIFICATION TOGGLE : Est-ce que cette section est déjà visible ?
+    const isVisible = currentSection.style.display !== "none";
+
+    if (isVisible) {
+      // Si c'est déjà ouvert, on ferme tout (Toggle Off)
+      [sectionUtilisateurs, sectionAnnonces, sectionSignalements, sectionQuartiers, sectionTemoignages].forEach(s => {
+         if(s) s.style.display = "none";
+      });
+      tabs.forEach(t => t.classList.remove("active"));
+      return; // Sortie anticipée
+    }
+
+    // Sinon, on ferme tout d'abord
     [sectionUtilisateurs, sectionAnnonces, sectionSignalements, sectionQuartiers, sectionTemoignages].forEach(s => {
        if(s) s.style.display = "none";
     });
-    
-    // Retirer active de tous les tabs
     tabs.forEach(t => t.classList.remove("active"));
 
+    // Ensuite, on ouvre la section demandée
     if (onglet === 'utilisateurs') {
       if (sectionUtilisateurs) {
         sectionUtilisateurs.style.display = "block";
@@ -104,10 +125,10 @@ document.addEventListener("DOMContentLoaded", async function() {
         tabs[3].classList.add("active");
         chargerQuartiers();
       }
-    } else if (onglet === 'temoignages') { // ✅ Nouveau cas
+    } else if (onglet === 'temoignages') { 
       if (sectionTemoignages) {
         sectionTemoignages.style.display = "block";
-        tabs[4].classList.add("active"); // Index 4 car c'est le 5ème bouton
+        tabs[4].classList.add("active"); 
         chargerTemoignages();
       }
     }
@@ -157,6 +178,8 @@ document.addEventListener("DOMContentLoaded", async function() {
         const statutBadge = u.est_bloque ? '<span class="badge-statut badge-bloque">🚫 Bloqué</span>' : '<span class="badge-statut badge-actif">✅ Actif</span>';
         const btnBloquerClass = u.est_bloque ? 'btn-debloquer' : 'btn-bloquer';
         const btnBloquerText = u.est_bloque ? '✅' : '🚫';
+        
+        // ✅ AJOUT DU BOUTON DÉTAILS
         return `
           <div class="admin-ligne">
             <div class="admin-avatar">${initiales}</div>
@@ -166,6 +189,9 @@ document.addEventListener("DOMContentLoaded", async function() {
               <p class="admin-detail">${statutBadge} <span>Rôle: ${u.role || 'utilisateur'}</span> · <span>Inscrit le ${new Date(u.date_inscription).toLocaleDateString()}</span></p>
             </div>
             <div class="admin-actions">
+              <!-- Bouton Détails -->
+              <button class="btn-admin btn-voir" onclick="voirDetailsUtilisateur('${u.id}')" title="Voir Profil & Annonces" style="width:auto; padding:4px 8px; font-size:12px;">👁️ Détail</button>
+              
               <button class="btn-admin ${btnBloquerClass}" onclick="changerStatutUtilisateur('${u.id}', ${!u.est_bloque})" title="${u.est_bloque ? 'Débloquer' : 'Bloquer'}">${btnBloquerText}</button>
               <button class="btn-admin btn-supprimer" onclick="supprimerUtilisateur('${u.id}')" title="Supprimer">🗑️</button>
             </div>
@@ -173,6 +199,105 @@ document.addEventListener("DOMContentLoaded", async function() {
       }).join("");
     }
   }
+
+  // ✅ NOUVELLE FONCTION : VOIR DETAILS UTILISATEUR (PROFIL + ANNONCES)
+  window.voirDetailsUtilisateur = async function(userId) {
+    // 1. Récupérer le profil
+    const { data: profil, error: errProfil } = await supabase
+      .from('profils_admin')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (errProfil || !profil) {
+      alert("Impossible de charger le profil.");
+      return;
+    }
+
+    // 2. Récupérer les annonces de cet utilisateur
+    const { data: annoncesUser, error: errAnnonces } = await supabase
+      .from('annonces')
+      .select('*')
+      .eq('user_id', userId)
+      .neq('statut', 'supprime')
+      .order('created_at', { ascending: false });
+
+    const initiales = (profil.nom || profil.email || "?").charAt(0).toUpperCase();
+    const statutBadge = profil.est_bloque ? '<span class="badge-statut badge-bloque">🚫 Bloqué</span>' : '<span class="badge-statut badge-actif">✅ Actif</span>';
+
+    // Création ou récupération de la modale
+    let modale = document.getElementById('modale-details-utilisateur');
+    if (!modale) {
+      modale = document.createElement('div');
+      modale.id = 'modale-details-utilisateur';
+      modale.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:99999; display:flex; align-items:center; justify-content:center; padding:20px;';
+      document.body.appendChild(modale);
+    }
+
+    let annoncesHTML = '';
+    if (!errAnnonces && annoncesUser && annoncesUser.length > 0) {
+      annoncesHTML = `
+        <div style="margin-top:20px;">
+          <h3 style="margin:0 0 12px 0; font-size:16px; color:var(--couleur-primaire);">📋 Annonces publiées (${annoncesUser.length})</h3>
+          <div style="max-height:200px; overflow-y:auto;">
+            ${annoncesUser.map(a => {
+              const statut = a.statut || 'actif';
+              const badgeStatut = statut === 'suspendu' ? '<span class="badge-statut badge-suspendu">⏸️ Suspendue</span>' : '<span class="badge-statut badge-actif">✅ Active</span>';
+              return `
+                <div style="background:var(--couleur-fond, #f7fafc); padding:10px; border-radius:6px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                  <div style="flex:1;">
+                    <p style="margin:0; font-size:13px; font-weight:600;">${a.titre}</p>
+                    <p style="margin:2px 0 0 0; font-size:11px; color:var(--couleur-texte-clair);">${a.arrondissement} - ${a.quartier} | ${Number(a.prix).toLocaleString()} FCFA</p>
+                  </div>
+                  <div style="display:flex; gap:4px; align-items:center;">
+                    ${badgeStatut}
+                    <a href="annonce.html?id=${a.id}" target="_blank" style="padding:4px 8px; background:#3182ce; color:white; border-radius:4px; text-decoration:none; font-size:11px;">Voir</a>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    } else {
+      annoncesHTML = `<p style="margin-top:20px; text-align:center; color:var(--couleur-texte-clair); font-size:13px;">Aucune annonce active trouvée pour cet utilisateur.</p>`;
+    }
+
+    modale.innerHTML = `
+      <div style="background:var(--couleur-carte, white); border-radius:12px; padding:24px; max-width:600px; width:100%; max-height:90vh; overflow-y:auto;">
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;">
+          <div class="admin-avatar" style="width:80px; height:80px; font-size:32px;">${initiales}</div>
+          <div>
+            <h2 style="margin:0; font-size:20px; color:var(--couleur-primaire);">${profil.nom || 'Utilisateur sans nom'}</h2>
+            <p style="margin:4px 0 0 0; font-size:14px; color:var(--couleur-texte-clair);">${statutBadge}</p>
+          </div>
+        </div>
+        
+        <div style="background:var(--couleur-fond, #f7fafc); padding:16px; border-radius:8px; margin-bottom:16px;">
+          <p style="margin:8px 0; font-size:14px;"><strong>📧 Email :</strong> ${profil.email}</p>
+          ${profil.telephone ? `<p style="margin:8px 0; font-size:14px;"><strong>📞 Téléphone :</strong> ${profil.telephone}</p>` : ''}
+          <p style="margin:8px 0; font-size:14px;"><strong>👤 Rôle :</strong> ${profil.role || 'utilisateur'}</p>
+          <p style="margin:8px 0; font-size:14px;"><strong>📅 Inscrit le :</strong> ${new Date(profil.date_inscription).toLocaleDateString()}</p>
+          ${profil.date_blocage ? `<p style="margin:8px 0; font-size:14px;"><strong>🚫 Bloqué le :</strong> ${new Date(profil.date_blocage).toLocaleDateString()}</p>` : ''}
+          ${profil.raison_blocage ? `<p style="margin:8px 0; font-size:14px;"><strong>📝 Raison :</strong> ${profil.raison_blocage}</p>` : ''}
+        </div>
+
+        ${annoncesHTML}
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:20px;">
+          ${profil.telephone ? `<a href="https://wa.me/${profil.telephone.replace(/\s/g, '')}" target="_blank" style="flex:1; padding:10px; background:#25D366; color:white; border-radius:6px; text-decoration:none; text-align:center; font-weight:600; font-size:14px;">💬 WhatsApp</a>` : ''}
+          <a href="mailto:${profil.email}" style="flex:1; padding:10px; background:#3182ce; color:white; border-radius:6px; text-decoration:none; text-align:center; font-weight:600; font-size:14px;">📧 Email</a>
+          <button onclick="fermerModaleDetailsUtilisateur()" style="flex:1; padding:10px; background:#718096; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:600; font-size:14px;">Fermer</button>
+        </div>
+      </div>
+    `;
+    modale.style.display = 'flex';
+  };
+
+  window.fermerModaleDetailsUtilisateur = function() {
+    const modale = document.getElementById('modale-details-utilisateur');
+    if (modale) modale.style.display = 'none';
+  };
 
   window.changerStatutUtilisateur = async function(userId, nouveauStatut) {
     if (!confirm(`Êtes-vous sûr de vouloir ${nouveauStatut ? 'débloquer' : 'bloquer'} cet utilisateur ?`)) return;
@@ -1154,4 +1279,3 @@ document.addEventListener("DOMContentLoaded", async function() {
   };
 
 });
-
