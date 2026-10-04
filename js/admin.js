@@ -179,7 +179,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         const btnBloquerClass = u.est_bloque ? 'btn-debloquer' : 'btn-bloquer';
         const btnBloquerText = u.est_bloque ? '✅' : '🚫';
         
-        // ✅ AJOUT DU BOUTON DÉTAILS
+        // ✅ AJOUT DU BOUTON DÉTAILS + ALIGNEMENT VERTICAL
         return `
           <div class="admin-ligne">
             <div class="admin-avatar">${initiales}</div>
@@ -188,7 +188,8 @@ document.addEventListener("DOMContentLoaded", async function() {
               <p class="admin-detail">📧 ${u.email}</p>
               <p class="admin-detail">${statutBadge} <span>Rôle: ${u.role || 'utilisateur'}</span> · <span>Inscrit le ${new Date(u.date_inscription).toLocaleDateString()}</span></p>
             </div>
-            <div class="admin-actions">
+            <!-- MODIFICATION ICI : Flex Direction Column pour verticalité -->
+            <div class="admin-actions" style="flex-direction: column; align-items: flex-end; gap: 4px;">
               <!-- Bouton Détails -->
               <button class="btn-admin btn-voir" onclick="voirDetailsUtilisateur('${u.id}')" title="Voir Profil & Annonces" style="width:auto; padding:4px 8px; font-size:12px;">👁️ Détail</button>
               
@@ -378,7 +379,8 @@ document.addEventListener("DOMContentLoaded", async function() {
               <p class="admin-detail">📍 ${a.arrondissement} - ${a.quartier}</p>
               <p class="admin-detail">💰 ${Number(a.prix).toLocaleString()} FCFA · ${badgeStatut} <span>Publiée le ${new Date(a.created_at).toLocaleDateString()}</span></p>
             </div>
-            <div class="admin-actions">
+            <!-- MODIFICATION ICI : Flex Direction Column pour verticalité -->
+            <div class="admin-actions" style="flex-direction: column; align-items: flex-end; gap: 4px;">
               <a href="annonce.html?id=${a.id}" target="_blank" class="btn-admin btn-voir" title="Voir">👁️</a>
               ${btnVerifHtml}
               <button class="btn-admin ${btnSuspendreClass}" onclick="changerStatutAnnonce('${a.id}', '${statut === 'suspendu' ? 'actif' : 'suspendu'}')" title="${statut === 'suspendu' ? 'Réactiver' : 'Suspendre'}">${btnSuspendreText}</button>
