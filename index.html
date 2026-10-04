@@ -417,9 +417,11 @@
       try {
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         
+        // ✅ MODIFICATION UNIQUE ICI : Filtrer les annonces suspendues côté serveur
         const { data, error } = await supabase
           .from('annonces')
           .select('*')
+          .neq('statut', 'suspendu') // Ignore les annonces suspendues
           .order('created_at', { ascending: false });
         
         if (skeleton) skeleton.style.display = "none";

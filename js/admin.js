@@ -548,6 +548,12 @@ document.addEventListener("DOMContentLoaded", async function() {
                 <button class="btn-admin btn-suspendre" onclick="suspendreAnnonceSignalee('${annonceId}')" title="Suspendre l'annonce" style="width:auto; padding:6px 12px; font-size:13px;">
                   ⏸️ Suspendre annonce
                 </button>
+                
+                <!-- ✅ NOUVEAU BOUTON SUPPRIMER ICI -->
+                <button class="btn-admin btn-supprimer" onclick="supprimerAnnonceDepuisSignalement('${annonceId}')" title="Supprimer définitivement" style="width:auto; padding:6px 12px; font-size:13px; background:#fed7d7; color:#c53030; border:1px solid #fc8181;">
+                  🗑️ Supprimer
+                </button>
+
                 ${prestataire ? `
                   <button class="btn-admin btn-bloquer" onclick="bloquerPrestataire('${prestataire.id}')" title="Bloquer le prestataire" style="width:auto; padding:6px 12px; font-size:13px;">
                     🚫 Bloquer prestataire
@@ -563,6 +569,28 @@ document.addEventListener("DOMContentLoaded", async function() {
       }).join("");
     }
   }
+
+  // ✅ NOUVELLE FONCTION POUR SUPPRIMER DEPUIS LES SIGNALEMENTS
+  window.supprimerAnnonceDepuisSignalement = async function(annonceId) {
+    if (!annonceId || annonceId === 'null') {
+      alert("ID de l'annonce introuvable.");
+      return;
+    }
+    if (!confirm("⚠️ Supprimer DÉFINITIVEMENT cette annonce ? Cette action est irréversible.")) return;
+    
+    // On met le statut à 'supprime' (logique soft delete comme ailleurs)
+    const { error } = await supabase.from('annonces').update({ statut: 'supprime' }).eq('id', annonceId);
+    
+    if (error) {
+      alert("Erreur : " + error.message);
+    } else {
+      await loggerAction('SUPPRIMER_ANNONCE_VIA_SIGNALEMENT', annonceId, {});
+      alert("✅ Annonce supprimée avec succès !");
+      chargerSignalements(); // Rafraîchir la liste des signalements
+      chargerAnnonces();      // Rafraîchir la liste générale
+      mettreAJourStatistiques();
+    }
+  };
 
   window.voirProfilDepuisAnnonce = async function(annonceId, emailUtilisateur) {
     let userId = null;
