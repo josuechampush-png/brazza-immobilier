@@ -1,6 +1,6 @@
 /* ==================================================
-   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES (V6 FINAL)
-   Correction Affichage Nom Complet (Prénom + 2ème mot max)
+   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES (V7 FINAL)
+   Correction : Séparation automatique des noms collés (CamelCase)
    ================================================== */
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -24,37 +24,41 @@ document.addEventListener("DOMContentLoaded", async function () {
     const { data: { session } } = await client.auth.getSession();
     
     if (session) {
-      // ✅ MODIFICATION ICI : Extraction des 2 premiers mots du nom
-      let nomCompletBrut = session.user.user_metadata?.nom;
+      // ✅ LOGIQUE DE NETTOYAGE ET SÉPARATION DES NOMS COLLÉS
+      let nomBrut = session.user.user_metadata?.nom || "";
       
-      // Fallback si pas de nom dans metadata, on prend l'email
-      if (!nomCompletBrut || nomCompletBrut.trim() === "") {
-        nomCompletBrut = session.user.email.split('@')[0];
+      // Fallback email si nom vide
+      if (!nomBrut.trim()) {
+        nomBrut = session.user.email.split('@')[0];
       }
+
+      // 1. Remplacer underscores par espaces
+      let nomNettoye = nomBrut.replace(/_/g, ' ');
+
+      // 2. Si le nom semble collé (pas d'espace mais plusieurs majuscules internes), 
+      // on insère un espace avant chaque Majuscule qui suit une minuscule.
+      // Ex: "JeanPaul" -> "Jean Paul", "MarieClaire" -> "Marie Claire"
+      if (nomNettoye.indexOf(' ') === -1 && /[a-z][A-Z]/.test(nomNettoye)) {
+          nomNettoye = nomNettoye.replace(/([a-z])([A-Z])/g, '$1 $2');
+      }
+
+      // 3. Découper en mots
+      const mots = nomNettoye.trim().split(/\s+/).filter(w => w.length > 0);
       
-      // Nettoyage : remplacer underscores par espaces
-      nomCompletBrut = nomCompletBrut.replace(/_/g, ' ');
-      
-      // Découper en mots (espaces multiples gérés)
-      const mots = nomCompletBrut.trim().split(/\s+/);
-      
-      // Prendre maximum les 2 premiers mots
+      // 4. Prendre max 2 premiers mots
       let prenomPrincipal = mots[0] || "";
       let secondMot = mots.length > 1 ? mots[1] : "";
       
-      // Construire la chaîne finale proprement
+      // 5. Capitalisation propre
+      const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+      
       let nomAfficheFinal = "";
       if (secondMot) {
-        // Ex: "Jean Paul" -> Capitaliser chaque début de mot
-        nomAfficheFinal = prenomPrincipal.charAt(0).toUpperCase() + prenomPrincipal.slice(1).toLowerCase() 
-                        + " " 
-                        + secondMot.charAt(0).toUpperCase() + secondMot.slice(1).toLowerCase();
+        nomAfficheFinal = capitalize(prenomPrincipal) + " " + capitalize(secondMot);
       } else {
-        // Ex: "Jean" -> Juste capitalisé
-        nomAfficheFinal = prenomPrincipal.charAt(0).toUpperCase() + prenomPrincipal.slice(1).toLowerCase();
+        nomAfficheFinal = capitalize(prenomPrincipal);
       }
       
-      // Si vide après tout ça, mettre défaut
       if(!nomAfficheFinal) nomAfficheFinal = "Utilisateur";
 
       // 2. ROLE DETECTION
@@ -80,6 +84,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       console.log("--- DEBUG HEADER ---");
       console.log("Email:", session.user.email);
+      console.log("Nom Brut Reçu:", nomBrut);
+      console.log("Nom Affiché Calculé:", nomAfficheFinal);
       console.log("Role Final Détecté:", roleUtilisateur);
       console.log("--------------------");
 
