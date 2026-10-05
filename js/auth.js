@@ -1,4 +1,4 @@
-// js/auth.js - VERSION DIAGNOSTIC & CORRECTION EMAIL
+// js/auth.js - VERSION AVEC NOTIFICATION INSCRIPTION AUX ADMINS
 
 const SUPABASE_URL = 'https://buymgwahouwcwwgdiogn.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDYyODQxOSwiZXhwIjoyMTA2MjA0NDE5fQ.4m7vMaiQvDEV5NtptuGlGcdh4gcxNMxHdD-8sPo6M4k';
@@ -93,6 +93,39 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
+  // ✅ NOUVELLE FONCTION : Notifier les admins d'une nouvelle inscription
+  async function notifierAdminsInscription(nom, email, role) {
+    try {
+      // Récupérer tous les utilisateurs avec le rôle 'admin'
+      const { data: admins, error: errAdmins } = await supabase
+        .from('profils_admin')
+        .select('id')
+        .eq('role', 'admin');
+      
+      if (errAdmins || !admins || admins.length === 0) {
+        console.warn("Aucun admin trouvé pour notification");
+        return;
+      }
+      
+      const roleLabel = role === 'prestataire' ? 'Prestataire' : 'Client';
+      const message = `👤 Nouvelle inscription ${roleLabel} : ${nom} (${email})`;
+      
+      // Créer un tableau de notifications (une par admin)
+      const notifications = admins.map(admin => ({
+        user_id: admin.id,
+        message: message,
+        lu: false
+      }));
+      
+      // Insérer toutes les notifications en une seule requête
+      await supabase.from('notifications').insert(notifications);
+      
+    } catch (err) {
+      // On ne bloque pas l'inscription si la notification échoue
+      console.error("Erreur notification admins:", err);
+    }
+  }
+
   // --- GESTION INSCRIPTION ---
   if (formRegister) {
     formRegister.addEventListener("submit", async function(e) {
@@ -137,7 +170,6 @@ document.addEventListener("DOMContentLoaded", function() {
       }
 
       try {
-        // APPEL CRUCIAL : signUp
         const { data, error } = await supabase.auth.signUp({
           email: email,
           password: password,
@@ -150,7 +182,6 @@ document.addEventListener("DOMContentLoaded", function() {
           }
         });
 
-        // ✅ DEBUG : Affiche la réponse brute dans la console
         console.log("Réponse SignUp:", JSON.stringify(data, null, 2));
         console.log("Erreur SignUp:", error);
 
@@ -158,10 +189,8 @@ document.addEventListener("DOMContentLoaded", function() {
           throw error;
         }
 
-        // Vérification stricte : Est-ce que l'utilisateur existe vraiment ?
         if (data && data.user) {
            
-           // Mise à jour base de données (non bloquant)
            try {
              await supabase.from('profils_admin').update({
                role: roleChoisi,
@@ -173,16 +202,14 @@ document.addEventListener("DOMContentLoaded", function() {
              console.warn("Update profil admin ignoré:", dbErr.message);
            }
 
-           // ✅ LOGIQUE DE CONFIRMATION EMAIL
-           // Si data.session est null, c'est que Supabase exige une confirmation email.
-           // C'est le comportement attendu si "Confirm email" est activé dans le dashboard.
+           // ✅ NOUVEAU : Notifier tous les admins de cette inscription
+           await notifierAdminsInscription(nom, email, roleChoisi);
            
            alert("✅ Compte créé avec succès !\n\n📧 Un lien de confirmation a été envoyé à :\n" + email + "\n\nMerci de vérifier votre boîte mail (et vos spams) et de cliquer sur le lien pour activer votre compte.\n\nVous serez redirigé vers la connexion.");
            
            window.location.href = "login.html";
 
         } else {
-           // Cas rare où user est null mais pas d'erreur
            afficherMessage("❌ Erreur inattendue lors de la création du compte.", "error");
            resetButton();
         }
@@ -190,7 +217,6 @@ document.addEventListener("DOMContentLoaded", function() {
       } catch (err) {
         console.error("Erreur SignUp Catch:", err);
         
-        // Messages d'erreurs plus précis
         if (err.message.includes("already registered") || err.message.includes("User already registered")) {
            afficherMessage("❌ Cet email est déjà inscrit.", "error");
         } else if (err.message.includes("rate limit")) {
@@ -324,4 +350,3 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 });
-
