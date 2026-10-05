@@ -18,9 +18,10 @@
   <meta property="og:title" content="Braza-Immobilier - Logement idéal à Brazzaville">
   <meta property="og:description" content="Découvrez des centaines d'annonces vérifiées : maisons, appartements, terrains. Louez ou achetez votre futur logement à Brazzaville.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ton-site.onrender.com/"> <!-- Remplace par ton URL réelle si possible -->
+  <meta property="og:url" content="https://ton-site.onrender.com/">
   <meta property="og:image" content="/icons/icon-512.png">
 
+	<link rel="icon" type="image/png" href="/images/logo-brazza.png">
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/header.css">
@@ -31,6 +32,28 @@
   <link rel="stylesheet" href="css/bottom-nav.css">
   
   <style>
+    /* ✅ Marge supérieure réduite de moitié (60px au lieu de 120px) */
+    .hero-section {
+      padding-top: 60px !important;
+      padding-bottom: 20px !important;
+      margin-bottom: 15px !important;
+    }
+    
+    .hero-contenu {
+      padding-top: 10px !important;
+      padding-bottom: 10px !important;
+    }
+    
+    .hero-titre {
+      margin-top: 10px !important;
+      margin-bottom: 15px !important;
+    }
+    
+    .hero-description {
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
+    }
+    
     #liste {
       display: grid !important;
       grid-template-columns: 1fr 1fr !important;
@@ -42,7 +65,6 @@
       width: 100% !important;
     }
     
-    /* ✅ STYLES POUR LE BOUTON FAVORI */
     .btn-favori {
       background: white;
       border: 2px solid #e2e8f0;
@@ -63,7 +85,6 @@
       color: #e53e3e;
     }
 
-    /* ✅ NOUVEAU : STYLES POUR LA PAGINATION */
     .pagination-container {
       display: flex;
       justify-content: center;
@@ -98,7 +119,6 @@
       background: #f8fafc;
     }
 
-    /* ✅ NOUVEAU : STYLES POUR LES TÉMOIGNAGES */
     .section-temoignages {
       padding: 40px 16px;
       background: var(--couleur-fond);
@@ -283,14 +303,11 @@
     Aucune annonce trouvée 😕
   </p>
 
-  <!-- ✅ NOUVEAU : Conteneur pour la pagination -->
   <div id="pagination" class="pagination-container"></div>
 
-  <!-- ✅ NOUVELLE SECTION : TÉMOIGNAGES CLIENTS -->
   <section class="section-temoignages" id="section-temoignages-public" style="display:none;">
     <h3 class="titre-temoignages">⭐ Ce que disent nos clients</h3>
     <div id="grille-temoignages" class="grille-temoignages">
-      <!-- Les témoignages seront injectés ici par JS -->
     </div>
   </section>
 
@@ -322,7 +339,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-    // ✅ DONNÉES LOCALES PAR DÉFAUT (SECOURS SI SUPABASE ÉCHEC)
     let ARRONDISSEMENTS_DATA = {
       "1er - Makélékélé": ["Centre Sportif", "Diata", "Kingouari", "Kinsoundi", "Mamba", "Mayoma", "Météo", "Moukoudzi Ngouaka", "Ngangouoni", "Ngoma", "Niania Sita dia tsiolo"],
       "2e - Bacongo": ["Cinq Chemins", "Dahomey (Vieux Bacongo)", "La Glacière", "Mbama", "Mpissa", "Nimbi", "Nkéoua", "Saint-Pierre Claver", "Tahiti"],
@@ -341,14 +357,12 @@
 
     let toutesLesAnnonces = [];
     
-    // ✅ VARIABLES POUR LA PAGINATION
     let resultatsFiltres = [];
     let pageActuelle = 1;
     const elementsParPage = 12;
 
     window.addEventListener("load", async function() {
       
-      // 1. CHARGER LES QUARTIERS DEPUIS SUPABASE EN PRIORITÉ
       try {
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const { data: quartiersDb, error } = await supabaseClient
@@ -358,7 +372,6 @@
           .order('ordre', { ascending: true });
 
         if (!error && quartiersDb && quartiersDb.length > 0) {
-          // Reconstruire l'objet ARRONDISSEMENTS_DATA depuis la base de données
           const newData = {};
           quartiersDb.forEach(q => {
             if (!newData[q.arrondissement]) {
@@ -366,7 +379,6 @@
             }
             newData[q.arrondissement].push(q.quartier);
           });
-          // Remplacer les données locales par celles de la DB
           ARRONDISSEMENTS_DATA = newData;
           console.log("✅ Quartiers chargés depuis Supabase");
         } else {
@@ -376,7 +388,6 @@
         console.error("❌ Erreur chargement quartiers:", err);
       }
 
-      // 2. INITIALISATION DE L'INTERFACE AVEC LES QUARTIERS DISPONIBLES
       const selectArr = document.getElementById("filtreArrondissement");
       const selectQuar = document.getElementById("filtreQuartier");
       
@@ -406,7 +417,6 @@
       initialiserBoutonRetour();
       initialiserBoutonsNavigation();
       
-      // ✅ NOUVEAU : Charger les témoignages publics
       chargerTemoignagesPublics();
     });
 
@@ -418,7 +428,6 @@
       try {
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         
-        // ✅ MODIFICATION CRUCIALE : Exclure BOTH 'suspendu' AND 'supprime'
         const { data, error } = await supabase
           .from('annonces')
           .select('*')
@@ -696,12 +705,10 @@
       }
     }
 
-    // ✅ NOUVELLE FONCTION : CHARGER ET AFFICHER LES TÉMOIGNAGES PUBLICS
     async function chargerTemoignagesPublics() {
       try {
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         
-        // On récupère les 3 derniers témoignages validés
         const { data, error } = await supabase
           .from('temoignages')
           .select('*')
@@ -710,7 +717,6 @@
           .limit(3);
 
         if (error || !data || data.length === 0) {
-          // Si pas de témoignages, on cache la section
           const section = document.getElementById("section-temoignages-public");
           if(section) section.style.display = "none";
           return;
@@ -729,7 +735,6 @@
             </div>
           `).join("");
           
-          // Afficher la section
           section.style.display = "block";
         }
 
@@ -744,7 +749,6 @@
   <script src="js/footer.js"></script>
 
 	
-  <!-- ✅ VÉRIFICATION DU MODE MAINTENANCE (avec exclusion admin) -->
   <script>
     (async function() {
       const SUPABASE_URL_M = 'https://buymgwahouwcwwgdiogn.supabase.co';
@@ -777,7 +781,6 @@
 
 
 	<script>
-  // Enregistrement du Service Worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js')
