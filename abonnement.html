@@ -16,24 +16,30 @@
 
   <style>
     /* ==================================================
-       STYLES SPÉCIFIQUES À LA PAGE ABONNEMENT (V4 HEADER FIXE)
-       Design moderne, contrasté et professionnel
+       STYLES SPÉCIFIQUES À LA PAGE ABONNEMENT (V9 FINALE)
+       Footer collé à la barre du bas, Marge haute augmentée
        ================================================== */
     
     body {
       background-color: #f8fafc; 
       font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       color: #1e293b;
-      /* Espace vital pour la barre de navigation fixe en bas */
-      padding-bottom: 70px; 
       margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      /* On retire le padding-bottom global car c'est le footer qui va gérer l'espace avec la nav */
     }
 
     .sub-wrapper {
       max-width: 1200px;
       margin: 0 auto;
-      /* Marge haute suffisante pour passer sous le header standard */
-      padding: 90px 16px 40px 16px; 
+      width: 100%;
+      box-sizing: border-box;
+      /* ✅ MARGE HAUTE : Augmentée à 160px pour être sûr que rien ne soit caché sous le header fixe + nav */
+      padding-top: 160px; 
+      padding-bottom: 40px; /* Espace avant le footer */
+      padding-left: 16px;
+      padding-right: 16px;
     }
 
     /* Hero Section */
@@ -96,12 +102,10 @@
       border-color: #cbd5e1;
     }
 
-    /* Effet Dégradé Haut pour les plans payants */
     .plan-card.standard { border-top: 5px solid #3182ce; }
     .plan-card.pro { border-top: 5px solid #22c55e; }
-    .plan-card.premium { border-top: 5px solid #f59e0b; } /* Orange/Jaune Congo */
+    .plan-card.premium { border-top: 5px solid #f59e0b; } 
 
-    /* Style spécifique pour le plan recommandé */
     .plan-card.recommended {
       transform: scale(1.03);
       z-index: 2;
@@ -203,7 +207,6 @@
       flex-shrink: 0;
     }
     
-    /* Texte grisé pour les fonctionnalités non incluses */
     .feature-disabled-text {
       color: #94a3b8;
       text-decoration: line-through;
@@ -262,7 +265,6 @@
       box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
     }
 
-    /* Note légale LISIBLE */
     .legal-note-box {
       margin-top: 50px;
       background: white;
@@ -313,7 +315,7 @@
         transform: none;
       }
       .sub-hero h1 { font-size: 28px; }
-      .sub-wrapper { padding-top: 80px; }
+      .sub-wrapper { padding-top: 140px; }
     }
   </style>
 
@@ -322,7 +324,7 @@
 </head>
 <body>
 
-  <!-- ✅ HEADER STANDARD COMPLET (Identique à index.html) -->
+  <!-- HEADER STANDARD COMPLET -->
   <header class="header-pro">
     <div class="header-contenu">
       <div class="header-logo">
@@ -333,7 +335,6 @@
       </div>
       <div class="header-actions">
         <button id="btn-theme" class="btn-theme" title="Changer de thème">🌙</button>
-        <!-- Le nom, la cloche et le bouton publier seront injectés ici par js/header.js -->
       </div>
     </div>
     <nav class="header-nav">
@@ -463,7 +464,7 @@
 
     </section>
 
-    <!-- NOTE LÉGALE & PAIEMENTS (MISE À JOUR : MTN & AIRTEL SEULEMENT) -->
+    <!-- NOTE LÉGALE & PAIEMENTS -->
     <div class="legal-note-box">
       <p class="legal-note-title">💳 Modes de paiement acceptés</p>
       <p class="legal-note-text">
@@ -477,7 +478,41 @@
 
   </main>
 
-  <!-- BARRE DE NAVIGATION BASSE -->
+  <!-- ✅ FOOTER STATIQUE PLACÉ JUSTE AVANT LA BARRE DE NAVIGATION BASSE -->
+  <!-- Cela garantit qu'il n'y a pas d'espace blanc entre la fin du contenu et la barre fixe -->
+  <footer class="footer">
+    <div class="footer-contenu">
+      
+      <div class="footer-section">
+        <h3>🏠 Brazza-Immobilier</h3>
+        <p>La plateforme de référence pour la location immobilière à Brazzaville.</p>
+      </div>
+
+      <div class="footer-section">
+        <h3>Liens rapides</h3>
+        <ul>
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="publier.html">Publier une annonce</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h3>Contact</h3>
+        <p>📧 brazza-immobilier7@gmail.com</p>
+        <p>📱 +242 06 462 57 30</p>
+        <p>📍 Brazzaville, Congo</p>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 Brazza-Immobilier. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <!-- BARRE DE NAVIGATION BASSE (FIXE) -->
+  <!-- Elle est maintenant juste après le footer. Comme elle est fixed, elle recouvrira le bas de l'écran. 
+       Le footer s'arrêtera visuellement là où la barre commence. -->
   <nav class="bottom-nav">
     <a href="index.html" class="bottom-nav-item">
       <span class="bottom-nav-icone">🏠</span>
@@ -505,8 +540,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/theme.js"></script>
   <script src="js/header.js"></script>
-  <script src="js/footer.js"></script>
+  <!-- ⚠️ NE PAS CHARGER js/footer.js ICI POUR ÉVITER LE DOUBLE FOOTER ET L'ESPACE BLANC -->
 
 </body>
 </html>
-
