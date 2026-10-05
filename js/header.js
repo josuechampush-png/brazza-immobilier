@@ -1,6 +1,6 @@
 /* ==================================================
-   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES (V10 FINAL)
-   Correction : Masquage total du bouton Publier pour les Clients
+   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES (V9 FINAL)
+   Correction : Masquage global des éléments .hide-for-client
    ================================================== */
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -26,6 +26,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (session) {
       
       // ✅ 1. RÉCUPÉRATION DIRECTE DU PROFIL EN BASE DE DONNÉES
+      // On ignore user_metadata pour le nom afin d'éviter les désynchronisations.
+      // On va chercher le nom ET le rôle dans un seul appel pour optimiser.
       const { data: profilDb, error: errProfil } = await client
         .from('profils_admin')
         .select('nom, role')
@@ -36,12 +38,16 @@ document.addEventListener("DOMContentLoaded", async function () {
       let nomAfficheFinal = "Utilisateur";
       
       if (!errProfil && profilDb && profilDb.nom) {
+        // Si le nom existe en base, on l'utilise tel quel (avec ses espaces).
+        // On fait juste un trim() pour enlever les espaces superflus au début/fin.
         nomAfficheFinal = profilDb.nom.trim();
       } else {
+        // Fallback si erreur DB ou nom vide : utiliser metadata auth ou email
         let nomBrut = session.user.user_metadata?.nom || "";
         if (!nomBrut.trim()) {
           nomBrut = session.user.email.split('@')[0];
         }
+        // Nettoyage basique underscores -> espaces
         nomAfficheFinal = nomBrut.replace(/_/g, ' ').trim();
       }
 
@@ -51,28 +57,36 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (!errProfil && profilDb && profilDb.role) {
         roleUtilisateur = profilDb.role;
       } else {
+        // Fallback metadata si pas trouvé en DB
         roleUtilisateur = session.user.user_metadata?.role || 'client';
       }
 
       console.log("--- DEBUG HEADER ---");
       console.log("Email:", session.user.email);
+      console.log("Nom Lu en Base:", profilDb ? profilDb.nom : "NULL");
+      console.log("Nom Affiché Final:", nomAfficheFinal);
       console.log("Role Détecté:", roleUtilisateur);
       console.log("--------------------");
 
-      // 4. LOGIQUE CLIENT : MASQUAGE TOTAL DES ÉLÉMENTS SENSIBLES
+      // 4. LOGIQUE CLIENT : MASQUAGE GLOBAL DES ÉLÉMENTS SENSIBLES
       if (roleUtilisateur === 'client') {
         
         // A. Cacher TOUS les éléments avec la classe .hide-for-client
+        // Cela inclut le bouton Abonnement dans plus.html, mais aussi d'autres futurs éléments
         const elementsHideForClient = document.querySelectorAll('.hide-for-client');
         elementsHideForClient.forEach(el => {
            el.style.display = 'none';
         });
 
-        // B. MASQUER TOTALEMENT LE BOUTON "+ PUBLIER" EN HAUT À DROITE
-        // Au lieu de le griser, on le supprime visuellement pour garder un header propre (Thème + Cloche + Nom)
+        // B. Griser/Cacher le bouton "+ Publier" en haut à droite (spécifique header)
         const btnPublier = document.querySelector('.btn-publier-pro');
         if (btnPublier) {
-          btnPublier.style.display = 'none'; 
+          btnPublier.style.opacity = '0.5';
+          btnPublier.style.pointerEvents = 'none'; 
+          btnPublier.title = "Réservé aux prestataires";
+          
+          const spanTexte = btnPublier.querySelector('.btn-texte');
+          if(spanTexte) spanTexte.textContent = "Prestataire";
         }
 
         // C. Cacher l'onglet "Publier" dans le menu horizontal
@@ -92,12 +106,13 @@ document.addEventListener("DOMContentLoaded", async function () {
           }
         });
       } 
-      // Si prestataire/admin, on laisse tel quel (le bouton publier reste visible et actif)
+      // Si prestataire/admin, on laisse tel quel
       
       // 5. INJECTION USER CONTAINER
       const userContainer = document.createElement("div");
       userContainer.className = "user-container";
       
+      // On utilise ici nomAfficheFinal qui contient maintenant l'espace correct lu depuis la DB
       userContainer.innerHTML = 
         '<div style="position:relative; display:inline-flex; align-items:center; gap:10px;">' +
           '<button id="btn-notif-cloche" title="Notifications" style="background:none; border:none; font-size:20px; cursor:pointer; position:relative; padding:0; margin:0;">🔔<span id="badge-notif-count" style="display:none; position:absolute; top:-5px; right:-8px; background:#e53e3e; color:white; font-size:10px; font-weight:bold; padding:2px 5px; border-radius:10px;">0</span></button>' +
