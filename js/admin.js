@@ -54,8 +54,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
     
     try {
-      // ✅ INSERT MINIMAL : seulement user_id, message, lu
-      // Pas de 'type', pas de 'created_at' (valeur par défaut automatique)
       const { data, error } = await supabase
         .from('notifications')
         .insert({
@@ -65,11 +63,9 @@ document.addEventListener("DOMContentLoaded", async function() {
         });
       
       if (error) {
-        // ✅ ALERTE VISIBLE SUR TÉLÉPHONE pour identifier le problème
         alert("❌ DEBUG Erreur notification :\n\n" + error.message + "\n\nDétail : " + JSON.stringify(error.details || error.hint || 'aucun'));
         return false;
       } else {
-        // ✅ Confirmation visible
         alert("✅ DEBUG : Notification envoyée avec succès au prestataire !");
         return true;
       }
@@ -218,7 +214,7 @@ document.addEventListener("DOMContentLoaded", async function() {
               <button class="btn-admin btn-voir" onclick="voirDetailsUtilisateur('${u.id}')" title="Voir Profil & Annonces" style="width:auto; padding:4px 8px; font-size:12px;">👁️ Détail</button>
               
               <button class="btn-admin ${btnBloquerClass}" onclick="changerStatutUtilisateur('${u.id}', ${!u.est_bloque})" title="${u.est_bloque ? 'Débloquer' : 'Bloquer'}">${btnBloquerText}</button>
-              <button class="btn-admin btn-supprimer" onclick="supprimerUtilisateur('${u.id}')" title="Supprimer">🗑️</button>
+              <button class="btn-admin btn-supprimer" onclick="supprimerUtilisateur('${u.id}')" title="Supprimer définitivement">🗑️</button>
             </div>
           </div>`;
       }).join("");
@@ -337,15 +333,17 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
   };
 
+  // ✅ CORRECTION : Suppression DÉFINITIVE via fonction RPC
   window.supprimerUtilisateur = async function(userId) {
-    if (!confirm("⚠️ Supprimer ce profil de la plateforme ?")) return;
+    if (!confirm("⚠️ Supprimer DÉFINITIVEMENT ce compte ?\n\nL'utilisateur ne pourra plus se connecter et pourra se réinscrire avec le même email.")) return;
     
-    const { error } = await supabase.from('profils_admin').delete().eq('id', userId);
+    const { error } = await supabase.rpc('delete_user_completely', { user_id_to_delete: userId });
     
     if (error) {
-      alert("❌ Erreur suppression : " + error.message + "\n\nVérifiez les permissions RLS dans Supabase.");
+      alert("❌ Erreur suppression : " + error.message);
     } else { 
-      await loggerAction('SUPPRIMER_USER', userId, {});
+      await loggerAction('SUPPRIMER_USER_DEFINITIF', userId, {});
+      alert("✅ Compte supprimé définitivement !");
       chargerUtilisateurs(); 
       mettreAJourStatistiques(); 
     }
@@ -390,7 +388,6 @@ document.addEventListener("DOMContentLoaded", async function() {
 
         const badgeStatut = statut === 'suspendu' ? '<span class="badge-statut badge-suspendu">⏸️ Suspendue</span>' : '<span class="badge-statut badge-actif">✅ Active</span>';
         
-        // ✅ Bouton qui alterne : ⏸️ Suspendre ↔ ▶️ Réafficher
         const btnSuspendreText = statut === 'suspendu' ? '▶️ Réafficher' : '⏸️ Suspendre';
         const btnSuspendreClass = statut === 'suspendu' ? 'btn-debloquer' : 'btn-suspendre';
         const btnSuspendreTitle = statut === 'suspendu' ? 'Réafficher cette annonce' : 'Suspendre cette annonce';
@@ -429,7 +426,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
   };
 
-  // ✅ Suspendre/Réafficher depuis la section ANNONCES + notification
   window.changerStatutAnnonce = async function(id, nouveauStatut) {
     const action = nouveauStatut === 'suspendu' ? 'suspendre' : 'réafficher';
     if (!confirm(`Voulez-vous vraiment ${action} cette annonce ?`)) return;
@@ -493,7 +489,6 @@ document.addEventListener("DOMContentLoaded", async function() {
   async function chargerSignalements() {
     if (skeletonSig) skeletonSig.style.display = "flex";
     
-    // ✅ AJOUT DE 'statut' DANS LA SÉLECTION pour connaître l'état de l'annonce
     const { data: signalementsData, error: errorSig } = await supabase
       .from('signalements')
       .select(`*, annonces (id, titre, arrondissement, quartier, user_id, statut)`)
@@ -505,10 +500,9 @@ document.addEventListener("DOMContentLoaded", async function() {
       return; 
     }
 
-    // ✅ FILTRER : On retire les signalements dont l'annonce est supprimée
     const signalementsFiltres = (signalementsData || []).filter(s => {
-      if (!s.annonces) return false; // Annonce déjà supprimée de la base
-      if (s.annonces.statut === 'supprime') return false; // Annonce marquée supprimée
+      if (!s.annonces) return false;
+      if (s.annonces.statut === 'supprime') return false;
       return true;
     });
 
@@ -587,21 +581,17 @@ document.addEventListener("DOMContentLoaded", async function() {
         const nbNonTraites = groupe.signalements.filter(s => s.statut === 'en attente').length;
         const nomAffiche = prestataire ? (prestataire.nom || prestataire.email) : 'Chargement...';
 
-        // ✅ VÉRIFICATION DU STATUT ACTUEL DE L'ANNONCE
         const statutAnnonce = groupe.annonce ? (groupe.annonce.statut || 'actif') : 'actif';
         const annonceSuspendue = statutAnnonce === 'suspendu';
 
-        // ✅ BOUTON QUI ALTERNE SELON L'ÉTAT RÉEL DE L'ANNONCE
         let boutonSuspendreHTML = '';
         if (annonceSuspendue) {
-          // L'annonce est déjà suspendue → on propose de la RÉAFFICHER
           boutonSuspendreHTML = `
             <button class="btn-admin btn-debloquer" onclick="reactiverAnnonceSignalee('${annonceId}')" title="Réafficher l'annonce" style="width:auto; padding:6px 12px; font-size:13px; background:#c6f6d5; color:#22543d; border:1px solid #9ae6b4;">
               ▶️ Réafficher annonce
             </button>
           `;
         } else {
-          // L'annonce est active → on propose de la SUSPENDRE
           boutonSuspendreHTML = `
             <button class="btn-admin btn-suspendre" onclick="suspendreAnnonceSignalee('${annonceId}')" title="Suspendre l'annonce" style="width:auto; padding:6px 12px; font-size:13px;">
               ⏸️ Suspendre annonce
@@ -609,7 +599,6 @@ document.addEventListener("DOMContentLoaded", async function() {
           `;
         }
 
-        // ✅ Badge indicateur si l'annonce est déjà suspendue
         const badgeAnnonceSuspendue = annonceSuspendue 
           ? ' <span style="background:#fefcbf; color:#744210; padding:2px 8px; border-radius:10px; font-size:11px;">⏸️ Annonce déjà suspendue</span>' 
           : '';
@@ -659,7 +648,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
   }
 
-  // ✅ NOUVELLE FONCTION : RÉACTIVER une annonce depuis les signalements
   window.reactiverAnnonceSignalee = async function(annonceId) {
     if (!annonceId || annonceId === 'null') {
       alert("ID de l'annonce introuvable.");
@@ -1462,4 +1450,5 @@ document.addEventListener("DOMContentLoaded", async function() {
   };
 
 });
+
 
