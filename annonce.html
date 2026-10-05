@@ -14,12 +14,10 @@
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/bottom-nav.css">
 
-	<!-- Ajoute ceci -->
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#ed8936">
   
   <style>
-    /* ✅ STYLE POUR LE BADGE VÉRIFIÉ */
     .badge-anonce-verifiee {
       display: inline-flex;
       align-items: center;
@@ -71,7 +69,6 @@
       <button id="btn-signaler-detail" class="btn-action-detail">🚨 Signaler</button>
     </div>
 
-    <!-- ✅ MODALE POSITIONNÉE JUSTE EN DESSOUS DU BOUTON -->
     <div id="modal-signalement" style="display:none; margin:10px 0; padding:20px; background:var(--couleur-carte, white); border:1px solid #e2e8f0; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
         <h3 style="margin:0; font-size:18px; color:#e53e3e;">🚨 Signaler cette annonce</h3>
@@ -111,7 +108,6 @@
 
     <h2 id="detail-titre">Chargement...</h2>
     
-    <!-- ✅ EMPLACEMENT POUR LE BADGE DE VÉRIFICATION -->
     <div id="badge-verifie-container"></div>
 
     <p id="detail-prix" class="prix-detail"></p>
@@ -167,7 +163,7 @@
       const btnFermer = document.getElementById("fermer-modal");
       const btnEnvoyer = document.getElementById("btn-envoyer-signalement");
       const msgStatus = document.getElementById("msg-signalement");
-      const badgeContainer = document.getElementById("badge-verifie-container"); // ✅ Élément ajouté
+      const badgeContainer = document.getElementById("badge-verifie-container");
 
       const urlParams = new URLSearchParams(window.location.search);
       const annonceId = urlParams.get('id');
@@ -178,7 +174,6 @@
         msgStatus.style.display = "block";
       }
 
-      // ✅ LOGIQUE AFFICHAGE BADGE VERIFIE
       async function verifierBadgeAnnonce() {
         if (!annonceId || !badgeContainer) return;
         
@@ -191,12 +186,11 @@
         if (!error && data && data.est_verifiee === true) {
           badgeContainer.innerHTML = '<span class="badge-anonce-verifiee">Annonce Vérifiée par Braza-Immobilier</span>';
         } else {
-          badgeContainer.innerHTML = ''; // Cache si non vérifié
+          badgeContainer.innerHTML = '';
         }
       }
       verifierBadgeAnnonce();
 
-      // Vérifier si déjà signalé
       async function verifierSignalement() {
         const { data: { user } } = await supabase.auth.getUser();
         if (user && annonceId) {
@@ -217,7 +211,6 @@
       }
       verifierSignalement();
 
-      // ✅ TOGGLE : Cliquer = affiche/cache la modale
       if (btnSignaler) {
         btnSignaler.addEventListener("click", async function() {
           if (btnSignaler.disabled) return;
@@ -229,7 +222,6 @@
             return;
           }
           
-          // Toggle : si visible, cacher ; sinon, afficher
           if (modal.style.display === 'block') {
             modal.style.display = "none";
           } else {
@@ -239,7 +231,6 @@
         });
       }
 
-      // Fermer avec le bouton X
       if (btnFermer) {
         btnFermer.addEventListener("click", function() {
           modal.style.display = "none";
@@ -247,7 +238,6 @@
         });
       }
 
-      // Envoyer le signalement
       if (btnEnvoyer) {
         btnEnvoyer.addEventListener("click", async function() {
           const motif = document.getElementById("signalement-motif").value;
@@ -279,6 +269,38 @@
           } else {
             afficherMessage("✅ Signalement envoyé avec succès !", false);
             
+            // ✅ NOUVEAU : Notifier tous les administrateurs du signalement
+            try {
+              // 1. Récupérer le titre de l'annonce
+              const { data: annonceData } = await supabase
+                .from('annonces')
+                .select('titre')
+                .eq('id', parseInt(annonceId))
+                .single();
+              
+              const titreAnnonce = annonceData?.titre || 'une annonce';
+              
+              // 2. Récupérer tous les utilisateurs avec le rôle 'admin'
+              const { data: admins, error: errAdmins } = await supabase
+                .from('profils_admin')
+                .select('id')
+                .eq('role', 'admin');
+              
+              // 3. Envoyer une notification à chaque admin
+              if (!errAdmins && admins && admins.length > 0) {
+                const notifications = admins.map(admin => ({
+                  user_id: admin.id,
+                  message: `🚨 Nouvelle annonce signalée : "${titreAnnonce}" — Motif : ${motif}`,
+                  lu: false
+                }));
+                
+                await supabase.from('notifications').insert(notifications);
+              }
+            } catch (notifErr) {
+              // On ne bloque pas l'utilisateur si la notification admin échoue
+              console.error("Erreur notification admin:", notifErr);
+            }
+            
             btnSignaler.style.setProperty("background", "#fc8181", "important");
             btnSignaler.style.setProperty("color", "white", "important");
             btnSignaler.innerHTML = "🚨 Déjà signalé";
@@ -296,8 +318,7 @@
     });
   </script>
 
-	<script>
-  // Enregistrement du Service Worker
+  <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js')
@@ -310,6 +331,6 @@
     });
   }
 </script>
-	
+  
 </body>
 </html>

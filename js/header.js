@@ -1,6 +1,6 @@
 /* ==================================================
-   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES (V9 FINAL)
-   Correction : Masquage global des éléments .hide-for-client
+   header.js — AFFICHAGE UTILISATEUR CONNECTÉ + NOTIFICATIONS + RÔLES (V10 FINAL)
+   Correction : Marquer notifications comme lues à l'ouverture + badge qui disparaît
    ================================================== */
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -25,39 +25,29 @@ document.addEventListener("DOMContentLoaded", async function () {
     
     if (session) {
       
-      // ✅ 1. RÉCUPÉRATION DIRECTE DU PROFIL EN BASE DE DONNÉES
-      // On ignore user_metadata pour le nom afin d'éviter les désynchronisations.
-      // On va chercher le nom ET le rôle dans un seul appel pour optimiser.
       const { data: profilDb, error: errProfil } = await client
         .from('profils_admin')
         .select('nom, role')
         .eq('id', session.user.id)
         .single();
 
-      // 2. DÉFINITION DU NOM À AFFICHER
       let nomAfficheFinal = "Utilisateur";
       
       if (!errProfil && profilDb && profilDb.nom) {
-        // Si le nom existe en base, on l'utilise tel quel (avec ses espaces).
-        // On fait juste un trim() pour enlever les espaces superflus au début/fin.
         nomAfficheFinal = profilDb.nom.trim();
       } else {
-        // Fallback si erreur DB ou nom vide : utiliser metadata auth ou email
         let nomBrut = session.user.user_metadata?.nom || "";
         if (!nomBrut.trim()) {
           nomBrut = session.user.email.split('@')[0];
         }
-        // Nettoyage basique underscores -> espaces
         nomAfficheFinal = nomBrut.replace(/_/g, ' ').trim();
       }
 
-      // 3. DÉTECTION DU RÔLE
-      let roleUtilisateur = 'client'; // Défaut sécurisé
+      let roleUtilisateur = 'client';
       
       if (!errProfil && profilDb && profilDb.role) {
         roleUtilisateur = profilDb.role;
       } else {
-        // Fallback metadata si pas trouvé en DB
         roleUtilisateur = session.user.user_metadata?.role || 'client';
       }
 
@@ -68,17 +58,13 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.log("Role Détecté:", roleUtilisateur);
       console.log("--------------------");
 
-      // 4. LOGIQUE CLIENT : MASQUAGE GLOBAL DES ÉLÉMENTS SENSIBLES
       if (roleUtilisateur === 'client') {
         
-        // A. Cacher TOUS les éléments avec la classe .hide-for-client
-        // Cela inclut le bouton Abonnement dans plus.html, mais aussi d'autres futurs éléments
         const elementsHideForClient = document.querySelectorAll('.hide-for-client');
         elementsHideForClient.forEach(el => {
            el.style.display = 'none';
         });
 
-        // B. Griser/Cacher le bouton "+ Publier" en haut à droite (spécifique header)
         const btnPublier = document.querySelector('.btn-publier-pro');
         if (btnPublier) {
           btnPublier.style.opacity = '0.5';
@@ -89,7 +75,6 @@ document.addEventListener("DOMContentLoaded", async function () {
           if(spanTexte) spanTexte.textContent = "Prestataire";
         }
 
-        // C. Cacher l'onglet "Publier" dans le menu horizontal
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
           if (link.href.includes('publier.html')) {
@@ -98,21 +83,17 @@ document.addEventListener("DOMContentLoaded", async function () {
           }
         });
 
-        // D. Cacher "Mes annonces" dans la barre du bas
         const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
         bottomNavItems.forEach(item => {
           if (item.href.includes('mes-annonces.html')) {
             item.style.display = 'none';
           }
         });
-      } 
-      // Si prestataire/admin, on laisse tel quel
+      }
       
-      // 5. INJECTION USER CONTAINER
       const userContainer = document.createElement("div");
       userContainer.className = "user-container";
       
-      // On utilise ici nomAfficheFinal qui contient maintenant l'espace correct lu depuis la DB
       userContainer.innerHTML = 
         '<div style="position:relative; display:inline-flex; align-items:center; gap:10px;">' +
           '<button id="btn-notif-cloche" title="Notifications" style="background:none; border:none; font-size:20px; cursor:pointer; position:relative; padding:0; margin:0;">🔔<span id="badge-notif-count" style="display:none; position:absolute; top:-5px; right:-8px; background:#e53e3e; color:white; font-size:10px; font-weight:bold; padding:2px 5px; border-radius:10px;">0</span></button>' +
@@ -122,7 +103,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       
       headerActions.appendChild(userContainer);
 
-      // ... (Code Notifications identique à avant) ...
       const btnCloche = document.getElementById("btn-notif-cloche");
       const dropdownNotifs = document.getElementById("dropdown-notifs");
       const badgeCount = document.getElementById("badge-notif-count");
@@ -141,6 +121,20 @@ document.addEventListener("DOMContentLoaded", async function () {
           badgeCount.style.display = "block";
         } else {
           badgeCount.style.display = "none";
+        }
+      }
+
+      // ✅ NOUVELLE FONCTION : Marquer toutes les notifications comme lues
+      async function marquerToutLu() {
+        if (!client) return;
+        try {
+          await client
+            .from('notifications')
+            .update({ lu: true })
+            .eq('user_id', userId)
+            .eq('lu', false);
+        } catch (err) {
+          console.error("Erreur marquage lu:", err);
         }
       }
 
@@ -206,13 +200,17 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
 
       if (btnCloche) {
-        btnCloche.onclick = (e) => {
+        btnCloche.onclick = async (e) => {
           e.stopPropagation();
           if (dropdownNotifs.style.display === "block") {
             dropdownNotifs.style.display = "none";
           } else {
             dropdownNotifs.style.display = "block";
             chargerListeNotifs();
+            // ✅ CORRECTION : Marquer toutes les notifications comme lues à l'ouverture
+            await marquerToutLu();
+            // ✅ CORRECTION : Mettre à jour le badge (il va disparaître car toutes sont lues)
+            majBadge();
           }
         };
       }
@@ -226,7 +224,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       };
 
     } else {
-      // Non connecté
       const userContainer = document.createElement("div");
       userContainer.className = "user-container";
       userContainer.innerHTML = '<a href="login.html" class="btn-connexion-header">🔐</a>';
@@ -238,3 +235,4 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
   
 });
+
