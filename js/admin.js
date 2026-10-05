@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", async function() {
   const SUPABASE_URL = 'https://buymgwahouwcwwgdiogn.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDYyODQxOSwiZXhwIjoyMTA2MjA0NDE5fQ.4m7vMaiQvDEV5NtptuGlGcdh4gcxNMxHdD-8sPo6M4k';
   
-  // Vérification que Supabase est chargé
   if (!window.supabase) {
     alert("Erreur critique : La librairie Supabase n'est pas chargée.");
     return;
@@ -14,9 +13,8 @@ document.addEventListener("DOMContentLoaded", async function() {
   let tousLesUtilisateurs = [];
   let tousLesSignalements = [];
   let tousLesQuartiers = []; 
-  let tousLesTemoignages = []; // ✅ NOUVEAU : Variable pour les témoignages
+  let tousLesTemoignages = [];
 
-  // Email de l'admin courant pour le logging
   let emailAdminCourant = '';
 
   const statAnnonces = document.getElementById("stat-annonces");
@@ -40,10 +38,27 @@ document.addEventListener("DOMContentLoaded", async function() {
   const listeQuartiers = document.getElementById("admin-liste-quartiers");
   const aucunQuartier = document.getElementById("admin-aucun-quartier");
 
-  // ✅ NOUVEAU : Éléments DOM pour Témoignages
   const listeTemoins = document.getElementById("admin-liste-temoins");
   const aucunTemoin = document.getElementById("admin-aucun-temoin");
   const formAjoutTemoin = document.getElementById("form-ajout-temoin");
+
+  // ==================================================
+  // FONCTION HELPER : ENVOYER NOTIFICATION
+  // ==================================================
+  async function envoyerNotification(userId, message, type = 'info') {
+    if (!userId) return;
+    try {
+      await supabase.from('notifications').insert({
+        user_id: userId,
+        message: message,
+        type: type,
+        lu: false,
+        created_at: new Date().toISOString()
+      });
+    } catch (err) {
+      console.error("Erreur envoi notification:", err);
+    }
+  }
 
   // ==================================================
   // FONCTION DE LOGGING D'ACTIVITÉ (Sécurisée)
@@ -58,12 +73,11 @@ document.addEventListener("DOMContentLoaded", async function() {
       });
     } catch (err) {
       console.error("Erreur log:", err);
-      // On ne bloque pas l'action principale si le log échoue
     }
   }
 
   // ==================================================
-  // GESTION DES ONGLETS (MODIFIÉE POUR TOGGLE)
+  // GESTION DES ONGLETS
   // ==================================================
   window.afficherOnglet = function(onglet) {
     const sectionUtilisateurs = document.getElementById("section-utilisateurs");
@@ -74,7 +88,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     
     const tabs = document.querySelectorAll(".admin-tab");
     
-    // Déterminer quelle section correspond à l'onglet cliqué
     let currentSection = null;
     if (onglet === 'utilisateurs') currentSection = sectionUtilisateurs;
     else if (onglet === 'annonces') currentSection = sectionAnnonces;
@@ -84,25 +97,21 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     if (!currentSection) return;
 
-    // VÉRIFICATION TOGGLE : Est-ce que cette section est déjà visible ?
     const isVisible = currentSection.style.display !== "none";
 
     if (isVisible) {
-      // Si c'est déjà ouvert, on ferme tout (Toggle Off)
       [sectionUtilisateurs, sectionAnnonces, sectionSignalements, sectionQuartiers, sectionTemoignages].forEach(s => {
          if(s) s.style.display = "none";
       });
       tabs.forEach(t => t.classList.remove("active"));
-      return; // Sortie anticipée
+      return;
     }
 
-    // Sinon, on ferme tout d'abord
     [sectionUtilisateurs, sectionAnnonces, sectionSignalements, sectionQuartiers, sectionTemoignages].forEach(s => {
        if(s) s.style.display = "none";
     });
     tabs.forEach(t => t.classList.remove("active"));
 
-    // Ensuite, on ouvre la section demandée
     if (onglet === 'utilisateurs') {
       if (sectionUtilisateurs) {
         sectionUtilisateurs.style.display = "block";
@@ -136,7 +145,6 @@ document.addEventListener("DOMContentLoaded", async function() {
 
   async function chargerDonnees() {
     try {
-      // Récupérer l'email de l'admin connecté
       const { data: { user } } = await supabase.auth.getUser();
       if (user) emailAdminCourant = user.email;
 
@@ -179,7 +187,6 @@ document.addEventListener("DOMContentLoaded", async function() {
         const btnBloquerClass = u.est_bloque ? 'btn-debloquer' : 'btn-bloquer';
         const btnBloquerText = u.est_bloque ? '✅' : '🚫';
         
-        // ✅ AJOUT DU BOUTON DÉTAILS + ALIGNEMENT VERTICAL
         return `
           <div class="admin-ligne">
             <div class="admin-avatar">${initiales}</div>
@@ -188,9 +195,7 @@ document.addEventListener("DOMContentLoaded", async function() {
               <p class="admin-detail">📧 ${u.email}</p>
               <p class="admin-detail">${statutBadge} <span>Rôle: ${u.role || 'utilisateur'}</span> · <span>Inscrit le ${new Date(u.date_inscription).toLocaleDateString()}</span></p>
             </div>
-            <!-- MODIFICATION ICI : Flex Direction Column pour verticalité -->
             <div class="admin-actions" style="flex-direction: column; align-items: flex-end; gap: 4px;">
-              <!-- Bouton Détails -->
               <button class="btn-admin btn-voir" onclick="voirDetailsUtilisateur('${u.id}')" title="Voir Profil & Annonces" style="width:auto; padding:4px 8px; font-size:12px;">👁️ Détail</button>
               
               <button class="btn-admin ${btnBloquerClass}" onclick="changerStatutUtilisateur('${u.id}', ${!u.est_bloque})" title="${u.est_bloque ? 'Débloquer' : 'Bloquer'}">${btnBloquerText}</button>
@@ -201,9 +206,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
   }
 
-  // ✅ NOUVELLE FONCTION : VOIR DETAILS UTILISATEUR (PROFIL + ANNONCES)
   window.voirDetailsUtilisateur = async function(userId) {
-    // 1. Récupérer le profil
     const { data: profil, error: errProfil } = await supabase
       .from('profils_admin')
       .select('*')
@@ -215,7 +218,6 @@ document.addEventListener("DOMContentLoaded", async function() {
       return;
     }
 
-    // 2. Récupérer les annonces de cet utilisateur
     const { data: annoncesUser, error: errAnnonces } = await supabase
       .from('annonces')
       .select('*')
@@ -226,7 +228,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     const initiales = (profil.nom || profil.email || "?").charAt(0).toUpperCase();
     const statutBadge = profil.est_bloque ? '<span class="badge-statut badge-bloque">🚫 Bloqué</span>' : '<span class="badge-statut badge-actif">✅ Actif</span>';
 
-    // Création ou récupération de la modale
     let modale = document.getElementById('modale-details-utilisateur');
     if (!modale) {
       modale = document.createElement('div');
@@ -343,7 +344,11 @@ document.addEventListener("DOMContentLoaded", async function() {
 
   function afficherAnnonces(annonces) {
     if (skeletonAnnonces) skeletonAnnonces.style.display = "none";
-    if (!annonces || annonces.length === 0) {
+    
+    // ✅ FILTRAGE ROBUSTE : Masquer définitivement les annonces supprimées
+    const annoncesVisibles = annonces.filter(a => (a.statut || 'actif') !== 'supprime');
+    
+    if (!annoncesVisibles || annoncesVisibles.length === 0) {
       if (listeAnnonces) listeAnnonces.style.display = "none";
       if (aucunAnnonces) aucunAnnonces.style.display = "block";
       return;
@@ -351,13 +356,11 @@ document.addEventListener("DOMContentLoaded", async function() {
     if (aucunAnnonces) aucunAnnonces.style.display = "none";
     if (listeAnnonces) {
       listeAnnonces.style.display = "flex";
-      listeAnnonces.innerHTML = annonces.map(a => {
+      listeAnnonces.innerHTML = annoncesVisibles.map(a => {
         const statut = a.statut || 'actif';
-        if (statut === 'supprime') return '';
         const photos = Array.isArray(a.photos) ? a.photos : [];
         const photoUrl = photos.length > 0 ? photos[0] : "https://via.placeholder.com/60x60?text=?";
         
-        // ✅ Gestion du badge de vérification
         const estVerifie = a.est_verifiee === true;
         const badgeVerif = estVerifie 
           ? '<span style="background:#c6f6d5; color:#2f855a; padding:2px 6px; border-radius:4px; font-size:11px; margin-left:5px;">✔ Vérifié</span>' 
@@ -371,15 +374,17 @@ document.addEventListener("DOMContentLoaded", async function() {
         const btnSuspendreText = statut === 'suspendu' ? '▶️' : '⏸️';
         const btnSuspendreClass = statut === 'suspendu' ? 'btn-debloquer' : 'btn-suspendre';
         
+        // ✅ STYLE VISUEL DISTINCT POUR LES ANNONCES SUSPENDUES
+        const opacityStyle = statut === 'suspendu' ? 'opacity: 0.6; background: #f7fafc;' : '';
+        
         return `
-          <div class="admin-ligne">
+          <div class="admin-ligne" style="${opacityStyle}">
             <img src="${photoUrl}" alt="${a.titre}" class="admin-miniature">
             <div class="admin-info">
               <p class="admin-titre">${a.titre} ${badgeVerif}</p>
               <p class="admin-detail">📍 ${a.arrondissement} - ${a.quartier}</p>
               <p class="admin-detail">💰 ${Number(a.prix).toLocaleString()} FCFA · ${badgeStatut} <span>Publiée le ${new Date(a.created_at).toLocaleDateString()}</span></p>
             </div>
-            <!-- MODIFICATION ICI : Flex Direction Column pour verticalité -->
             <div class="admin-actions" style="flex-direction: column; align-items: flex-end; gap: 4px;">
               <a href="annonce.html?id=${a.id}" target="_blank" class="btn-admin btn-voir" title="Voir">👁️</a>
               ${btnVerifHtml}
@@ -391,7 +396,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
   }
 
-  // ✅ Fonction Changer statut vérification
   window.changerStatutVerification = async function(id, nouveauStatut) {
     if (!confirm(`Voulez-vous vraiment ${nouveauStatut ? 'vérifier' : 'retirer la vérification'} cette annonce ?`)) return;
     
@@ -404,27 +408,64 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
   };
 
+  // ✅ CORRECTION : Envoi notification au prestataire lors de la suspension/réactivation
   window.changerStatutAnnonce = async function(id, nouveauStatut) {
     if (!confirm(`Voulez-vous vraiment ${nouveauStatut === 'suspendu' ? 'suspendre' : 'réactiver'} cette annonce ?`)) return;
     
+    // Récupérer l'annonce pour avoir le user_id et le titre
+    const { data: annonce, error: errAnnonce } = await supabase
+      .from('annonces')
+      .select('user_id, titre')
+      .eq('id', id)
+      .single();
+
     const { error } = await supabase.from('annonces').update({ statut: nouveauStatut }).eq('id', id);
     
-    if (error) alert("Erreur : " + error.message);
-    else { 
+    if (error) {
+      alert("Erreur : " + error.message);
+    } else { 
       await loggerAction(nouveauStatut === 'suspendu' ? 'SUSPENDRE_ANNONCE' : 'REACTIVER_ANNONCE', id, {});
+      
+      // Envoyer notification au prestataire
+      if (!errAnnonce && annonce && annonce.user_id) {
+        const message = nouveauStatut === 'suspendu' 
+          ? `⏸️ Votre annonce "${annonce.titre}" a été suspendue par l'administration. Veuillez vérifier qu'elle respecte nos conditions d'utilisation.`
+          : `✅ Votre annonce "${annonce.titre}" a été réactivée et est à nouveau visible sur le site.`;
+        await envoyerNotification(annonce.user_id, message, nouveauStatut === 'suspendu' ? 'warning' : 'success');
+      }
+      
       chargerAnnonces(); 
       mettreAJourStatistiques(); 
     }
   };
 
+  // ✅ CORRECTION : Envoi notification au prestataire lors de la suppression
   window.supprimerAnnonce = async function(id) {
     if (!confirm("⚠️ Supprimer définitivement cette annonce ?")) return;
     
+    // Récupérer l'annonce pour avoir le user_id et le titre
+    const { data: annonce, error: errAnnonce } = await supabase
+      .from('annonces')
+      .select('user_id, titre')
+      .eq('id', id)
+      .single();
+    
     const { error } = await supabase.from('annonces').update({ statut: 'supprime' }).eq('id', id);
     
-    if (error) alert("Erreur : " + error.message);
-    else { 
+    if (error) {
+      alert("Erreur : " + error.message);
+    } else { 
       await loggerAction('SUPPRIMER_ANNONCE_LOGIQUE', id, {});
+      
+      // Envoyer notification au prestataire
+      if (!errAnnonce && annonce && annonce.user_id) {
+        await envoyerNotification(
+          annonce.user_id, 
+          `🗑️ Votre annonce "${annonce.titre}" a été supprimée définitivement par l'administration.`, 
+          'error'
+        );
+      }
+      
       chargerAnnonces(); 
       mettreAJourStatistiques(); 
     }
@@ -549,7 +590,6 @@ document.addEventListener("DOMContentLoaded", async function() {
                   ⏸️ Suspendre annonce
                 </button>
                 
-                <!-- ✅ NOUVEAU BOUTON SUPPRIMER ICI -->
                 <button class="btn-admin btn-supprimer" onclick="supprimerAnnonceDepuisSignalement('${annonceId}')" title="Supprimer définitivement" style="width:auto; padding:6px 12px; font-size:13px; background:#fed7d7; color:#c53030; border:1px solid #fc8181;">
                   🗑️ Supprimer
                 </button>
@@ -570,7 +610,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
   }
 
-  // ✅ NOUVELLE FONCTION POUR SUPPRIMER DEPUIS LES SIGNALEMENTS
+  // ✅ CORRECTION : Envoi notification au prestataire lors de la suppression depuis signalement
   window.supprimerAnnonceDepuisSignalement = async function(annonceId) {
     if (!annonceId || annonceId === 'null') {
       alert("ID de l'annonce introuvable.");
@@ -578,16 +618,32 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
     if (!confirm("⚠️ Supprimer DÉFINITIVEMENT cette annonce ? Cette action est irréversible.")) return;
     
-    // On met le statut à 'supprime' (logique soft delete comme ailleurs)
+    // Récupérer l'annonce pour avoir le user_id et le titre
+    const { data: annonce, error: errAnnonce } = await supabase
+      .from('annonces')
+      .select('user_id, titre')
+      .eq('id', annonceId)
+      .single();
+    
     const { error } = await supabase.from('annonces').update({ statut: 'supprime' }).eq('id', annonceId);
     
     if (error) {
       alert("Erreur : " + error.message);
     } else {
       await loggerAction('SUPPRIMER_ANNONCE_VIA_SIGNALEMENT', annonceId, {});
+      
+      // Envoyer notification au prestataire
+      if (!errAnnonce && annonce && annonce.user_id) {
+        await envoyerNotification(
+          annonce.user_id, 
+          `🗑️ Votre annonce "${annonce.titre}" a été supprimée suite à des signalements d'utilisateurs.`, 
+          'error'
+        );
+      }
+      
       alert("✅ Annonce supprimée avec succès !");
-      chargerSignalements(); // Rafraîchir la liste des signalements
-      chargerAnnonces();      // Rafraîchir la liste générale
+      chargerSignalements();
+      chargerAnnonces();
       mettreAJourStatistiques();
     }
   };
@@ -769,6 +825,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     if (modale) modale.style.display = 'none';
   };
 
+  // ✅ CORRECTION : Envoi notification au prestataire avec les motifs lors de la suspension
   window.suspendreAnnonceSignalee = async function(annonceId) {
     if (!annonceId || annonceId === 'null') {
       alert("ID de l'annonce introuvable.");
@@ -776,11 +833,28 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
     if (!confirm("⏸️ Suspendre cette annonce ? Elle sera masquée du site public.")) return;
     
+    // Récupérer l'annonce et les signalements pour construire le message
+    const { data: annonce, error: errAnnonce } = await supabase
+      .from('annonces')
+      .select('user_id, titre')
+      .eq('id', annonceId)
+      .single();
+    
+    const signalementsAnnonce = tousLesSignalements.filter(s => s.annonce_id === annonceId && s.statut === 'en attente');
+    const motifs = signalementsAnnonce.map(s => s.motif).join(', ');
+    
     const { error } = await supabase.from('annonces').update({ statut: 'suspendu' }).eq('id', annonceId);
     if (error) {
       alert("Erreur : " + error.message);
     } else {
       await loggerAction('SUSPENDRE_ANNONCE_SIGNALEE', annonceId, {});
+      
+      // Envoyer notification au prestataire avec les motifs
+      if (!errAnnonce && annonce && annonce.user_id) {
+        const message = `⏸️ Votre annonce "${annonce.titre}" a été suspendue suite à des signalements. Motifs : ${motifs || 'Non précisés'}. Veuillez vérifier qu'elle respecte nos conditions.`;
+        await envoyerNotification(annonce.user_id, message, 'warning');
+      }
+      
       alert("✅ Annonce suspendue avec succès !");
       chargerSignalements();
       chargerAnnonces(); 
@@ -1179,7 +1253,7 @@ document.addEventListener("DOMContentLoaded", async function() {
   };
 
   // ==================================================
-  // ✅ NOUVELLE SECTION : GESTION DES TÉMOIGNAGES CLIENTS
+  // GESTION DES TÉMOIGNAGES CLIENTS
   // ==================================================
   async function chargerTemoignages() {
     const { data, error } = await supabase
@@ -1211,12 +1285,11 @@ document.addEventListener("DOMContentLoaded", async function() {
           ? '<span class="badge-statut badge-actif">✅ Visible</span>' 
           : '<span class="badge-statut badge-suspendu">⏳ En attente</span>';
         
-        // ✅ STYLE COMPACT POUR LES BOUTONS (Petit carré avec icône seule)
         const btnToggleStyle = t.est_valide
-          ? 'background:#fefcbf; color:#744210; border:1px solid #ecc94b; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:16px;' // Jaune compact
-          : 'background:#c6f6d5; color:#22543d; border:1px solid #9ae6b4; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:16px;'; // Vert compact
+          ? 'background:#fefcbf; color:#744210; border:1px solid #ecc94b; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:16px;'
+          : 'background:#c6f6d5; color:#22543d; border:1px solid #9ae6b4; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:16px;';
         
-        const btnDeleteStyle = 'background:#fed7d7; color:#c53030; border:1px solid #fc8181; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:16px;'; // Rouge compact
+        const btnDeleteStyle = 'background:#fed7d7; color:#c53030; border:1px solid #fc8181; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:16px;';
 
         return `
           <div class="admin-ligne">
@@ -1253,7 +1326,6 @@ document.addEventListener("DOMContentLoaded", async function() {
 
   window.fermerFormAjoutTemoin = function() {
     if(formAjoutTemoin) formAjoutTemoin.style.display = "none";
-    // Reset champs
     document.getElementById("temoin-nom").value = "";
     document.getElementById("temoin-ville").value = "Brazzaville";
     document.getElementById("temoin-message").value = "";
@@ -1276,7 +1348,7 @@ document.addEventListener("DOMContentLoaded", async function() {
       ville: ville,
       message: message,
       note: note,
-      est_valide: true // On valide directement depuis l'admin pour gagner du temps
+      est_valide: true
     });
 
     if(error) {
