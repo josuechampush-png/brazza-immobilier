@@ -43,20 +43,29 @@ document.addEventListener("DOMContentLoaded", async function() {
   const formAjoutTemoin = document.getElementById("form-ajout-temoin");
 
   // ==================================================
-  // FONCTION HELPER : ENVOYER NOTIFICATION
+  // FONCTION HELPER : ENVOYER NOTIFICATION (AVEC LOGS)
   // ==================================================
   async function envoyerNotification(userId, message, type = 'info') {
-    if (!userId) return;
+    if (!userId) {
+      console.error("❌ Notification non envoyée : userId manquant");
+      return;
+    }
     try {
-      await supabase.from('notifications').insert({
+      const { data, error } = await supabase.from('notifications').insert({
         user_id: userId,
         message: message,
         type: type,
         lu: false,
         created_at: new Date().toISOString()
       });
+      
+      if (error) {
+        console.error("❌ Erreur insertion notification:", error);
+      } else {
+        console.log("✅ Notification envoyée à", userId, ":", message);
+      }
     } catch (err) {
-      console.error("Erreur envoi notification:", err);
+      console.error("❌ Exception envoi notification:", err);
     }
   }
 
@@ -345,7 +354,6 @@ document.addEventListener("DOMContentLoaded", async function() {
   function afficherAnnonces(annonces) {
     if (skeletonAnnonces) skeletonAnnonces.style.display = "none";
     
-    // ✅ FILTRAGE ROBUSTE : Masquer définitivement les annonces supprimées
     const annoncesVisibles = annonces.filter(a => (a.statut || 'actif') !== 'supprime');
     
     if (!annoncesVisibles || annoncesVisibles.length === 0) {
@@ -371,10 +379,12 @@ document.addEventListener("DOMContentLoaded", async function() {
           : `<button class="btn-admin btn-suspendre" onclick="changerStatutVerification('${a.id}', true)" title="Marquer comme vérifié" style="width:auto; padding:4px 8px; font-size:12px; background:#38a169; color:white;">✔ Verify</button>`;
 
         const badgeStatut = statut === 'suspendu' ? '<span class="badge-statut badge-suspendu">⏸️ Suspendue</span>' : '<span class="badge-statut badge-actif">✅ Active</span>';
-        const btnSuspendreText = statut === 'suspendu' ? '▶️' : '⏸️';
-        const btnSuspendreClass = statut === 'suspendu' ? 'btn-debloquer' : 'btn-suspendre';
         
-        // ✅ STYLE VISUEL DISTINCT POUR LES ANNONCES SUSPENDUES
+        // ✅ CORRECTION : Le bouton alterne correctement entre Suspendre et Réafficher
+        const btnSuspendreText = statut === 'suspendu' ? '▶️ Réafficher' : '⏸️ Suspendre';
+        const btnSuspendreClass = statut === 'suspendu' ? 'btn-debloquer' : 'btn-suspendre';
+        const btnSuspendreTitle = statut === 'suspendu' ? 'Réafficher cette annonce' : 'Suspendre cette annonce';
+        
         const opacityStyle = statut === 'suspendu' ? 'opacity: 0.6; background: #f7fafc;' : '';
         
         return `
@@ -388,7 +398,7 @@ document.addEventListener("DOMContentLoaded", async function() {
             <div class="admin-actions" style="flex-direction: column; align-items: flex-end; gap: 4px;">
               <a href="annonce.html?id=${a.id}" target="_blank" class="btn-admin btn-voir" title="Voir">👁️</a>
               ${btnVerifHtml}
-              <button class="btn-admin ${btnSuspendreClass}" onclick="changerStatutAnnonce('${a.id}', '${statut === 'suspendu' ? 'actif' : 'suspendu'}')" title="${statut === 'suspendu' ? 'Réactiver' : 'Suspendre'}">${btnSuspendreText}</button>
+              <button class="btn-admin ${btnSuspendreClass}" onclick="changerStatutAnnonce('${a.id}', '${statut === 'suspendu' ? 'actif' : 'suspendu'}')" title="${btnSuspendreTitle}" style="width:auto; padding:6px 10px; font-size:12px;">${btnSuspendreText}</button>
               <button class="btn-admin btn-supprimer" onclick="supprimerAnnonce('${a.id}')" title="Supprimer">🗑️</button>
             </div>
           </div>`;
@@ -408,11 +418,13 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
   };
 
-  // ✅ CORRECTION : Envoi notification au prestataire lors de la suspension/réactivation
+  // ✅ CORRECTION : Envoi notification + rafraîchissement forcé
   window.changerStatutAnnonce = async function(id, nouveauStatut) {
-    if (!confirm(`Voulez-vous vraiment ${nouveauStatut === 'suspendu' ? 'suspendre' : 'réactiver'} cette annonce ?`)) return;
+    console.log("Changement statut annonce", id, "vers", nouveauStatut);
     
-    // Récupérer l'annonce pour avoir le user_id et le titre
+    const action = nouveauStatut === 'suspendu' ? 'suspendre' : 'réafficher';
+    if (!confirm(`Voulez-vous vraiment ${action} cette annonce ?`)) return;
+    
     const { data: annonce, error: errAnnonce } = await supabase
       .from('annonces')
       .select('user_id, titre')
@@ -424,26 +436,26 @@ document.addEventListener("DOMContentLoaded", async function() {
     if (error) {
       alert("Erreur : " + error.message);
     } else { 
+      console.log("✅ Statut mis à jour avec succès");
       await loggerAction(nouveauStatut === 'suspendu' ? 'SUSPENDRE_ANNONCE' : 'REACTIVER_ANNONCE', id, {});
       
-      // Envoyer notification au prestataire
       if (!errAnnonce && annonce && annonce.user_id) {
         const message = nouveauStatut === 'suspendu' 
           ? `⏸️ Votre annonce "${annonce.titre}" a été suspendue par l'administration. Veuillez vérifier qu'elle respecte nos conditions d'utilisation.`
-          : `✅ Votre annonce "${annonce.titre}" a été réactivée et est à nouveau visible sur le site.`;
+          : `✅ Votre annonce "${annonce.titre}" a été réaffichée et est à nouveau visible sur le site.`;
         await envoyerNotification(annonce.user_id, message, nouveauStatut === 'suspendu' ? 'warning' : 'success');
       }
       
-      chargerAnnonces(); 
+      // Rafraîchissement forcé
+      await chargerAnnonces(); 
       mettreAJourStatistiques(); 
     }
   };
 
-  // ✅ CORRECTION : Envoi notification au prestataire lors de la suppression
+  // ✅ CORRECTION : Envoi notification + suppression définitive
   window.supprimerAnnonce = async function(id) {
     if (!confirm("⚠️ Supprimer définitivement cette annonce ?")) return;
     
-    // Récupérer l'annonce pour avoir le user_id et le titre
     const { data: annonce, error: errAnnonce } = await supabase
       .from('annonces')
       .select('user_id, titre')
@@ -457,7 +469,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     } else { 
       await loggerAction('SUPPRIMER_ANNONCE_LOGIQUE', id, {});
       
-      // Envoyer notification au prestataire
       if (!errAnnonce && annonce && annonce.user_id) {
         await envoyerNotification(
           annonce.user_id, 
@@ -466,7 +477,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         );
       }
       
-      chargerAnnonces(); 
+      await chargerAnnonces(); 
       mettreAJourStatistiques(); 
     }
   };
@@ -479,7 +490,8 @@ document.addEventListener("DOMContentLoaded", async function() {
     
     const { data: signalementsData, error: errorSig } = await supabase
       .from('signalements')
-      .select(`*, annonces (id, titre, arrondissement, quartier, user_id)`)
+      .select(`*, annonces!inner (id, titre, arrondissement, quartier, user_id, statut)`)
+      .neq('annonces.statut', 'supprime') // ✅ FILTRER LES ANNONCES SUPPRIMÉES
       .order('date_signalement', { ascending: false });
 
     if (errorSig) { 
@@ -610,7 +622,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
   }
 
-  // ✅ CORRECTION : Envoi notification au prestataire lors de la suppression depuis signalement
+  // ✅ CORRECTION : Suppression définitive + notification
   window.supprimerAnnonceDepuisSignalement = async function(annonceId) {
     if (!annonceId || annonceId === 'null') {
       alert("ID de l'annonce introuvable.");
@@ -618,7 +630,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
     if (!confirm("⚠️ Supprimer DÉFINITIVEMENT cette annonce ? Cette action est irréversible.")) return;
     
-    // Récupérer l'annonce pour avoir le user_id et le titre
     const { data: annonce, error: errAnnonce } = await supabase
       .from('annonces')
       .select('user_id, titre')
@@ -632,7 +643,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     } else {
       await loggerAction('SUPPRIMER_ANNONCE_VIA_SIGNALEMENT', annonceId, {});
       
-      // Envoyer notification au prestataire
       if (!errAnnonce && annonce && annonce.user_id) {
         await envoyerNotification(
           annonce.user_id, 
@@ -642,8 +652,10 @@ document.addEventListener("DOMContentLoaded", async function() {
       }
       
       alert("✅ Annonce supprimée avec succès !");
-      chargerSignalements();
-      chargerAnnonces();
+      
+      // Rafraîchir les deux listes
+      await chargerSignalements();
+      await chargerAnnonces();
       mettreAJourStatistiques();
     }
   };
@@ -825,7 +837,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     if (modale) modale.style.display = 'none';
   };
 
-  // ✅ CORRECTION : Envoi notification au prestataire avec les motifs lors de la suspension
+  // ✅ CORRECTION : Suspension avec motifs + notification
   window.suspendreAnnonceSignalee = async function(annonceId) {
     if (!annonceId || annonceId === 'null') {
       alert("ID de l'annonce introuvable.");
@@ -833,7 +845,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
     if (!confirm("⏸️ Suspendre cette annonce ? Elle sera masquée du site public.")) return;
     
-    // Récupérer l'annonce et les signalements pour construire le message
     const { data: annonce, error: errAnnonce } = await supabase
       .from('annonces')
       .select('user_id, titre')
@@ -849,15 +860,14 @@ document.addEventListener("DOMContentLoaded", async function() {
     } else {
       await loggerAction('SUSPENDRE_ANNONCE_SIGNALEE', annonceId, {});
       
-      // Envoyer notification au prestataire avec les motifs
       if (!errAnnonce && annonce && annonce.user_id) {
         const message = `⏸️ Votre annonce "${annonce.titre}" a été suspendue suite à des signalements. Motifs : ${motifs || 'Non précisés'}. Veuillez vérifier qu'elle respecte nos conditions.`;
         await envoyerNotification(annonce.user_id, message, 'warning');
       }
       
       alert("✅ Annonce suspendue avec succès !");
-      chargerSignalements();
-      chargerAnnonces(); 
+      await chargerSignalements();
+      await chargerAnnonces(); 
       mettreAJourStatistiques();
     }
   };
