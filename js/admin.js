@@ -317,7 +317,7 @@ document.addEventListener("DOMContentLoaded", async function() {
   };
 
   window.changerStatutUtilisateur = async function(userId, nouveauStatut) {
-    if (!confirm(`Êtes-vous sûr de vouloir ${nouveauStatut ? 'débloquer' : 'bloquer'} cet utilisateur ?`)) return;
+    if (!confirm(`Êtes-vous sûr de vouloir ${nouveauStatut ? 'bloquer' : 'débloquer'} cet utilisateur ?`)) return;
     
     const { error } = await supabase.from('profils_admin').update({ 
       est_bloque: nouveauStatut, 
