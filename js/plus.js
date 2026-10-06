@@ -87,4 +87,111 @@ document.addEventListener("DOMContentLoaded", function () {
     alert(stats);
   });
   
+  // ==================================================
+  // ✅ INSTALLATION PWA (Application mobile)
+  // ==================================================
+  (function() {
+    const sectionApp = document.getElementById("section-app-mobile");
+    const btnInstaller = document.getElementById("btn-installer-app");
+    const texteBouton = document.getElementById("texte-bouton-app");
+    const iconeBouton = btnInstaller ? btnInstaller.querySelector('.plus-action-icone') : null;
+    
+    if (!sectionApp || !btnInstaller || !texteBouton) return;
+    
+    // Variable pour stocker l'événement d'installation
+    let deferredPrompt = null;
+    
+    // Fonction : Vérifier si l'app est déjà installée
+    function estDejaInstallee() {
+      // Méthode 1 : display-mode standalone
+      if (window.matchMedia('(display-mode: standalone)').matches) return true;
+      // Méthode 2 : iOS
+      if (window.navigator.standalone === true) return true;
+      return false;
+    }
+    
+    // Fonction : Mettre le bouton en état "déjà installé"
+    function marquerCommeInstallee() {
+      texteBouton.textContent = "✅ Application déjà installée";
+      if (iconeBouton) iconeBouton.textContent = "✅";
+      btnInstaller.disabled = true;
+      btnInstaller.style.opacity = "0.5";
+      btnInstaller.style.cursor = "not-allowed";
+      btnInstaller.style.pointerEvents = "none";
+    }
+    
+    // Vérifier immédiatement si déjà installée
+    if (estDejaInstallee()) {
+      sectionApp.style.display = "block";
+      marquerCommeInstallee();
+      return;
+    }
+    
+    // Capturer l'événement beforeinstallprompt
+    window.addEventListener('beforeinstallprompt', function(e) {
+      // Empêcher l'affichage automatique du prompt natif
+      e.preventDefault();
+      deferredPrompt = e;
+      
+      // Afficher la section
+      sectionApp.style.display = "block";
+      
+      console.log("✅ beforeinstallprompt capturé, bouton prêt");
+    });
+    
+    // Gestion du clic sur le bouton
+    btnInstaller.addEventListener('click', async function() {
+      if (!deferredPrompt) {
+        alert("⚠️ L'installation n'est pas disponible pour le moment.\n\nEssayez d'utiliser Chrome ou Edge, et assurez-vous de ne pas être en mode navigation privée.");
+        return;
+      }
+      
+      try {
+        // Afficher le prompt d'installation
+        deferredPrompt.prompt();
+        
+        // Attendre la réponse de l'utilisateur
+        const { outcome } = await deferredPrompt.userChoice;
+        
+        if (outcome === 'accepted') {
+          // Installation réussie
+          alert("✅ Application installée avec succès !\n\nVous la trouverez sur votre écran d'accueil.");
+          marquerCommeInstallee();
+        } else {
+          // Utilisateur a annulé
+          console.log("Installation annulée par l'utilisateur");
+        }
+        
+        // Libérer le prompt (il ne peut être utilisé qu'une fois)
+        deferredPrompt = null;
+      } catch (err) {
+        console.error("Erreur installation:", err);
+        alert("❌ Erreur lors de l'installation : " + err.message);
+      }
+    });
+    
+    // Écouter l'événement appinstalled
+    window.addEventListener('appinstalled', function() {
+      console.log("✅ Application installée avec succès");
+      marquerCommeInstallee();
+      deferredPrompt = null;
+    });
+    
+    // Fallback : si après 3 secondes l'événement beforeinstallprompt n'a pas été capturé
+    // et que l'app n'est pas installée, on affiche quand même la section avec un message
+    setTimeout(function() {
+      if (!deferredPrompt && !estDejaInstallee() && sectionApp.style.display === "none") {
+        // Le navigateur ne supporte peut-être pas l'installation
+        // On affiche quand même la section avec une aide
+        sectionApp.style.display = "block";
+        texteBouton.textContent = "Utilisez Chrome pour installer";
+        btnInstaller.disabled = true;
+        btnInstaller.style.opacity = "0.6";
+        btnInstaller.style.cursor = "not-allowed";
+        if (iconeBouton) iconeBouton.textContent = "ℹ️";
+      }
+    }, 3000);
+  })();
+  
 });
+
