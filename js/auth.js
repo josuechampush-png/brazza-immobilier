@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .from('profils_admin')
         .select('email')
         .or(`telephone.eq.${normalized},telephone.eq.${avecZeroInitial},telephone.eq.${sansPrefixe}`)
-        .single();
+        .maybeSingle();
       if (error || !data) return null;
       return data.email;
     } catch (err) {
@@ -75,18 +75,25 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
+  // ✅ FONCTION CORRIGÉE : permet la connexion même si le profil n'existe pas
   async function verifierAccesUtilisateur(userId) {
     try {
       const { data: profil, error } = await supabase
         .from('profils_admin')
         .select('*')
         .eq('id', userId)
-        .single();
-      if (error || !profil) return false;
+        .maybeSingle();
+      
+      // ✅ Si le profil n'existe pas, on permet quand même la connexion
+      if (error || !profil) return true;
+      
+      // ✅ Si le profil existe et est bloqué, on bloque
       if (profil.est_bloque === true) return false;
+      
       return true;
     } catch (err) {
-      return false;
+      // ✅ En cas d'erreur, on permet la connexion
+      return true;
     }
   }
 
@@ -264,7 +271,7 @@ document.addEventListener("DOMContentLoaded", function() {
         
         if (!hasAccess) {
           await supabase.auth.signOut();
-          afficherMessage("🚫 Accès refusé. Votre compte est bloqué ou inexistant.", "error");
+          afficherMessage("🚫 Accès refusé. Votre compte est bloqué.", "error");
           return;
         }
 
@@ -337,4 +344,3 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 });
-
