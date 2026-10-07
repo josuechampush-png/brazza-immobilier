@@ -155,7 +155,8 @@
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const SUPABASE_URL = 'https://buymgwahouwcwwgdiogn.supabase.co';
-      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDYyODQxOSwiZXhwIjoyMTA2MjA0NDE5fQ.4m7vMaiQvDEV5NtptuGlGcdh4gcxNMxHdD-8sPo6M4k';
+      // ✅ CLÉ ANON (sécurisée) au lieu de SERVICE_ROLE (dangereuse)
+      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2Mjg0MTksImV4cCI6MjEwNjIwNDQxOX0.B5GTAoT9ip-PTlTUVMw3I-t1xBESxPoeeoELbtNBxqo';
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
       const btnSignaler = document.getElementById("btn-signaler-detail");
@@ -269,9 +270,7 @@
           } else {
             afficherMessage("✅ Signalement envoyé avec succès !", false);
             
-            // ✅ NOUVEAU : Notifier tous les administrateurs du signalement
             try {
-              // 1. Récupérer le titre de l'annonce
               const { data: annonceData } = await supabase
                 .from('annonces')
                 .select('titre')
@@ -280,13 +279,11 @@
               
               const titreAnnonce = annonceData?.titre || 'une annonce';
               
-              // 2. Récupérer tous les utilisateurs avec le rôle 'admin'
               const { data: admins, error: errAdmins } = await supabase
                 .from('profils_admin')
                 .select('id')
                 .eq('role', 'admin');
               
-              // 3. Envoyer une notification à chaque admin
               if (!errAdmins && admins && admins.length > 0) {
                 const notifications = admins.map(admin => ({
                   user_id: admin.id,
@@ -297,7 +294,6 @@
                 await supabase.from('notifications').insert(notifications);
               }
             } catch (notifErr) {
-              // On ne bloque pas l'utilisateur si la notification admin échoue
               console.error("Erreur notification admin:", notifErr);
             }
             
@@ -334,3 +330,4 @@
   
 </body>
 </html>
+

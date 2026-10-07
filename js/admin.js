@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", async function() {
   const SUPABASE_URL = 'https://buymgwahouwcwwgdiogn.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDYyODQxOSwiZXhwIjoyMTA2MjA0NDE5fQ.4m7vMaiQvDEV5NtptuGlGcdh4gcxNMxHdD-8sPo6M4k';
+  // ✅ CLÉ ANON (sécurisée) au lieu de SERVICE_ROLE (dangereuse)
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2Mjg0MTksImV4cCI6MjEwNjIwNDQxOX0.B5GTAoT9ip-PTlTUVMw3I-t1xBESxPoeeoELbtNBxqo';
   
   if (!window.supabase) {
     alert("Erreur critique : La librairie Supabase n'est pas chargée.");
@@ -1450,5 +1451,4 @@ document.addEventListener("DOMContentLoaded", async function() {
   };
 
 });
-
 

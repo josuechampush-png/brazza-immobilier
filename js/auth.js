@@ -1,7 +1,8 @@
 // js/auth.js - VERSION AVEC NOTIFICATION INSCRIPTION AUX ADMINS
 
 const SUPABASE_URL = 'https://buymgwahouwcwwgdiogn.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDYyODQxOSwiZXhwIjoyMTA2MjA0NDE5fQ.4m7vMaiQvDEV5NtptuGlGcdh4gcxNMxHdD-8sPo6M4k';
+// ✅ CLÉ ANON (sécurisée) au lieu de SERVICE_ROLE (dangereuse)
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2Mjg0MTksImV4cCI6MjEwNjIwNDQxOX0.B5GTAoT9ip-PTlTUVMw3I-t1xBESxPoeeoELbtNBxqo';
 
 document.addEventListener("DOMContentLoaded", function() {
   
@@ -17,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function() {
   const formLogin = document.getElementById("form-login");
   const messageAuth = document.getElementById("message-auth");
   
-  // Champs Inscription
   const inputNom = document.getElementById("nom");
   const inputEmailReg = document.getElementById("email");
   const inputTelReg = document.getElementById("telephone"); 
@@ -26,18 +26,15 @@ document.addEventListener("DOMContentLoaded", function() {
   const btnRegister = document.getElementById("btn-register");
   const inputRole = document.getElementById("role"); 
 
-  // Champs Connexion
   const inputIdentifiantLog = document.getElementById("identifiant"); 
   const inputPassLog = document.getElementById("mdp-login"); 
 
-  // Bouton Mot de passe oublié & Modale
   const btnForgotPassword = document.getElementById("btn-forgot-password");
   const modalForgot = document.getElementById("modal-forgot-password");
   const closeForgotModal = document.querySelector(".close-modal");
   const formForgot = document.getElementById("form-forgot");
   const inputForgotContact = document.getElementById("forgot-contact");
 
-  // --- FONCTIONS UTILITAIRES ---
   function afficherMessage(msg, type) {
     if (!messageAuth) return;
     messageAuth.textContent = msg;
@@ -93,10 +90,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  // ✅ NOUVELLE FONCTION : Notifier les admins d'une nouvelle inscription
   async function notifierAdminsInscription(nom, email, role) {
     try {
-      // Récupérer tous les utilisateurs avec le rôle 'admin'
       const { data: admins, error: errAdmins } = await supabase
         .from('profils_admin')
         .select('id')
@@ -110,23 +105,19 @@ document.addEventListener("DOMContentLoaded", function() {
       const roleLabel = role === 'prestataire' ? 'Prestataire' : 'Client';
       const message = `👤 Nouvelle inscription ${roleLabel} : ${nom} (${email})`;
       
-      // Créer un tableau de notifications (une par admin)
       const notifications = admins.map(admin => ({
         user_id: admin.id,
         message: message,
         lu: false
       }));
       
-      // Insérer toutes les notifications en une seule requête
       await supabase.from('notifications').insert(notifications);
       
     } catch (err) {
-      // On ne bloque pas l'inscription si la notification échoue
       console.error("Erreur notification admins:", err);
     }
   }
 
-  // --- GESTION INSCRIPTION ---
   if (formRegister) {
     formRegister.addEventListener("submit", async function(e) {
       e.preventDefault();
@@ -143,7 +134,6 @@ document.addEventListener("DOMContentLoaded", function() {
       const confirmPassword = inputPassConfirm.value;
       const roleChoisi = inputRole ? inputRole.value : "";
 
-      // Validations Front-end
       if (!nom || !email || !password) {
         afficherMessage("⚠️ Veuillez remplir tous les champs requis.", "error");
         resetButton();
@@ -202,7 +192,6 @@ document.addEventListener("DOMContentLoaded", function() {
              console.warn("Update profil admin ignoré:", dbErr.message);
            }
 
-           // ✅ NOUVEAU : Notifier tous les admins de cette inscription
            await notifierAdminsInscription(nom, email, roleChoisi);
            
            alert("✅ Compte créé avec succès !\n\n📧 Un lien de confirmation a été envoyé à :\n" + email + "\n\nMerci de vérifier votre boîte mail (et vos spams) et de cliquer sur le lien pour activer votre compte.\n\nVous serez redirigé vers la connexion.");
@@ -238,7 +227,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  // --- GESTION CONNEXION ---
   if (formLogin) {
     formLogin.addEventListener("submit", async function(e) {
       e.preventDefault();
@@ -296,7 +284,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // --- MOT DE PASSE OUBLIÉ ---
   if (btnForgotPassword && modalForgot) {
     btnForgotPassword.addEventListener("click", () => {
       modalForgot.style.display = "flex";
@@ -350,3 +337,4 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 });
+

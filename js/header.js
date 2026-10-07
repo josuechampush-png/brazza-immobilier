@@ -13,7 +13,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     client = window.supabase;
   } else if (window.supabase && window.supabase.createClient) {
     const SUPABASE_URL = 'https://buymgwahouwcwwgdiogn.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDYyODQxOSwiZXhwIjoyMTA2MjA0NDE5fQ.4m7vMaiQvDEV5NtptuGlGcdh4gcxNMxHdD-8sPo6M4k';
+    // ✅ CLÉ ANON (sécurisée) au lieu de SERVICE_ROLE (dangereuse)
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1eW1nd2Fob3V3Y3d3Z2Rpb2duIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2Mjg0MTksImV4cCI6MjEwNjIwNDQxOX0.B5GTAoT9ip-PTlTUVMw3I-t1xBESxPoeeoELbtNBxqo';
     client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   } else {
     console.error("❌ Supabase non disponible");
@@ -124,7 +125,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
       }
 
-      // ✅ NOUVELLE FONCTION : Marquer toutes les notifications comme lues
       async function marquerToutLu() {
         if (!client) return;
         try {
@@ -207,9 +207,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           } else {
             dropdownNotifs.style.display = "block";
             chargerListeNotifs();
-            // ✅ CORRECTION : Marquer toutes les notifications comme lues à l'ouverture
             await marquerToutLu();
-            // ✅ CORRECTION : Mettre à jour le badge (il va disparaître car toutes sont lues)
             majBadge();
           }
         };
