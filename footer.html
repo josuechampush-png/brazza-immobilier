@@ -1,19 +1,25 @@
+
 <!-- ============================================
      footer.html — PIED DE PAGE
      Informations de contact et liens utiles
+     Créateur : Josué Soumbou
      ============================================ -->
+
 <footer class="footer">
 
-  	<!-- Ajoute ceci -->
+  <!-- Manifest PWA et couleur du thème -->
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#ed8936">
-	
+
   <div class="footer-contenu">
-    
+
     <!-- Section À propos -->
     <div class="footer-section">
       <h3>🏠 Brazza-Immobilier</h3>
-      <p>La plateforme de référence pour la location immobilière à Brazzaville.</p>
+      <p>
+        La plateforme de référence pour la location
+        immobilière à Brazzaville.
+      </p>
     </div>
 
     <!-- Section Liens rapides -->
@@ -35,25 +41,41 @@
 
   </div>
 
-  <!-- Copyright -->
+  <!-- Copyright et identité du créateur -->
   <div class="footer-bottom">
-    <p>&copy; 2026 Brazza-Immobilier. Tous droits réservés.</p>
-	</div>
 
-	<script>
-  // Enregistrement du Service Worker
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then(registration => {
-          console.log('SW enregistré avec succès : ', registration.scope);
-        })
-        .catch(error => {
-          console.log('Échec de l\'enregistrement du SW : ', error);
-        });
-    });
-  }
-</script>
+    <p>
+      &copy; 2026 Brazza-Immobilier.
+      Tous droits réservés.
+    </p>
 
-	
+    <p class="footer-createur">
+      Conçu et développé par
+      <strong>Josué Soumbou</strong>
+    </p>
+
+  </div>
+
+  <!-- Enregistrement du Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log(
+              'SW enregistré avec succès : ',
+              registration.scope
+            );
+          })
+          .catch(error => {
+            console.log(
+              'Échec de l\'enregistrement du SW : ',
+              error
+            );
+          });
+      });
+    }
+  </script>
+
 </footer>
+
