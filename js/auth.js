@@ -201,7 +201,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
            await notifierAdminsInscription(nom, email, roleChoisi);
            
-           alert("✅ Compte créé avec succès !\n\n📧 Un lien de confirmation a été envoyé à :\n" + email + "\n\nMerci de vérifier votre boîte mail (et vos spams) et de cliquer sur le lien pour activer votre compte.\n\nVous serez redirigé vers la connexion.");
+           //alert("✅ Compte créé avec succès !\n\n📧 Un lien de confirmation a été envoyé à :\n" + email + "\n\nMerci de vérifier votre boîte mail (et vos spams) et de cliquer sur le lien pour activer votre compte.\n\nVous serez redirigé vers la connexion.");
+					 alert("Compte créé avec succès !\n\nVous serez redirigé vers la page de connexion.\n\nVeuillez vous connecter à votre nouveau compte.")
            
            window.location.href = "login.html";
 
