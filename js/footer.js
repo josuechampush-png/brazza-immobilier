@@ -66,6 +66,11 @@ document.addEventListener("DOMContentLoaded", function() {
           <p>📍 Brazzaville, Congo</p>
         </div>
 
+        <p class="footer-createur">
+          Conçu et développé par
+          <strong>Josué Soumbou</strong>
+        </p>
+
       </div>
 
       <div class="footer-bottom">
