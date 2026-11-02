@@ -4,8 +4,8 @@
    ================================================== */
 
 document.addEventListener("DOMContentLoaded", function() {
-  
-  // Charger l'historique depuis localStorage
+
+  // ---------- 1. Charger l'historique depuis localStorage ----------
   let historique = [];
   try {
     const historiqueStocke = localStorage.getItem("brazza_historique");
@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", function() {
   } catch (e) {
     console.log("Erreur chargement historique:", e);
   }
-  
-  // Créer la section historique si on a des annonces
+
+  // ---------- 2. Créer la section historique si on a des annonces ----------
   let sectionHistorique = "";
   if (historique.length > 0 && typeof annonces !== "undefined" && annonces.length > 0) {
     // Récupérer les 5 dernières annonces consultées
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
       .slice(0, 5)
       .map(id => annonces.find(a => a.id === id))
       .filter(a => a !== undefined);
-    
+
     if (annoncesRecentes.length > 0) {
       sectionHistorique = `
         <div class="footer-section">
@@ -39,11 +39,13 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  // Créer le HTML du footer
+  // ---------- 3. Créer le HTML du footer ----------
   const footerHTML = `
     <footer class="footer">
+
+      <!-- Zone principale : sections en colonnes -->
       <div class="footer-contenu">
-        
+
         <div class="footer-section">
           <h3>🏠 Brazza-Immobilier</h3>
           <p>La plateforme de référence pour la location immobilière à Brazzaville.</p>
@@ -66,18 +68,20 @@ document.addEventListener("DOMContentLoaded", function() {
           <p>📍 Brazzaville, Congo</p>
         </div>
 
+      </div>
+
+      <!-- Barre du bas : copyright + crédit du créateur -->
+      <div class="footer-bottom">
+        <p>&copy; 2026 Brazza-Immobilier. Tous droits réservés.</p>
         <p class="footer-createur">
           Conçu et développé par
           <strong>Josué Soumbou</strong>
         </p>
-
       </div>
 
-      <div class="footer-bottom">
-        <p>&copy; 2026 Brazza-Immobilier. Tous droits réservés.</p>
-      </div>
     </footer>
   `;
 
-  document.body.insertAdjacentHTML('beforeend', footerHTML);
+  // ---------- 4. Injecter le footer à la fin de la page ----------
+  document.body.insertAdjacentHTML("beforeend", footerHTML);
 });
