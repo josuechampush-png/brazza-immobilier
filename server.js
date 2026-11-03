@@ -1,26 +1,46 @@
+
 /* ==================================================
-   server.js — SERVEUR EXPRESS
-   Redirige la racine vers login.html
+   server.js — SERVEUR EXPRESS SÉCURISÉ
+   Projet : Braza Immobilier
    ================================================== */
 
 const express = require('express');
 const app = express();
 
-// Render fournit automatiquement le port via process.env.PORT
-// 3000 est utilisé comme port de secours en local.
+// Charger les protections de sécurité
+const security = require('./security');
+
+// Port Render ou port local
 const PORT = process.env.PORT || 3000;
 
-// ===== ROUTE PRINCIPALE (AVANT express.static) =====
-// Quand on arrive sur la racine (/), rediriger vers login.html
+// Activer les protections
+security(app);
+
+// Rediriger la racine vers la connexion
 app.get('/', (req, res) => {
   res.redirect('/login.html');
 });
 
-// ===== ENSUITE : Servir les fichiers statiques =====
-app.use(express.static(__dirname));
+// Servir les fichiers publics
+app.use(express.static(__dirname, {
+  dotfiles: 'deny',
+  index: false,
+  extensions: ['html']
+}));
 
-// ===== DÉMARRAGE DU SERVEUR =====
-app.listen(PORT, () => {
-  console.log(`✅ Serveur démarré sur le port ${PORT}`);
+// Page 404
+app.use((req, res) => {
+  res.status(404).send('Page introuvable');
 });
+
+// Démarrer le serveur
+const server = app.listen(PORT, () => {
+  console.log(`🔐 Braza Immobilier sécurisé`);
+  console.log(`🚀 Serveur démarré sur le port ${PORT}`);
+});
+
+// Limites de temps des connexions
+server.requestTimeout = 30000;
+server.headersTimeout = 35000;
+server.keepAliveTimeout = 5000;
 
